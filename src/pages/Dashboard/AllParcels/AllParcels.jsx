@@ -63,7 +63,13 @@ const AllParcels = () => {
     const fetchParcels = useCallback(async () => {
         try {
             const res = await axiosSecure.get(`/all-parcels?search=${search}`);
-            setParcels(res.data);
+            // Sort by latest first: use bookedAt, fall back to _id timestamp
+            const sorted = [...res.data].sort((a, b) => {
+                const timeA = a.bookedAt ? new Date(a.bookedAt).getTime() : (a._id ? parseInt(a._id.substring(0, 8), 16) * 1000 : 0);
+                const timeB = b.bookedAt ? new Date(b.bookedAt).getTime() : (b._id ? parseInt(b._id.substring(0, 8), 16) * 1000 : 0);
+                return timeB - timeA;
+            });
+            setParcels(sorted);
         } catch (err) {
             console.error('Failed to fetch parcels:', err);
         } finally {
