@@ -1,5 +1,5 @@
 import useScrollAnimation from '../../../Hooks/useScrollAnimation';
-import merchantImg from '../../../assets/Merchant/merchant.png';
+import merchantImg from '../../../assets/Merchant/Merchant.png';
 
 const BecomeMerchant = () => {
     const [sectionRef, sectionVisible] = useScrollAnimation();
