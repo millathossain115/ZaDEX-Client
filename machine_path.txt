@@ -1,0 +1,1 @@
+C:\xampp\php;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files\Git\cmd;C:\Program Files\Java\jdk-19\bin;C:\Program Files\Cloudflare\Cloudflare WARP\;C:\Program Files\PowerToys\DSCModules\;C:\Users\milla\AppData\Local\nvm;C:\nvm4w\nodejs

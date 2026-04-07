@@ -1,0 +1,132 @@
+@import url("https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&display=swap");
+@import "tailwindcss";
+* {
+  font-family: "Urbanist", sans-serif;
+}
+
+/* ===== Scroll Animation Classes ===== */
+
+.scroll-fade-up {
+  opacity: 0;
+  transform: translateY(60px);
+  transition:
+    opacity 1s ease-out,
+    transform 1s ease-out;
+}
+.scroll-fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-fade-down {
+  opacity: 0;
+  transform: translateY(-60px);
+  transition:
+    opacity 1s ease-out,
+    transform 1s ease-out;
+}
+.scroll-fade-down.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-fade-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition:
+    opacity 1s ease-out,
+    transform 1s ease-out;
+}
+.scroll-fade-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-fade-right {
+  opacity: 0;
+  transform: translateX(60px);
+  transition:
+    opacity 1s ease-out,
+    transform 1s ease-out;
+}
+.scroll-fade-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.scroll-zoom-in {
+  opacity: 0;
+  transform: scale(0.85);
+  transition:
+    opacity 1s ease-out,
+    transform 1s ease-out;
+}
+.scroll-zoom-in.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Stagger delay utilities */
+.delay-100 {
+  transition-delay: 100ms;
+}
+.delay-200 {
+  transition-delay: 200ms;
+}
+.delay-300 {
+  transition-delay: 300ms;
+}
+.delay-400 {
+  transition-delay: 400ms;
+}
+.delay-500 {
+  transition-delay: 500ms;
+}
+
+/* ===== Leaflet Map Custom Markers ===== */
+.custom-div-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+@keyframes markerPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(249, 115, 22, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0);
+  }
+}
+
+.marker-pulse {
+  animation: markerPulse 1.5s infinite;
+}
+
+.center-pin-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Success popup animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes progressBar {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
