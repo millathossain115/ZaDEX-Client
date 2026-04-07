@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 const useAxiosSecure = () => {
     const axiosSecure = useMemo(() => {
         return axios.create({
-            baseURL: 'http://localhost:5000',
+            baseURL: import.meta.env.VITE_SERVER_URL || 'http://localhost:5000',
             withCredentials: true,
         });
     }, []);

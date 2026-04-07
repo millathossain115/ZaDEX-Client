@@ -43,7 +43,7 @@ const AuthProvider = ({ children }) => {
             if (currentUser) {
                 // get token and store client
                 const userPayload = { email: currentUser.email };
-                axios.post('http://localhost:5000/jwt', userPayload, { 
+                axios.post(`${import.meta.env.VITE_SERVER_URL || 'http://localhost:5000'}/jwt`, userPayload, { 
                     withCredentials: true 
                 })
                 .then(res => console.log(res.data));
