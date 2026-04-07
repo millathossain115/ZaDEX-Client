@@ -28,19 +28,21 @@ const BenefitCard = ({ item, idx }) => {
     return (
         <div
             ref={cardRef}
-            className={`scroll-fade-right ${cardVisible ? 'visible' : ''} flex bg-amber-50 items-center w-full mb-8 rounded-lg p-6`}
+            className={`scroll-fade-right ${cardVisible ? 'visible' : ''} flex flex-col md:flex-row bg-amber-50 items-center justify-between w-full mb-8 rounded-lg p-6 py-10 md:p-6`}
             style={{ transitionDelay: `${idx * 150}ms` }}
         >
-            {/* image on left side */}
-            <img
-                src={item.image}
-                alt={item.title}
-                className="w-50 h-50 object-cover p-5"
-            />
-            {/* dotted divider */}
-            <div className="border-l-2 border-dotted border-gray-300 h-40 mx-4"></div>
-            {/* text portion fixed width 922px */}
-            <div className="w-full px-8">
+            {/* image */}
+            <div className="flex-shrink-0 flex justify-center items-center">
+                <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-32 h-32 md:w-50 md:h-50 object-cover p-2 md:p-5"
+                />
+            </div>
+            {/* dotted divider - hidden on mobile, vertical on md */}
+            <div className="hidden md:block border-l-2 border-dotted border-gray-300 h-40 mx-4"></div>
+            {/* text portion */}
+            <div className="w-full text-center md:text-left md:px-8 mt-4 md:mt-0">
                 <h3 className="text-xl font-semibold mb-2 capitalize">{item.title}</h3>
                 <p className="text-gray-700">{item.description}</p>
             </div>
