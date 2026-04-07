@@ -46,9 +46,16 @@ const AuthProvider = ({ children }) => {
                 axios.post(`${import.meta.env.VITE_SERVER_URL || 'http://localhost:5000'}/jwt`, userPayload, { 
                     withCredentials: true 
                 })
-                .then(res => console.log(res.data));
+                .then(res => {
+                    console.log(res.data);
+                    // Save token to localStorage for cross-domain Authorization header
+                    if (res.data?.token) {
+                        localStorage.setItem('zadex_token', res.data.token);
+                    }
+                });
             } else {
-                // user is logged out
+                // user is logged out — clear stored token
+                localStorage.removeItem('zadex_token');
             }
             setLoading(false);
         });
