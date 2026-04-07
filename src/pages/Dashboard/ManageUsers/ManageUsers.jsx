@@ -289,8 +289,8 @@ const ManageUsers = () => {
                 />
             </div>
 
-            {/* Table */}
-            <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-x-auto">
+            {/* Table — Desktop */}
+            <div className="hidden lg:block bg-white rounded-3xl border border-gray-100 shadow-sm overflow-x-auto">
                 {/* Table Header */}
                 <div className="sticky top-0 z-10 grid grid-cols-[2.5fr_1fr_1fr_1fr_1fr_0.8fr_0.8fr_0.8fr_0.5fr] gap-3 px-6 py-4 bg-gray-50 border-b border-gray-100 text-[10px] font-black text-gray-400 uppercase tracking-widest items-center min-w-275">
                     <div>User</div>
@@ -477,11 +477,123 @@ const ManageUsers = () => {
                 )}
             </div>
 
+            {/* Card List — Mobile / Tablet */}
+            <div className="lg:hidden bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+                {filteredUsers.length === 0 ? (
+                    <div className="p-16 text-center">
+                        <p className="text-gray-400 text-sm font-bold uppercase tracking-widest">No users match your filters</p>
+                    </div>
+                ) : (
+                    <div className="divide-y divide-gray-50">
+                        {filteredUsers.map((user) => {
+                            const isAdmin = user.role === 'admin';
+                            const stats = user.role === 'rider'
+                                ? getRiderDeliveryStats(user.email)
+                                : getUserParcelStats(user.email);
+                            const district = getUserDistrict(user.email, user.role);
+                            const self = isSelf(user);
+
+                            return (
+                                <div key={user._id} className={`p-4 flex flex-col gap-3 ${user.disabled ? 'opacity-60 bg-gray-50/70' : ''}`}>
+                                    {/* Top Row: avatar + name + role badge + status */}
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0 ${
+                                            user.role === 'admin' ? 'bg-purple-500' : user.role === 'rider' ? 'bg-emerald-600' : 'bg-[#03373D]'
+                                        }`}>
+                                            {user.name?.charAt(0)?.toUpperCase() || '?'}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-1.5 flex-wrap">
+                                                <p className="text-sm font-bold text-gray-900 truncate">{user.name}</p>
+                                                {self && <span className="text-[8px] font-black bg-[#03373D] text-white px-1.5 py-0.5 rounded-md uppercase tracking-wider shrink-0">You</span>}
+                                            </div>
+                                            <p className="text-xs text-gray-400 truncate">{user.email}</p>
+                                        </div>
+                                        <div className="flex items-center gap-2 shrink-0">
+                                            <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${
+                                                user.disabled ? 'bg-red-100 text-red-600' : 'bg-emerald-50 text-emerald-700'
+                                            }`}>
+                                                <span className={`w-1.5 h-1.5 rounded-full ${user.disabled ? 'bg-red-400' : 'bg-emerald-400'}`}></span>
+                                                {user.disabled ? 'Blocked' : 'Active'}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Detail grid */}
+                                    <div className="grid grid-cols-2 gap-x-4 gap-y-2 pl-13">
+                                        <div>
+                                            <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Role</p>
+                                            <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest ${
+                                                user.role === 'admin' ? 'bg-purple-100 text-purple-700' :
+                                                user.role === 'rider' ? 'bg-emerald-100 text-emerald-700' :
+                                                                        'bg-gray-100 text-gray-600'
+                                            }`}>{user.role || 'user'}</span>
+                                        </div>
+                                        <div>
+                                            <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Phone</p>
+                                            <p className="text-xs font-bold text-gray-700">{user.phone || '—'}</p>
+                                        </div>
+                                        {!isAdmin && (
+                                            <div>
+                                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Parcels</p>
+                                                <p className="text-sm font-black text-gray-900 leading-none">{stats.total} <span className="text-[10px] font-bold text-emerald-600">({stats.delivered} done)</span></p>
+                                            </div>
+                                        )}
+                                        {district && (
+                                            <div>
+                                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider">District</p>
+                                                <p className="text-xs font-bold text-gray-700">{district}</p>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Role changer + actions */}
+                                    <div className="flex items-center gap-2 pl-13 flex-wrap">
+                                        <select
+                                            value={user.role || 'user'}
+                                            onChange={(e) => handleRoleChange(user, e.target.value)}
+                                            disabled={self}
+                                            className={`flex-1 min-w-0 px-2 py-2 rounded-lg border text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#03373D]/20 cursor-pointer transition ${
+                                                self ? 'bg-gray-50 text-gray-300 border-gray-100 cursor-not-allowed' : 'bg-white text-gray-700 border-gray-200 hover:border-[#03373D]/30'
+                                            }`}
+                                        >
+                                            <option value="user">User</option>
+                                            <option value="rider">Rider</option>
+                                            <option value="admin">Admin</option>
+                                        </select>
+                                        <button
+                                            onClick={() => openEdit(user)}
+                                            className="px-3 py-2 bg-gray-100 text-gray-600 hover:bg-[#03373D] hover:text-white rounded-lg text-xs font-black transition cursor-pointer"
+                                        >Edit</button>
+                                        {!self && (
+                                            <button
+                                                onClick={() => { setDisableModal({ show: true, user }); setOpenMenuId(null); }}
+                                                className={`px-3 py-2 rounded-lg text-xs font-black transition cursor-pointer ${
+                                                    user.disabled
+                                                        ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white'
+                                                        : 'bg-orange-50 text-orange-600 hover:bg-orange-500 hover:text-white'
+                                                }`}
+                                            >{user.disabled ? 'Enable' : 'Disable'}</button>
+                                        )}
+                                        {!self && (
+                                            <button
+                                                onClick={() => { setDeleteModal({ show: true, user }); setOpenMenuId(null); }}
+                                                className="px-3 py-2 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg text-xs font-black transition cursor-pointer"
+                                            >Delete</button>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+            </div>
+
             {/* ── Edit Modal ─────────────────────────────────────────── */}
             {editModal.show && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden">
-                        <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+                    <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
+                        <div className="px-6 sm:px-8 py-5 sm:py-6 border-b border-gray-100 flex items-center justify-between bg-gray-50/50 shrink-0">
                             <div>
                                 <h3 className="text-xl font-bold text-gray-900">Edit User</h3>
                                 <p className="text-xs text-gray-400 mt-0.5">Updating: {editModal.user?.email}</p>
@@ -490,7 +602,7 @@ const ManageUsers = () => {
                                 <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                             </button>
                         </div>
-                        <div className="p-8 space-y-4">
+                        <div className="p-6 sm:p-8 space-y-4 overflow-y-auto">
                             <div>
                                 <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 ml-1">Name</label>
                                 <input
@@ -522,7 +634,7 @@ const ManageUsers = () => {
                                 </select>
                             </div>
                         </div>
-                        <div className="px-8 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3">
+                        <div className="px-6 sm:px-8 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3 shrink-0">
                             <button
                                 onClick={() => setEditModal({ show: false, user: null })}
                                 disabled={isProcessing}

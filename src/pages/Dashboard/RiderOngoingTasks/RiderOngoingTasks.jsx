@@ -13,15 +13,35 @@ const RiderOngoingTasks = () => {
         setActingId(parcel._id);
 
         const currentStatus = normalizeStatus(parcel.status);
-        const nextPayload = currentStatus === 'accepted'
-            ? { status: 'shipped', pickedUpAt: new Date().toISOString() }
-            : { status: 'delivered', deliveredAt: new Date().toISOString() };
+        let nextPayload;
+        if (currentStatus === 'accepted') {
+            nextPayload = { status: 'shipped', pickedUpAt: new Date().toISOString() };
+        } else if (currentStatus === 'shipped') {
+            nextPayload = { status: 'out_for_delivery', outForDeliveryAt: new Date().toISOString() };
+        } else if (currentStatus === 'out_for_delivery') {
+            nextPayload = { status: 'delivered', deliveredAt: new Date().toISOString() };
+        } else {
+            setActingId('');
+            return;
+        }
 
         try {
             await axiosSecure.put(`/parcels/${parcel._id}`, nextPayload);
             refetch();
         } catch (err) {
             console.error('Failed to update rider task status:', err);
+        } finally {
+            setActingId('');
+        }
+    };
+
+    const handleCodCollected = async (parcel) => {
+        setActingId(parcel._id + '_cod');
+        try {
+            await axiosSecure.patch(`/parcels/${parcel._id}/cod-collected`);
+            refetch();
+        } catch (err) {
+            console.error('Failed to mark COD collected:', err);
         } finally {
             setActingId('');
         }
@@ -54,7 +74,23 @@ const RiderOngoingTasks = () => {
                     <div className="space-y-5">
                         {ongoingTasks.map(parcel => {
                             const currentStatus = normalizeStatus(parcel.status);
-                            const actionLabel = currentStatus === 'accepted' ? 'Mark as Picked Up' : 'Mark as Delivered';
+
+                            // Step label & button color per status
+                            const actionConfig = {
+                                accepted:         { label: 'Mark as Picked Up',       btn: 'bg-[#03373D] hover:bg-[#025a63]' },
+                                shipped:          { label: 'Out for Delivery',         btn: 'bg-sky-600 hover:bg-sky-700' },
+                                out_for_delivery: { label: 'Mark as Delivered',        btn: 'bg-emerald-600 hover:bg-emerald-700' },
+                            };
+                            const config = actionConfig[currentStatus];
+
+                            // Progress steps
+                            const steps = [
+                                { key: 'accepted',         label: 'Picked Up' },
+                                { key: 'shipped',          label: 'Out for Delivery' },
+                                { key: 'out_for_delivery', label: 'Delivered' },
+                            ];
+                            const stepOrder = ['accepted', 'shipped', 'out_for_delivery', 'delivered'];
+                            const currentStepIdx = stepOrder.indexOf(currentStatus);
 
                             return (
                                 <div key={parcel._id} className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
@@ -97,14 +133,56 @@ const RiderOngoingTasks = () => {
                                             </div>
                                         </div>
 
-                                        <div className="lg:w-64">
-                                            <button
-                                                onClick={() => handleStatusUpdate(parcel)}
-                                                disabled={actingId === parcel._id}
-                                                className="w-full py-4 rounded-2xl bg-[#03373D] text-white text-sm font-bold uppercase tracking-[0.2em] hover:bg-[#025a63] transition disabled:opacity-50 cursor-pointer"
-                                            >
-                                                {actingId === parcel._id ? 'Updating...' : actionLabel}
-                                            </button>
+                                        <div className="lg:w-64 flex flex-col gap-3">
+                                            {/* Progress steps */}
+                                            {currentStatus !== 'delivered' && (
+                                                <div className="flex items-center gap-1 mb-1">
+                                                    {steps.map((step, i) => {
+                                                        const done = currentStepIdx > i;
+                                                        const active = currentStepIdx === i;
+                                                        return (
+                                                            <div key={step.key} className="flex-1 flex flex-col items-center gap-1">
+                                                                <div className={`w-full h-1.5 rounded-full transition-all ${
+                                                                    done ? 'bg-emerald-400' : active ? 'bg-[#03373D]' : 'bg-gray-200'
+                                                                }`} />
+                                                                <p className={`text-[8px] font-black uppercase tracking-wider text-center leading-tight ${
+                                                                    done ? 'text-emerald-500' : active ? 'text-[#03373D]' : 'text-gray-300'
+                                                                }`}>{step.label}</p>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+
+                                            {/* Main status action — hide once delivered for COD parcels needing collection */}
+                                            {config && !(currentStatus === 'delivered' && parcel.paymentStatus?.toLowerCase() !== 'paid') && (
+                                                <button
+                                                    onClick={() => handleStatusUpdate(parcel)}
+                                                    disabled={actingId === parcel._id}
+                                                    className={`w-full py-4 rounded-2xl text-white text-sm font-bold uppercase tracking-[0.2em] transition disabled:opacity-50 cursor-pointer ${config.btn}`}
+                                                >
+                                                    {actingId === parcel._id ? 'Updating...' : config.label}
+                                                </button>
+                                            )}
+
+                                            {/* COD Cash Collection button — only for delivered, unpaid parcels */}
+                                            {currentStatus === 'delivered' && parcel.paymentStatus?.toLowerCase() !== 'paid' && (
+                                                parcel.riderCodStatus === 'collected' ? (
+                                                    <div className="w-full py-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm font-bold uppercase tracking-[0.15em] flex items-center justify-center gap-2">
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                        Cash Collected
+                                                    </div>
+                                                ) : (
+                                                    <button
+                                                        onClick={() => handleCodCollected(parcel)}
+                                                        disabled={actingId === parcel._id + '_cod'}
+                                                        className="w-full py-4 rounded-2xl bg-amber-500 text-white text-sm font-bold uppercase tracking-[0.15em] hover:bg-amber-600 transition disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
+                                                    >
+                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                                        {actingId === parcel._id + '_cod' ? 'Marking...' : 'Mark Cash Collected'}
+                                                    </button>
+                                                )
+                                            )}
                                         </div>
                                     </div>
                                 </div>

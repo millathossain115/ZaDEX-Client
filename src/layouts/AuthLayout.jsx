@@ -1,6 +1,6 @@
 import { Link, Outlet } from 'react-router-dom';
-import authImage from '../assets/authImage.png';
-import logo from '../assets/logo.png';
+import authImage from '../assets/Authentication.png';
+import logo from '../assets/LOGOS/Logo2.png';
 
 const AuthLayout = () => {
     return (
@@ -16,7 +16,7 @@ const AuthLayout = () => {
                     {/* Logo */}
                     <Link to="/" className="absolute top-8 left-8 flex items-center gap-2">
                         <img src={logo} alt="Zadex" className="h-8" />
-                        <span className="text-xl font-extrabold text-gray-800">Zadex</span>
+                        <span className="text-3xl font-black tracking-tight italic"><span className="text-gray-800">Za</span><span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0d9051] to-emerald-400">DEX</span></span>
                     </Link>
 
                     {/* Auth Image */}
@@ -44,7 +44,7 @@ const AuthLayout = () => {
                 <div className="lg:hidden absolute top-6 left-6">
                     <Link to="/" className="flex items-center gap-2">
                         <img src={logo} alt="Zadex" className="h-7" />
-                        <span className="text-lg font-extrabold text-gray-800">Zadex</span>
+                        <span className="text-2xl font-black tracking-tight italic"><span className="text-gray-800">Za</span><span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0d9051] to-emerald-400">DEX</span></span>
                     </Link>
                 </div>
 

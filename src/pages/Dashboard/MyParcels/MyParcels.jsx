@@ -12,6 +12,7 @@ const MyParcels = () => {
     const { user } = useAuth();
     const [parcels, setParcels] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [filterStatus, setFilterStatus] = useState('all');
 
     // Edit modal state
     const [editModal, setEditModal] = useState(false);
@@ -83,6 +84,11 @@ const MyParcels = () => {
         setParcels(prev => prev.filter(p => p._id !== deletedParcelId));
     };
 
+    const displayedParcels = parcels.filter(parcel => {
+        if (filterStatus === 'all') return true;
+        return parcel.status?.toLowerCase() === filterStatus;
+    });
+
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
@@ -137,7 +143,7 @@ const MyParcels = () => {
             </div>
 
             {/* Stats Cards */}
-            <ParcelStats parcels={parcels} />
+            <ParcelStats parcels={parcels} activeFilter={filterStatus} onFilterChange={setFilterStatus} />
 
             {/* Parcels List */}
             {parcels.length === 0 ? (
@@ -156,6 +162,22 @@ const MyParcels = () => {
                         Add Your First Parcel
                     </Link>
                 </div>
+            ) : displayedParcels.length === 0 ? (
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
+                    <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-1">No matches found</h3>
+                    <p className="text-gray-500 text-sm mb-4">You don't have any parcels with the "{filterStatus}" status.</p>
+                    <button 
+                        onClick={() => setFilterStatus('all')}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-100 text-gray-700 font-semibold text-sm rounded-xl hover:bg-gray-200 transition"
+                    >
+                        View All Parcels
+                    </button>
+                </div>
             ) : (
                 <div className="bg-white rounded-2xl border border-gray-100 shadow-sm">
                     {/* Table Header (Desktop) - 8 Columns */}
@@ -171,7 +193,7 @@ const MyParcels = () => {
                     </div>
 
                     {/* Table Rows */}
-                    {parcels.map((parcel, index) => (
+                    {displayedParcels.map((parcel, index) => (
                         <ParcelRow
                             key={parcel._id || index}
                             parcel={parcel}

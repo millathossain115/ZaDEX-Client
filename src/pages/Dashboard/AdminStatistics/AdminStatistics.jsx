@@ -365,12 +365,12 @@ const AdminStatistics = () => {
 
             {/* Recent Parcel Activity List */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 overflow-hidden">
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                     <div>
                         <h3 className="text-lg font-black text-gray-900">Recent Shipping Activity</h3>
                         <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">Real-time update of last 5 booked items</p>
                     </div>
-                    <a href="/dashboard/all-parcels" className="bg-[#03373D]/5 text-[#03373D] text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-lg hover:bg-[#03373D] hover:text-white transition-all shadow-sm">View All Parcels</a>
+                    <a href="/dashboard/all-parcels" className="bg-[#03373D]/5 text-[#03373D] text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-lg hover:bg-[#03373D] hover:text-white transition-all shadow-sm text-center">View All Parcels</a>
                 </div>
                 
                 {recentParcels.length === 0 ? (
@@ -378,134 +378,226 @@ const AdminStatistics = () => {
                         <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">Waiting for incoming parcels...</p>
                     </div>
                 ) : (
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left">
-                            <thead className="bg-gray-50/50">
-                                <tr className="border-b border-gray-100 uppercase text-[9px] font-black text-gray-400 tracking-widest">
-                                    <th className="py-2.5 pl-3">Order Details</th>
-                                    <th className="py-2.5">Manifest</th>
-                                    <th className="py-2.5">Specs/Rate</th>
-                                    <th className="py-2.5">Payment</th>
-                                    <th className="py-2.5">Assignment</th>
-                                    <th className="py-2.5">Log Status</th>
-                                    <th className="py-2.5 text-right pr-3">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-50">
-                                {recentParcels.map((parcel) => (
-                                    <tr key={parcel._id} className="group hover:bg-gray-50/50 transition-colors">
-                                        <td className="py-4 pl-3">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-300 group-hover:bg-[#03373D]/5 group-hover:text-[#03373D] transition-colors relative shrink-0">
-                                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                                    </svg>
-                                                    {parcel.paymentStatus === 'paid' && (
-                                                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 border border-white rounded-full"></div>
+                    <>
+                        {/* Desktop Table View */}
+                        <div className="hidden lg:block overflow-x-auto">
+                            <table className="w-full text-left min-w-[900px]">
+                                <thead className="bg-gray-50/50">
+                                    <tr className="border-b border-gray-100 uppercase text-[9px] font-black text-gray-400 tracking-widest">
+                                        <th className="py-2.5 pl-3">Order Details</th>
+                                        <th className="py-2.5">Manifest</th>
+                                        <th className="py-2.5">Specs/Rate</th>
+                                        <th className="py-2.5">Payment</th>
+                                        <th className="py-2.5">Assignment</th>
+                                        <th className="py-2.5">Log Status</th>
+                                        <th className="py-2.5 text-right pr-3">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-50">
+                                    {recentParcels.map((parcel) => (
+                                        <tr key={parcel._id} className="group hover:bg-gray-50/50 transition-colors">
+                                            <td className="py-4 pl-3">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-300 group-hover:bg-[#03373D]/5 group-hover:text-[#03373D] transition-colors relative shrink-0">
+                                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                                        </svg>
+                                                        {parcel.paymentStatus === 'paid' && (
+                                                            <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 border border-white rounded-full"></div>
+                                                        )}
+                                                    </div>
+                                                    <div className="min-w-0 max-w-45">
+                                                        <p className="text-sm font-black text-gray-900 group-hover:text-[#03373D] transition-colors truncate">{parcel.parcelName || parcel.name || 'Unnamed'}</p>
+                                                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-tighter mt-0.5">TRK: {parcel._id.slice(-8).toUpperCase()}</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="py-4">
+                                                <div className="flex flex-col">
+                                                    <div className="flex items-center gap-1">
+                                                        <span className="text-[11px] font-extrabold text-gray-800">{parcel.senderName}</span>
+                                                        <svg className="w-3 h-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                                                        <span className="text-[11px] font-extrabold text-gray-800">{parcel.receiverName}</span>
+                                                    </div>
+                                                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-0.5 leading-none">{parcel.senderDistrict} → {parcel.receiverDistrict}</p>
+                                                </div>
+                                            </td>
+                                            <td className="py-4">
+                                                <p className="text-sm font-black text-gray-900 tracking-tight">৳{parcel.totalCost || parcel.price || 0}</p>
+                                                <p className="text-[10px] font-bold text-gray-400 uppercase mt-0.5">{parcel.parcelWeight || parcel.weight || 0} KG Weight</p>
+                                            </td>
+                                            <td className="py-4">
+                                                <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${
+                                                    parcel.paymentStatus === 'paid' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-amber-50 text-amber-600 border border-amber-100'
+                                                }`}>
+                                                    {parcel.paymentStatus || 'Pending'}
+                                                </span>
+                                            </td>
+                                            <td className="py-4">
+                                                <div className="flex flex-col">
+                                                    {parcel.assignedRider ? (
+                                                        <div className="flex flex-col">
+                                                            <span className="text-[10px] font-black text-[#03373D] uppercase tracking-tighter">Assigned</span>
+                                                            <p className="text-[9px] text-gray-400 font-bold truncate max-w-24">{parcel.assignedRiderName || parcel.assignedRider}</p>
+                                                        </div>
+                                                    ) : (
+                                                        <span className="text-[10px] font-black text-rose-500 uppercase tracking-tighter">Not Assigned</span>
                                                     )}
                                                 </div>
-                                                <div className="min-w-0 max-w-45">
-                                                    <p className="text-sm font-black text-gray-900 group-hover:text-[#03373D] transition-colors truncate">{parcel.parcelName || parcel.name || 'Unnamed'}</p>
-                                                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-tighter mt-0.5">TRK: {parcel._id.slice(-8).toUpperCase()}</p>
-                                                </div>
+                                            </td>
+                                            <td className="py-4">
+                                                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${
+                                                    parcel.status?.toLowerCase() === 'pending' ? 'bg-amber-50 text-amber-600' :
+                                                    parcel.status?.toLowerCase() === 'shipped' ? 'bg-blue-50 text-blue-600' :
+                                                    parcel.status?.toLowerCase() === 'delivered' ? 'bg-emerald-50 text-emerald-600' : 
+                                                    'bg-gray-100 text-gray-500'
+                                                }`}>
+                                                    <span className={`w-1.5 h-1.5 rounded-full ${
+                                                        parcel.status?.toLowerCase() === 'pending' ? 'bg-amber-400 animate-pulse' :
+                                                        parcel.status?.toLowerCase() === 'shipped' ? 'bg-blue-400 animate-pulse' :
+                                                        parcel.status?.toLowerCase() === 'delivered' ? 'bg-emerald-400' : 'bg-gray-400'
+                                                    }`}></span>
+                                                    {parcel.status || 'Received'}
+                                                </span>
+                                            </td>
+                                            <td className="py-4 text-right pr-3 flex items-center justify-end gap-2">
+                                                <button 
+                                                    onClick={() => {
+                                                        setSelectedParcel(parcel);
+                                                        setIsDetailModalOpen(true);
+                                                    }}
+                                                    className="w-9 h-9 rounded-xl bg-gray-100 text-gray-500 hover:bg-[#03373D] hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-xs hover:-translate-y-0.5"
+                                                    title="Details"
+                                                >
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                                </button>
+                                                <button 
+                                                    onClick={() => {
+                                                        setSelectedParcel(parcel);
+                                                        setEditData({ 
+                                                            parcelName: parcel.parcelName || parcel.name || '', 
+                                                            weight: parcel.parcelWeight || parcel.weight || '' 
+                                                        });
+                                                        setIsEditModalOpen(true);
+                                                    }}
+                                                    className="w-9 h-9 rounded-xl bg-gray-100 text-[#03373D] hover:bg-[#03373D] hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-xs hover:-translate-y-0.5"
+                                                    title="Edit"
+                                                >
+                                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        {/* Mobile/Tablet Card View */}
+                        <div className="lg:hidden space-y-4">
+                            {recentParcels.map((parcel) => (
+                                <div key={parcel._id} className="bg-gray-50 rounded-xl p-4 border border-gray-100 flex flex-col gap-3 shadow-sm">
+                                    <div className="flex justify-between items-start gap-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-gray-400 relative shrink-0 shadow-sm border border-gray-100">
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                                </svg>
+                                                {parcel.paymentStatus === 'paid' && (
+                                                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-500 border border-white rounded-full"></div>
+                                                )}
                                             </div>
-                                        </td>
-                                        <td className="py-4">
-                                            <div className="flex flex-col">
-                                                <div className="flex items-center gap-1">
-                                                    <span className="text-[11px] font-extrabold text-gray-800">{parcel.senderName}</span>
-                                                    <svg className="w-3 h-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 8l4 4m0 0l-4 4m4-4H3" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                                                    <span className="text-[11px] font-extrabold text-gray-800">{parcel.receiverName}</span>
-                                                </div>
-                                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mt-0.5 leading-none">{parcel.senderDistrict} → {parcel.receiverDistrict}</p>
+                                            <div className="min-w-0">
+                                                <p className="text-sm font-black text-gray-900 truncate">{parcel.parcelName || parcel.name || 'Unnamed'}</p>
+                                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-tighter mt-0.5">TRK: {parcel._id.slice(-8).toUpperCase()}</p>
                                             </div>
-                                        </td>
-                                        <td className="py-4">
-                                            <p className="text-sm font-black text-gray-900 tracking-tight">৳{parcel.totalCost || parcel.price || 0}</p>
-                                            <p className="text-[10px] font-bold text-gray-400 uppercase mt-0.5">{parcel.parcelWeight || parcel.weight || 0} KG Weight</p>
-                                        </td>
-                                        <td className="py-4">
-                                            <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${
-                                                parcel.paymentStatus === 'paid' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-amber-50 text-amber-600 border border-amber-100'
+                                        </div>
+                                        <div className="text-right shrink-0">
+                                            <p className="text-sm font-black text-gray-900">৳{parcel.totalCost || parcel.price || 0}</p>
+                                            <span className={`inline-flex items-center px-1.5 py-0.5 mt-1 rounded text-[8px] font-black uppercase tracking-widest ${
+                                                parcel.paymentStatus === 'paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
                                             }`}>
                                                 {parcel.paymentStatus || 'Pending'}
                                             </span>
-                                        </td>
-                                        <td className="py-4">
-                                            <div className="flex flex-col">
-                                                {parcel.assignedRider ? (
-                                                    <div className="flex flex-col">
-                                                        <span className="text-[10px] font-black text-[#03373D] uppercase tracking-tighter">Assigned</span>
-                                                        <p className="text-[9px] text-gray-400 font-bold truncate max-w-24">{parcel.assignedRiderName || parcel.assignedRider}</p>
-                                                    </div>
-                                                ) : (
-                                                    <span className="text-[10px] font-black text-rose-500 uppercase tracking-tighter">Not Assigned</span>
-                                                )}
-                                            </div>
-                                        </td>
-                                        <td className="py-4">
-                                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${
-                                                parcel.status?.toLowerCase() === 'pending' ? 'bg-amber-50 text-amber-600' :
-                                                parcel.status?.toLowerCase() === 'shipped' ? 'bg-blue-50 text-blue-600' :
-                                                parcel.status?.toLowerCase() === 'delivered' ? 'bg-emerald-50 text-emerald-600' : 
-                                                'bg-gray-100 text-gray-500'
-                                            }`}>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="grid grid-cols-2 gap-3 pt-3 border-t border-gray-200">
+                                        <div>
+                                            <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Route</p>
+                                            <p className="text-[11px] font-bold text-gray-800 line-clamp-1">{parcel.senderDistrict} → {parcel.receiverDistrict}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Weight</p>
+                                            <p className="text-[11px] font-bold text-gray-800">{parcel.parcelWeight || parcel.weight || 0} KG</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Courier</p>
+                                            <p className="text-[11px] font-bold text-[#03373D] line-clamp-1">{parcel.assignedRiderName || parcel.assignedRider || 'Unassigned'}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-[9px] font-black text-gray-400 uppercase tracking-wider">Status</p>
+                                            <div className="flex items-center gap-1.5 mt-0.5">
                                                 <span className={`w-1.5 h-1.5 rounded-full ${
                                                     parcel.status?.toLowerCase() === 'pending' ? 'bg-amber-400 animate-pulse' :
                                                     parcel.status?.toLowerCase() === 'shipped' ? 'bg-blue-400 animate-pulse' :
                                                     parcel.status?.toLowerCase() === 'delivered' ? 'bg-emerald-400' : 'bg-gray-400'
                                                 }`}></span>
-                                                {parcel.status || 'Received'}
-                                            </span>
-                                        </td>
-                                        <td className="py-4 text-right pr-3 flex items-center justify-end gap-2">
-                                            <button 
-                                                onClick={() => {
-                                                    setSelectedParcel(parcel);
-                                                    setIsDetailModalOpen(true);
-                                                }}
-                                                className="w-9 h-9 rounded-xl bg-gray-100 text-gray-500 hover:bg-[#03373D] hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-xs hover:-translate-y-0.5"
-                                                title="Details"
-                                            >
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                            </button>
-                                            <button 
-                                                onClick={() => {
-                                                    setSelectedParcel(parcel);
-                                                    setEditData({ 
-                                                        parcelName: parcel.parcelName || parcel.name || '', 
-                                                        weight: parcel.parcelWeight || parcel.weight || '' 
-                                                    });
-                                                    setIsEditModalOpen(true);
-                                                }}
-                                                className="w-9 h-9 rounded-xl bg-gray-100 text-[#03373D] hover:bg-[#03373D] hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-xs hover:-translate-y-0.5"
-                                                title="Edit"
-                                            >
-                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                                                <span className={`text-[10px] font-black uppercase tracking-widest ${
+                                                    parcel.status?.toLowerCase() === 'pending' ? 'text-amber-600' :
+                                                    parcel.status?.toLowerCase() === 'shipped' ? 'text-blue-600' :
+                                                    parcel.status?.toLowerCase() === 'delivered' ? 'text-emerald-600' : 'text-gray-500'
+                                                }`}>
+                                                    {parcel.status || 'Received'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="flex items-center gap-2 pt-1">
+                                        <button 
+                                            onClick={() => {
+                                                setSelectedParcel(parcel);
+                                                setIsDetailModalOpen(true);
+                                            }}
+                                            className="flex-1 py-2 rounded-lg bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors text-xs font-black cursor-pointer shadow-sm"
+                                        >
+                                            Details
+                                        </button>
+                                        <button 
+                                            onClick={() => {
+                                                setSelectedParcel(parcel);
+                                                setEditData({ 
+                                                    parcelName: parcel.parcelName || parcel.name || '', 
+                                                    weight: parcel.parcelWeight || parcel.weight || '' 
+                                                });
+                                                setIsEditModalOpen(true);
+                                            }}
+                                            className="flex-1 py-2 rounded-lg bg-white border border-gray-200 text-[#03373D] hover:bg-[#03373D] hover:text-white transition-colors text-xs font-black cursor-pointer shadow-sm"
+                                        >
+                                            Edit
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </>
                 )}
             </div>
 
             {/* Modals are kept the same... */}
             {isDetailModalOpen && selectedParcel && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
-                    <div className="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl animate-in zoom-in slide-in-from-bottom-4 duration-300">
-                        <div className="bg-[#03373D] p-6 text-white flex items-center justify-between">
-                            <div>
-                                <h2 className="text-xl font-black">Parcel Details</h2>
-                                <p className="text-xs text-white/60 uppercase tracking-widest mt-1">Order Ref: {selectedParcel._id}</p>
+                    <div className="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl animate-in zoom-in slide-in-from-bottom-4 duration-300 flex flex-col max-h-[90vh]">
+                        <div className="bg-[#03373D] p-5 sm:p-6 text-white flex flex-row items-center justify-between shrink-0 gap-4">
+                            <div className="min-w-0">
+                                <h2 className="text-lg sm:text-xl font-black truncate">Parcel Details</h2>
+                                <p className="text-[10px] sm:text-xs text-white/60 uppercase tracking-widest mt-1 truncate">Order Ref: {selectedParcel._id}</p>
                             </div>
-                            <button onClick={() => setIsDetailModalOpen(false)} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors cursor-pointer">
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                            <button onClick={() => setIsDetailModalOpen(false)} className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors cursor-pointer shrink-0">
+                                <svg className="w-4 h-4 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                             </button>
                         </div>
-                        <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="p-5 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-6 overflow-y-auto">
                             <div className="space-y-6">
                                 <div>
                                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Parcel Contents</p>
@@ -575,14 +667,14 @@ const AdminStatistics = () => {
 
             {isEditModalOpen && selectedParcel && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
-                    <div className="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl animate-in slide-in-from-top-4 duration-300 border border-gray-100">
-                        <div className="p-6 border-b border-gray-50 flex items-center justify-between">
+                    <div className="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl animate-in slide-in-from-top-4 duration-300 border border-gray-100 flex flex-col max-h-[90vh]">
+                        <div className="p-5 sm:p-6 border-b border-gray-50 flex items-center justify-between shrink-0">
                             <h2 className="text-lg font-black text-gray-900">Modify Parcel</h2>
-                            <button onClick={() => setIsEditModalOpen(false)} className="text-gray-400 hover:text-gray-600 cursor-pointer">
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                            <button onClick={() => setIsEditModalOpen(false)} className="text-gray-400 hover:text-gray-600 cursor-pointer shrink-0">
+                                <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                             </button>
                         </div>
-                        <form onSubmit={handleUpdateParcel} className="p-8 space-y-6">
+                        <form onSubmit={handleUpdateParcel} className="p-5 sm:p-8 space-y-6 overflow-y-auto">
                             <div className="space-y-4">
                                 <div className="space-y-1.5">
                                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Parcel Name</label>

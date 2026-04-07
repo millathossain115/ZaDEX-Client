@@ -37,12 +37,12 @@ const AssignParcels = () => {
                     axiosSecure.get('/users'),
                 ]);
 
-                // Unassigned parcels (no rider assigned yet AND payment is done)
+                // Unassigned parcels (no rider assigned, not yet delivered or cancelled)
                 const unassigned = parcelsRes.data.filter(p =>
-                    !p.assignedRider && 
-                    p.paymentStatus?.toLowerCase() === 'paid' && 
-                    p.status?.toLowerCase() !== 'delivered' && 
-                    p.status?.toLowerCase() !== 'cancelled'
+                    !p.assignedRider &&
+                    p.status?.toLowerCase() !== 'delivered' &&
+                    p.status?.toLowerCase() !== 'cancelled' &&
+                    p.status?.toLowerCase() !== 'assigned'
                 );
                 setParcels(unassigned);
 

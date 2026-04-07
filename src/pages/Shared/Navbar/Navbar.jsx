@@ -43,7 +43,7 @@ const Navbar = () => {
                     <div className="shrink-0">
                         <Link to="/" className="flex items-center gap-2">
                             <img src={logo} alt="Zadex" className="h-7" />
-                            <span className="text-lg font-extrabold text-[#0d9051]">ZaDEX</span>
+                            <span className="text-2xl font-black tracking-tight italic"><span className="text-gray-800">Za</span><span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0d9051] to-emerald-400">DEX</span></span>
                         </Link>
                     </div>
 

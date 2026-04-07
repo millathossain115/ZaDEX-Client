@@ -3,7 +3,7 @@ import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import useAdmin from '../Hooks/useAdmin';
 import useAuth from '../Hooks/useAuth';
 import useUserRole from '../Hooks/useUserRole';
-import logo from '../assets/logo.png';
+import logo from '../assets/LOGOS/Logo2.png';
 
 const DashboardLayout = () => {
     const { user, logOut } = useAuth();
@@ -271,7 +271,7 @@ const DashboardLayout = () => {
                             </button>
                             <Link to="/" className="flex items-center gap-2">
                                 <img src={logo} alt="Zadex" className="h-7" />
-                                <span className="text-lg font-extrabold text-gray-800">Zadex</span>
+                                <span className="text-2xl font-black tracking-tight italic"><span className="text-gray-800">Za</span><span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0d9051] to-emerald-400">DEX</span></span>
                             </Link>
                         </div>
 

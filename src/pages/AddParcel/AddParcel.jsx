@@ -56,6 +56,9 @@ const AddParcel = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
 
+    // Today's date in YYYY-MM-DD — used as min for the date picker
+    const todayStr = new Date().toLocaleDateString('en-CA'); // 'en-CA' gives YYYY-MM-DD
+
     // Parcel info
     const [parcelType, setParcelType] = useState('');
     const [parcelName, setParcelName] = useState('');
@@ -104,6 +107,12 @@ const AddParcel = () => {
         }
         if (!pickupDate || !pickupTimeSlot) {
             setError('Please select a pickup date and time slot.');
+            return;
+        }
+
+        // Prevent past dates
+        if (pickupDate < todayStr) {
+            setError('Pickup date cannot be in the past. Please select today or a future date.');
             return;
         }
 
@@ -520,7 +529,7 @@ const AddParcel = () => {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                         </svg>
                                     </div>
-                                    <input id="pickupDate" type="date" value={pickupDate} onChange={(e) => setPickupDate(e.target.value)} className={inputClass} />
+                                    <input id="pickupDate" type="date" value={pickupDate} min={todayStr} onChange={(e) => setPickupDate(e.target.value)} className={inputClass} />
                                 </div>
                             </div>
 

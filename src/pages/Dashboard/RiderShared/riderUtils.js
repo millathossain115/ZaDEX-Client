@@ -37,7 +37,7 @@ export const isAssignedJob = (parcel) => {
 
 export const isOngoingTask = (parcel) => {
     const status = normalizeStatus(parcel.status);
-    return status === 'accepted' || status === 'shipped' || status === 'out for delivery';
+    return status === 'accepted' || status === 'shipped' || status === 'out_for_delivery';
 };
 
 export const isDeliveredTask = (parcel) => normalizeStatus(parcel.status) === 'delivered';
@@ -50,6 +50,8 @@ export const getStatusBadgeClass = (status) => {
             return 'bg-sky-50 text-sky-700 border-sky-200';
         case 'shipped':
             return 'bg-indigo-50 text-indigo-700 border-indigo-200';
+        case 'out_for_delivery':
+            return 'bg-orange-50 text-orange-700 border-orange-200';
         case 'delivered':
             return 'bg-emerald-50 text-emerald-700 border-emerald-200';
         case 'cancelled':
@@ -65,7 +67,7 @@ export const getStatusLabel = (status) => {
     if (normalized === 'assigned') return 'Waiting for Acceptance';
     if (normalized === 'accepted') return 'Accepted';
     if (normalized === 'shipped') return 'Picked Up';
-    if (normalized === 'out for delivery') return 'Out for Delivery';
+    if (normalized === 'out_for_delivery') return 'Out for Delivery';
     if (normalized === 'delivered') return 'Delivered';
     if (normalized === 'cancelled') return 'Cancelled';
 
