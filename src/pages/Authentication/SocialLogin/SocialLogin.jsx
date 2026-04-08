@@ -1,23 +1,41 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../Contexts/AuthContext/AuthContext';
+import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 
 const SocialLogin = () => {
 
     const { googleSignIn } = useContext(AuthContext);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
+    const axiosSecure = useAxiosSecure();
     const from = location.state?.from || '/dashboard';
 
     const handleGoogleSignIn = () => {
+        setIsSubmitting(true);
         googleSignIn()
-            .then(result => {
+            .then(async (result) => {
                 const user = result.user;
-                console.log(user);
-                navigate(from, { replace: true });
+                console.log('Google login successful:', user);
+
+                await axiosSecure.post('/jwt', { email: user.email });
+                const roleRes = await axiosSecure.get(`/users/role?email=${user.email}`);
+                const { role } = roleRes.data;
+
+                if (role === 'admin') {
+                    navigate('/dashboard', { replace: true });
+                } else if (role === 'rider') {
+                    navigate('/dashboard', { replace: true });
+                } else {
+                    navigate(from === '/dashboard' ? '/dashboard' : from, { replace: true });
+                }
             })
             .catch(error => {
                 console.log(error);
+            })
+            .finally(() => {
+                setIsSubmitting(false);
             });
     }
 
@@ -25,6 +43,7 @@ const SocialLogin = () => {
         <div>
             <button
                 type="button"
+                disabled={isSubmitting}
                 className="w-full flex items-center justify-center gap-3 py-3.5 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer group"
                 onClick={handleGoogleSignIn}
             >
@@ -47,7 +66,7 @@ const SocialLogin = () => {
                     />
                 </svg>
                 <span className="text-sm font-semibold text-gray-600 group-hover:text-gray-800 transition-colors">
-                    Login with Google
+                    {isSubmitting ? 'Signing in with Google...' : 'Login with Google'}
                 </span>
             </button>
         </div>
