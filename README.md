@@ -7,6 +7,17 @@
   A premium, high-performance logistics and parcel delivery management ecosystem built to streamline nationwide shipping. ZaDex provides specialized tools for end-users, delivery riders, and administrators to orchestrate seamless package fulfillment operations.
 </p>
 
+## 📸 Dashboard Screenshots
+
+### Admin Dashboard
+![Admin Dashboard](./src/assets/ScreenShots/Admin-Dashboard.png)
+
+### Rider Dashboard
+![Rider Dashboard](./src/assets/ScreenShots/Rider%20Dashboard.png)
+
+### User Dashboard
+![User Dashboard](./src/assets/ScreenShots/user%20Dashboard.png)
+
 ## 🌟 Key Features
 
 ### 👤 User Capabilities (Merchants / Senders)
