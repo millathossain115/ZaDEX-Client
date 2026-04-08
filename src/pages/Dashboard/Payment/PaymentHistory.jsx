@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import useAuth from '../../../Hooks/useAuth';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const PaymentHistory = () => {
     const { user } = useAuth();
@@ -50,6 +52,81 @@ const PaymentHistory = () => {
         );
     }
 
+    const generateInvoice = (payment) => {
+        const doc = new jsPDF();
+        
+        // Header
+        doc.setFontSize(22);
+        doc.setTextColor(3, 55, 61); // #03373D
+        doc.text('ZaDEX', 14, 22);
+        
+        doc.setFontSize(10);
+        doc.setTextColor(100);
+        doc.text('Invoice for Parcel Booking', 14, 30);
+        doc.text(`Transaction ID: ${payment.transactionId || payment._id}`, 14, 36);
+        doc.text(`Date: ${payment.paymentDate ? new Date(payment.paymentDate).toLocaleDateString() : new Date().toLocaleDateString()}`, 14, 42);
+
+        // Sender & Receiver Details
+        doc.autoTable({
+            startY: 50,
+            head: [['Sender Details', 'Receiver Details']],
+            body: [
+                [
+                    `${payment.senderName || user?.displayName || 'N/A'}\n${payment.senderPhone || ''}\n${payment.senderDistrict || ''}`, 
+                    `${payment.receiverName || 'N/A'}\n${payment.receiverPhone || ''}\n${payment.receiverDistrict || ''}`
+                ],
+            ],
+            theme: 'grid',
+            headStyles: { fillColor: [3, 55, 61] }
+        });
+
+        // Payment Details
+        doc.autoTable({
+            startY: doc.lastAutoTable.finalY + 10,
+            head: [['Description', 'Payment Method', 'Amount']],
+            body: [
+                [
+                    payment.parcelName || payment.name || 'Parcel Booking',
+                    `${payment.paymentMethod || 'Card'} ${payment.paymentNumber || payment.accountNumber || payment.senderNumber ? `(${payment.paymentNumber || payment.accountNumber || payment.senderNumber})` : ''}`,
+                    `BDT ${payment.totalCost || payment.price || 0}`
+                ],
+            ],
+            theme: 'striped',
+            headStyles: { fillColor: [3, 55, 61] }
+        });
+
+        // Footer
+        doc.setFontSize(10);
+        doc.setTextColor(150);
+        doc.text('Thank you for choosing ZaDEX!', 105, doc.lastAutoTable.finalY + 20, { align: 'center' });
+
+        doc.save(`Invoice_${payment.transactionId || payment._id}.pdf`);
+    };
+
+    const getPaymentMethodUI = (method, accNumber) => {
+        const lowerMethod = method?.toLowerCase() || '';
+        let ui = { colorClass: 'bg-gray-100 text-gray-700 border-gray-200', label: method || 'Card' };
+        
+        if (lowerMethod.includes('bkash')) {
+            ui = { colorClass: 'bg-pink-100 text-pink-700 border-pink-200', label: 'bKash' };
+        } else if (lowerMethod.includes('nagad')) {
+            ui = { colorClass: 'bg-orange-100 text-orange-700 border-orange-200', label: 'Nagad' };
+        } else if (lowerMethod.includes('bank')) {
+            ui = { colorClass: 'bg-blue-100 text-blue-700 border-blue-200', label: 'Bank' };
+        }
+        
+        return (
+            <div className="flex flex-col gap-1 items-start">
+                <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border ${ui.colorClass}`}>
+                    {ui.label}
+                </span>
+                {accNumber && (
+                    <span className="text-[10px] text-gray-500 font-mono tracking-tight">{accNumber}</span>
+                )}
+            </div>
+        );
+    };
+
     return (
         <div>
             {/* Page Header */}
@@ -87,22 +164,28 @@ const PaymentHistory = () => {
                 </div>
             ) : (
                 <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="hidden md:grid grid-cols-6 gap-4 px-8 py-5 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                    <div className="hidden xl:grid grid-cols-7 gap-4 px-8 py-5 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
                         <div className="col-span-2">Transaction Details</div>
+                        <div>Receiver</div>
                         <div>Date</div>
-                        <div>Method</div>
+                        <div>Method & Acc</div>
                         <div>Amount</div>
-                        <div className="text-right">Status</div>
+                        <div className="text-right">Action</div>
                     </div>
                     
                     <div className="divide-y divide-gray-50">
                         {payments.map(payment => (
-                            <div key={payment._id} className="grid grid-cols-1 md:grid-cols-6 gap-4 px-8 py-6 items-center hover:bg-gray-50/50 transition-colors">
+                            <div key={payment._id} className="grid grid-cols-1 xl:grid-cols-7 gap-4 px-8 py-6 items-center hover:bg-gray-50/50 transition-colors">
                                 <div className="col-span-2">
                                     <p className="font-bold text-gray-900 mb-1">{payment.parcelName || payment.name || 'Parcel Booking'}</p>
                                     <p className="text-xs font-mono text-gray-400 truncate pr-4">ID: {payment.transactionId || payment._id}</p>
                                 </div>
                                 
+                                <div>
+                                    <p className="text-sm font-semibold text-gray-700">{payment.receiverName || 'N/A'}</p>
+                                    <p className="text-xs text-gray-400">{payment.receiverPhone || 'N/A'}</p>
+                                </div>
+
                                 <div>
                                     <p className="text-sm font-semibold text-gray-700">
                                         {payment.paymentDate 
@@ -119,22 +202,31 @@ const PaymentHistory = () => {
                                 </div>
                                 
                                 <div>
-                                    <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wider bg-gray-100 text-gray-600">
-                                        {payment.paymentMethod || 'Card'}
-                                    </span>
+                                    {getPaymentMethodUI(
+                                        payment.paymentMethod || payment.paymentType, 
+                                        payment.paymentNumber || payment.accountNumber || payment.senderNumber
+                                    )}
                                 </div>
                                 
                                 <div>
                                     <p className="text-base font-extrabold text-gray-900">৳{payment.totalCost || payment.price}</p>
                                 </div>
                                 
-                                <div className="flex md:justify-end">
-                                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
-                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div className="flex xl:justify-end items-center gap-3">
+                                    <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                        <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                         </svg>
-                                        Successful
+                                        Success
                                     </span>
+                                    <button 
+                                        onClick={() => generateInvoice(payment)}
+                                        className="p-2 sm:px-3 sm:py-1.5 bg-[#03373D]/5 text-[#03373D] border border-[#03373D]/10 hover:bg-[#03373D] hover:text-white rounded-xl transition flex items-center gap-1.5"
+                                        title="Download Invoice PDF"
+                                    >
+                                        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                        <span className="text-xs font-bold sm:hidden">Invoice</span>
+                                    </button>
                                 </div>
                             </div>
                         ))}

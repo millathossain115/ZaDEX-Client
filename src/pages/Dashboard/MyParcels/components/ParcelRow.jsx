@@ -122,7 +122,7 @@ const ParcelRow = ({ parcel, index, isOpen, onToggle, openEditModal, openDeleteM
                         to={`/dashboard/view/${parcel._id}`}
                         className="flex items-center justify-center px-3 py-1.5 text-[11px] font-bold text-blue-600 bg-blue-50 border border-blue-100 rounded-lg hover:bg-blue-100 transition"
                     >
-                        View Details
+                        Track Parcel
                     </Link>
                 )}
 
