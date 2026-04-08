@@ -4,6 +4,24 @@ import useAuth from '../../../Hooks/useAuth';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import SocialLogin from '../SocialLogin/SocialLogin';
 
+const DEMO_ACCOUNTS = {
+    user: {
+        label: 'User',
+        email: 'user@demo.com',
+        password: 'user12345',
+    },
+    rider: {
+        label: 'Rider',
+        email: 'saif@gmail.com',
+        password: '1234567890',
+    },
+    admin: {
+        label: 'Admin',
+        email: 'admin@zadex.com',
+        password: 'admin123',
+    },
+};
+
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -18,14 +36,13 @@ const Login = () => {
     const location = useLocation();
     const from = location.state?.from || '/dashboard';
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const loginWithCredentials = async (loginEmail, loginPassword) => {
         setError('');
         setIsSubmitting(true);
 
         try {
             // 1. Firebase sign in
-            const result = await signIn(email, password);
+            const result = await signIn(loginEmail, loginPassword);
             const loggedInUser = result.user;
             console.log('✅ Firebase login successful:', loggedInUser.email);
 
@@ -67,6 +84,21 @@ const Login = () => {
         }
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await loginWithCredentials(email, password);
+    };
+
+    const handleDemoLogin = async (accountType) => {
+        const selectedAccount = DEMO_ACCOUNTS[accountType];
+        if (!selectedAccount) return;
+
+        setEmail(selectedAccount.email);
+        setPassword(selectedAccount.password);
+
+        await loginWithCredentials(selectedAccount.email, selectedAccount.password);
+    };
+
     return (
         <>
         {/* Success Popup Overlay */}
@@ -96,6 +128,30 @@ const Login = () => {
                 <p className="text-gray-500 text-sm">
                     Sign in to your account to continue
                 </p>
+            </div>
+
+            <div className="mb-6 rounded-2xl border border-orange-100 bg-orange-50/60 p-4">
+                <p className="text-sm font-semibold text-gray-800 mb-3">
+                    Demo login
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {Object.entries(DEMO_ACCOUNTS).map(([accountType, account]) => (
+                        <button
+                            key={accountType}
+                            type="button"
+                            onClick={() => handleDemoLogin(accountType)}
+                            disabled={isSubmitting}
+                            className="rounded-xl border border-orange-200 bg-white px-4 py-3 text-left transition-all duration-200 hover:border-orange-400 hover:bg-orange-50 disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                            <span className="block text-sm font-bold text-gray-900">
+                                {account.label}
+                            </span>
+                            <span className="block text-xs text-gray-500 mt-1">
+                                Login with demo credentials
+                            </span>
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {/* Error Message */}
