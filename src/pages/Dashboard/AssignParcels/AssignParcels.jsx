@@ -117,37 +117,32 @@ const AssignParcels = () => {
                 </div>
 
                 {/* Parcels Skeleton */}
-                <div className="space-y-4">
+                <div className="space-y-3">
                     {[1, 2, 3].map(i => (
-                        <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 overflow-hidden">
-                            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                                <div className="flex items-start gap-4 min-w-0 flex-1">
-                                    <div className="min-w-0 flex-1 grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div>
-                                            <div className="flex items-center gap-3 mb-3">
-                                                <div className="h-6 w-48 bg-gray-200 rounded-lg"></div>
-                                                <div className="h-5 w-12 bg-gray-100 rounded-md"></div>
-                                                <div className="h-5 w-16 bg-gray-100 rounded-md"></div>
-                                            </div>
-                                            <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 h-30 flex flex-col justify-center">
-                                                <div className="h-3 w-24 bg-gray-200 rounded-lg mb-3"></div>
-                                                <div className="h-4 w-40 bg-gray-300 rounded-lg mb-2"></div>
-                                                <div className="h-3 w-full max-w-50 bg-gray-200 rounded-lg mb-2"></div>
-                                                <div className="h-3 w-32 bg-gray-100 rounded-lg"></div>
-                                            </div>
+                        <div key={i} className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 overflow-hidden">
+                            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <div className="h-5 w-40 bg-gray-200 rounded-lg"></div>
+                                        <div className="h-4 w-10 bg-gray-100 rounded-md"></div>
+                                        <div className="h-4 w-12 bg-gray-100 rounded-md"></div>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="bg-gray-50 border border-gray-100 rounded-lg p-3">
+                                            <div className="h-2 w-20 bg-gray-200 rounded mb-2"></div>
+                                            <div className="h-4 w-32 bg-gray-300 rounded mb-1"></div>
+                                            <div className="h-3 w-48 bg-gray-200 rounded"></div>
                                         </div>
-                                        <div className="md:pt-9.5">
-                                            <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 h-30 flex flex-col justify-center">
-                                                <div className="h-3 w-24 bg-gray-200 rounded-lg mb-3"></div>
-                                                <div className="h-4 w-40 bg-gray-300 rounded-lg mb-2"></div>
-                                                <div className="h-3 w-full max-w-50 bg-gray-200 rounded-lg"></div>
-                                            </div>
+                                        <div className="bg-gray-50 border border-gray-100 rounded-lg p-3">
+                                            <div className="h-2 w-20 bg-gray-200 rounded mb-2"></div>
+                                            <div className="h-4 w-32 bg-gray-300 rounded mb-1"></div>
+                                            <div className="h-3 w-48 bg-gray-200 rounded"></div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex flex-col items-center shrink-0 border-t lg:border-t-0 lg:border-l border-gray-100 pt-4 lg:pt-0 lg:pl-6 w-full lg:w-48">
-                                    <div className="w-12 h-12 bg-gray-200 rounded-full mb-3"></div>
-                                    <div className="w-full h-11 bg-gray-200 rounded-xl"></div>
+                                <div className="flex flex-col shrink-0 border-t lg:border-t-0 lg:border-l border-gray-100 pt-3 lg:pt-0 lg:pl-4 w-full lg:w-36 items-center">
+                                    <div className="hidden lg:flex w-10 h-10 bg-gray-200 rounded-full mb-2"></div>
+                                    <div className="w-full h-8 bg-gray-200 rounded-lg"></div>
                                 </div>
                             </div>
                         </div>
@@ -314,62 +309,54 @@ const AssignParcels = () => {
                     <p className="text-gray-500 text-sm">No parcels need assignment right now.</p>
                 </div>
             ) : (
-                <div className="space-y-4">
+                <div className="space-y-3">
                     {parcels.map(parcel => (
-                        <div key={parcel._id} className="bg-white rounded-2xl border border-gray-200 border-l-[6px] border-l-[#03373D] shadow-sm p-6 hover:shadow-md transition">
-                            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-                                {/* Parcel Detailed Info */}
-                                <div className="flex items-start gap-4 min-w-0 flex-1">
-                                    <div className="min-w-0 flex-1 grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        
+                        <div key={parcel._id} className="bg-white rounded-xl border border-gray-200 border-l-[4px] border-l-[#03373D] shadow-sm p-4 hover:shadow-md transition">
+                            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <h3 className="font-bold text-gray-900 text-lg tracking-tight truncate">{parcel.parcelName || parcel.name || 'Unnamed Parcel'}</h3>
+                                        <span className="bg-gray-100 text-gray-600 font-bold px-2 py-0.5 rounded text-[10px] whitespace-nowrap">{parcel.parcelWeight || parcel.weight || 0} kg</span>
+                                        <span className="bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded text-[10px] whitespace-nowrap">৳{parcel.totalCost || parcel.price || 0}</span>
+                                    </div>
+                                    
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         {/* Sender Column */}
-                                        <div>
-                                            <div className="flex items-center gap-3 space-y-0.5 mb-3">
-                                                <h3 className="font-bold text-gray-900 text-xl tracking-tight">{parcel.parcelName || parcel.name || 'Unnamed Parcel'}</h3>
-                                                <span className="bg-gray-100 text-gray-600 font-bold px-2 py-0.5 rounded text-xs">{parcel.parcelWeight || parcel.weight || 0} kg</span>
-                                                <span className="bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded text-xs">৳{parcel.totalCost || parcel.price || 0}</span>
-                                            </div>
-                                            
-                                            <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 h-30">
-                                                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                                                    <svg className="w-3.5 h-3.5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
-                                                    Pickup From
-                                                </p>
-                                                <p className="text-sm font-bold text-gray-800">{parcel.senderName} <span className="font-medium text-gray-500 text-xs ml-1">({parcel.senderPhone})</span></p>
-                                                <p className="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">
-                                                    {parcel.senderAddress}{parcel.senderArea && `, ${parcel.senderArea}`}{parcel.senderDistrict && `, ${parcel.senderDistrict}`}
-                                                </p>
-                                                <p className="text-xs text-gray-400 mt-1">{parcel.senderEmail}</p>
-                                            </div>
+                                        <div className="bg-gray-50 border border-gray-100 rounded-lg p-3">
+                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1 flex items-center gap-1">
+                                                <svg className="w-3 h-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                                                Pickup From
+                                            </p>
+                                            <p className="text-sm font-bold text-gray-800 truncate">{parcel.senderName} <span className="font-medium text-gray-400 text-[11px] ml-0.5">({parcel.senderPhone})</span></p>
+                                            <p className="text-xs text-gray-500 mt-0.5 truncate">
+                                                {parcel.senderAddress}{parcel.senderArea && `, ${parcel.senderArea}`}{parcel.senderDistrict && `, ${parcel.senderDistrict}`}
+                                            </p>
                                         </div>
                                         
                                         {/* Receiver Column */}
-                                        <div className="md:pt-9.5">
-                                            <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 h-30">
-                                                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                                                    <svg className="w-3.5 h-3.5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-                                                    Deliver To
-                                                </p>
-                                                <p className="text-sm font-bold text-gray-800">{parcel.receiverName} <span className="font-medium text-gray-500 text-xs ml-1">({parcel.receiverPhone})</span></p>
-                                                <p className="text-xs text-gray-500 mt-1 line-clamp-2 leading-relaxed">
-                                                    {parcel.receiverAddress}{parcel.receiverArea && `, ${parcel.receiverArea}`}{parcel.receiverDistrict && `, ${parcel.receiverDistrict}`}
-                                                </p>
-                                            </div>
+                                        <div className="bg-gray-50 border border-gray-100 rounded-lg p-3">
+                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1 flex items-center gap-1">
+                                                <svg className="w-3 h-3 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                                                Deliver To
+                                            </p>
+                                            <p className="text-sm font-bold text-gray-800 truncate">{parcel.receiverName} <span className="font-medium text-gray-400 text-[11px] ml-0.5">({parcel.receiverPhone})</span></p>
+                                            <p className="text-xs text-gray-500 mt-0.5 truncate">
+                                                {parcel.receiverAddress}{parcel.receiverArea && `, ${parcel.receiverArea}`}{parcel.receiverDistrict && `, ${parcel.receiverDistrict}`}
+                                            </p>
                                         </div>
-                                        
                                     </div>
                                 </div>
 
                                 {/* Assign Action */}
-                                <div className="flex flex-col items-center shrink-0 border-t lg:border-t-0 lg:border-l border-gray-100 pt-4 lg:pt-0 lg:pl-6 w-full lg:w-48 text-center">
-                                    <div className="w-12 h-12 bg-[#03373D]/10 rounded-full flex items-center justify-center mb-3">
-                                        <svg className="w-6 h-6 text-[#03373D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div className="flex flex-col sm:flex-row lg:flex-col items-center shrink-0 border-t lg:border-t-0 lg:border-l border-gray-100 pt-3 lg:pt-0 lg:pl-4 w-full lg:w-36 gap-2 lg:gap-3">
+                                    <div className="hidden lg:flex w-10 h-10 bg-[#03373D]/10 rounded-full items-center justify-center">
+                                        <svg className="w-5 h-5 text-[#03373D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                                         </svg>
                                     </div>
                                     <button 
                                         onClick={() => setSelectedParcelForModal(parcel)}
-                                        className="w-full bg-[#03373D] text-white py-3 rounded-xl text-sm font-bold shadow-sm hover:bg-[#025a63] hover:shadow-md transition active:scale-[0.98]"
+                                        className="w-full bg-[#03373D] text-white py-2 rounded-lg text-xs font-bold shadow-sm hover:bg-[#025a63] hover:shadow-md transition active:scale-[0.98]"
                                     >
                                         Assign Rider
                                     </button>

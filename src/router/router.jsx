@@ -14,6 +14,7 @@ import Balance from "../pages/Dashboard/Balance/Balance";
 import DashboardIndex from "../pages/Dashboard/DashboardIndex";
 import ManageUsers from "../pages/Dashboard/ManageUsers/ManageUsers";
 import ManageRiders from "../pages/Dashboard/ManageRiders/ManageRiders";
+import AdminPaymentLogs from "../pages/Dashboard/AdminPaymentLogs/AdminPaymentLogs";
 import MyProfile from "../pages/Dashboard/MyProfile/MyProfile";
 import Payment from "../pages/Dashboard/Payment/Payment";
 import PaymentHistory from "../pages/Dashboard/Payment/PaymentHistory";
@@ -137,6 +138,10 @@ export const router = createBrowserRouter([
             {
                 path: "assign-parcels",
                 element: <AdminRoute><AssignParcels /></AdminRoute>
+            },
+            {
+                path: "payment-logs",
+                element: <AdminRoute><AdminPaymentLogs /></AdminRoute>
             },
             {
                 path: "manage-riders",

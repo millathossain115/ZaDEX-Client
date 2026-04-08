@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import CountUp from 'react-countup';
 
 const AdminStatistics = () => {
     const axiosSecure = useAxiosSecure();
@@ -228,7 +229,7 @@ const AdminStatistics = () => {
                         <span className="text-[10px] font-black uppercase tracking-widest bg-emerald-400 text-[#03373D] px-2 py-0.5 rounded-md">Revenue</span>
                     </div>
                     <p className="text-[10px] text-white/50 font-black uppercase tracking-wider mb-0.5 px-0.5">Earnings</p>
-                    <p className="text-3xl font-black relative leading-tight tracking-tight">৳{stats.totalEarnings.toLocaleString()}</p>
+                    <p className="text-3xl font-black relative leading-tight tracking-tight">৳<CountUp end={stats.totalEarnings} separator="," duration={2.5} /></p>
                 </div>
 
                 {/* Total Parcels */}
@@ -242,7 +243,7 @@ const AdminStatistics = () => {
                         <span className="text-[10px] font-black text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-md uppercase tracking-tighter shadow-sm">+{stats.todayParcels} New</span>
                     </div>
                     <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider mb-0.5 px-0.5 text-right">Volume</p>
-                    <p className="text-3xl font-black text-gray-900 text-right leading-tight tracking-tight">{stats.totalParcels}</p>
+                    <p className="text-3xl font-black text-gray-900 text-right leading-tight tracking-tight"><CountUp end={stats.totalParcels} duration={2} /></p>
                 </div>
 
                 {/* Active Riders */}
@@ -256,7 +257,7 @@ const AdminStatistics = () => {
                         <span className="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-md uppercase tracking-tighter shadow-sm text-center">Active</span>
                     </div>
                     <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider mb-0.5 px-0.5 text-right">Team</p>
-                    <p className="text-3xl font-black text-gray-900 text-right leading-tight tracking-tight">{stats.activeRiders}</p>
+                    <p className="text-3xl font-black text-gray-900 text-right leading-tight tracking-tight"><CountUp end={stats.activeRiders} duration={2} /></p>
                 </div>
 
                 {/* Success Rate */}
@@ -270,7 +271,7 @@ const AdminStatistics = () => {
                         <span className="text-[10px] font-black text-amber-600 bg-amber-50 px-2.5 py-0.5 rounded-md uppercase tracking-tighter shadow-sm">Rate</span>
                     </div>
                     <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider mb-0.5 px-0.5 text-right">Success</p>
-                    <p className="text-3xl font-black text-gray-900 text-right leading-tight tracking-tight">{deliveryRate}%</p>
+                    <p className="text-3xl font-black text-gray-900 text-right leading-tight tracking-tight"><CountUp end={deliveryRate} duration={2} />%</p>
                 </div>
             </div>
 
@@ -282,7 +283,7 @@ const AdminStatistics = () => {
                         </svg>
                     </div>
                     <div>
-                        <p className="text-xl font-black text-gray-900 leading-none">{stats.totalUsers}</p>
+                        <p className="text-xl font-black text-gray-900 leading-none"><CountUp end={stats.totalUsers} duration={2} /></p>
                         <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mt-0.5">Registered Users</p>
                     </div>
                 </Link>
@@ -294,7 +295,7 @@ const AdminStatistics = () => {
                         </svg>
                     </div>
                     <div>
-                        <p className="text-xl font-black text-gray-900 leading-none">{stats.pendingCount}</p>
+                        <p className="text-xl font-black text-gray-900 leading-none"><CountUp end={stats.pendingCount} duration={2} /></p>
                         <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mt-0.5">Pending Orders</p>
                     </div>
                 </Link>
@@ -306,7 +307,7 @@ const AdminStatistics = () => {
                         </svg>
                     </div>
                     <div>
-                        <p className="text-xl font-black text-gray-900 leading-none">{stats.shippedCount}</p>
+                        <p className="text-xl font-black text-gray-900 leading-none"><CountUp end={stats.shippedCount} duration={2} /></p>
                         <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mt-0.5">Out to Deliver</p>
                     </div>
                 </Link>
@@ -318,7 +319,7 @@ const AdminStatistics = () => {
                         </svg>
                     </div>
                     <div>
-                        <p className="text-xl font-black text-gray-900 leading-none">{stats.deliveredCount}</p>
+                        <p className="text-xl font-black text-gray-900 leading-none"><CountUp end={stats.deliveredCount} duration={2} /></p>
                         <p className="text-[9px] text-gray-400 font-black uppercase tracking-widest mt-0.5">Completion Goal</p>
                     </div>
                 </Link>
@@ -333,7 +334,7 @@ const AdminStatistics = () => {
                     <p className="text-[9px] font-black text-amber-600 uppercase tracking-widest mb-0.5">Queue Status</p>
                     <h3 className="text-base font-bold text-gray-900 mb-3">Pending Approval</h3>
                     <div className="flex items-end justify-between">
-                         <p className="text-3xl font-black text-gray-900 leading-none">{stats.pendingCount}</p>
+                         <p className="text-3xl font-black text-gray-900 leading-none"><CountUp end={stats.pendingCount} duration={2} /></p>
                          <p className="text-[9px] font-black text-amber-600 bg-white/50 px-2 py-0.5 rounded-md">ACTION REQUIRED</p>
                     </div>
                 </div>
@@ -345,7 +346,7 @@ const AdminStatistics = () => {
                     <p className="text-[9px] font-black text-blue-600 uppercase tracking-widest mb-0.5">Dispatching</p>
                     <h3 className="text-base font-bold text-gray-900 mb-3">In Field Transit</h3>
                     <div className="flex items-end justify-between">
-                        <p className="text-3xl font-black text-gray-900 leading-none">{stats.shippedCount}</p>
+                        <p className="text-3xl font-black text-gray-900 leading-none"><CountUp end={stats.shippedCount} duration={2} /></p>
                         <p className="text-[9px] font-black text-blue-600 bg-white/50 px-2 py-0.5 rounded-md">TRACKING LIVE</p>
                     </div>
                 </div>
@@ -357,7 +358,7 @@ const AdminStatistics = () => {
                     <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest mb-0.5">Efficiency</p>
                     <h3 className="text-base font-bold text-gray-900 mb-3">Delivered Successfully</h3>
                     <div className="flex items-end justify-between">
-                        <p className="text-3xl font-black text-gray-900 leading-none">{stats.deliveredCount}</p>
+                        <p className="text-3xl font-black text-gray-900 leading-none"><CountUp end={stats.deliveredCount} duration={2} /></p>
                         <p className="text-[9px] font-black text-emerald-600 bg-white/50 px-2 py-0.5 rounded-md">DAILY GOAL</p>
                     </div>
                 </div>
