@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import useAuth from '../../../Hooks/useAuth';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 
 const PaymentHistory = () => {
     const { user } = useAuth();
@@ -67,7 +67,7 @@ const PaymentHistory = () => {
         doc.text(`Date: ${payment.paymentDate ? new Date(payment.paymentDate).toLocaleDateString() : new Date().toLocaleDateString()}`, 14, 42);
 
         // Sender & Receiver Details
-        doc.autoTable({
+        autoTable(doc, {
             startY: 50,
             head: [['Sender Details', 'Receiver Details']],
             body: [
@@ -81,7 +81,7 @@ const PaymentHistory = () => {
         });
 
         // Payment Details
-        doc.autoTable({
+        autoTable(doc, {
             startY: doc.lastAutoTable.finalY + 10,
             head: [['Description', 'Payment Method', 'Amount']],
             body: [
