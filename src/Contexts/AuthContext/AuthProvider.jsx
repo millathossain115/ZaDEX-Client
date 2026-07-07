@@ -1,7 +1,7 @@
-import axios from 'axios';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { auth } from '../../Firebase/firebase.init';
+import { clearAuthToken, createAuthToken } from '../../Utils/authToken';
 import { AuthContext } from './AuthContext';
 
 const googleProvider = new GoogleAuthProvider();
@@ -12,22 +12,38 @@ const AuthProvider = ({ children }) => {
 
     const createUser = (email, password) => {
         setLoading(true);
-        return createUserWithEmailAndPassword(auth, email, password);
+        return createUserWithEmailAndPassword(auth, email, password)
+            .catch((err) => {
+                setLoading(false);
+                throw err;
+            });
     }
 
     const signIn = (email, password) => {
         setLoading(true);
-        return signInWithEmailAndPassword(auth, email, password);
+        return signInWithEmailAndPassword(auth, email, password)
+            .catch((err) => {
+                setLoading(false);
+                throw err;
+            });
     }
 
     const googleSignIn = () => {
         setLoading(true);
-        return signInWithPopup(auth, googleProvider);
+        return signInWithPopup(auth, googleProvider)
+            .catch((err) => {
+                setLoading(false);
+                throw err;
+            });
     }
 
     const logOut = () => {
         setLoading(true);
-        return signOut(auth);
+        return signOut(auth)
+            .catch((err) => {
+                setLoading(false);
+                throw err;
+            });
     }
 
     const updateUserProfile = (profileData) => {
@@ -38,28 +54,33 @@ const AuthProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        let isMounted = true;
+
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+            if (!isMounted) return;
+
             setUser(currentUser);
-            if (currentUser) {
-                // get token and store client
-                const userPayload = { email: currentUser.email };
-                axios.post(`${import.meta.env.VITE_SERVER_URL || 'http://localhost:5000'}/jwt`, userPayload, { 
-                    withCredentials: true 
-                })
-                .then(res => {
-                    console.log(res.data);
-                    // Save token to localStorage for cross-domain Authorization header
-                    if (res.data?.token) {
-                        localStorage.setItem('zadex_token', res.data.token);
-                    }
-                });
-            } else {
-                // user is logged out — clear stored token
-                localStorage.removeItem('zadex_token');
+
+            try {
+                if (currentUser?.email) {
+                    await createAuthToken(currentUser.email);
+                } else {
+                    clearAuthToken();
+                }
+            } catch (err) {
+                console.error('Failed to sync auth token:', err);
+                clearAuthToken();
+            } finally {
+                if (isMounted) {
+                    setLoading(false);
+                }
             }
-            setLoading(false);
         });
-        return () => unsubscribe();
+
+        return () => {
+            isMounted = false;
+            unsubscribe();
+        };
     }, []);
 
     const authInfo = { user, loading, createUser, signIn, googleSignIn, logOut, updateUserProfile };

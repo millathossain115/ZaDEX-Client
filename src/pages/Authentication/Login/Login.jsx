@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useAuth from '../../../Hooks/useAuth';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import { createAuthToken } from '../../../Utils/authToken';
 import SocialLogin from '../SocialLogin/SocialLogin';
 
 const DEMO_ACCOUNTS = {
@@ -49,7 +50,7 @@ const Login = () => {
             // 2. Explicitly set the JWT cookie BEFORE querying any protected route.
             //    (AuthProvider's onAuthStateChanged also does this, but it's async and
             //     may not complete in time — causing a 403 on the next request.)
-            await axiosSecure.post('/jwt', { email: loggedInUser.email });
+            await createAuthToken(loggedInUser.email);
             console.log('🍪 JWT cookie set');
 
             // 3. Now fetch the user's role from our backend to decide where to redirect.

@@ -39,7 +39,7 @@ const Trackparcel = () => {
                 }
             }
         } catch { /* not a URL */ }
-        return decodeURIComponent(id).replace(/^.*[\\\/]/, '');
+        return decodeURIComponent(id).replace(/^.*[\\/]/, '');
     };
 
     const fetchTracking = useCallback(async (id, silent = false) => {

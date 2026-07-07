@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../Contexts/AuthContext/AuthContext';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import { createAuthToken } from '../../../Utils/authToken';
 
 const SocialLogin = () => {
 
@@ -19,7 +20,7 @@ const SocialLogin = () => {
                 const user = result.user;
                 console.log('Google login successful:', user);
 
-                await axiosSecure.post('/jwt', { email: user.email });
+                await createAuthToken(user.email);
                 const roleRes = await axiosSecure.get(`/users/role?email=${user.email}`);
                 const { role } = roleRes.data;
 

@@ -6,9 +6,11 @@ const useAdmin = () => {
     const { user, loading } = useAuth();
     const axiosSecure = useAxiosSecure();
 
-    const { data: isAdmin = false, isPending: isAdminLoading } = useQuery({
+    const adminQueryEnabled = !loading && !!user?.email;
+
+    const { data: isAdmin = false, isLoading, isFetching } = useQuery({
         queryKey: ['isAdmin', user?.email],
-        enabled: !loading && !!user?.email,   // only runs once Firebase is ready
+        enabled: adminQueryEnabled,   // only runs once Firebase is ready
         queryFn: async () => {
             const res = await axiosSecure.get(`/users/role?email=${user.email}`);
             console.log(`🔍 Role check for ${user.email}:`, res.data.role);
@@ -16,7 +18,7 @@ const useAdmin = () => {
         }
     });
 
-    return [isAdmin, isAdminLoading];
+    return [isAdmin, adminQueryEnabled && (isLoading || isFetching)];
 };
 
 export default useAdmin;

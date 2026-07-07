@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useAuth from '../../../Hooks/useAuth';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 
@@ -78,13 +78,9 @@ const Balance = () => {
     const [txFilter, setTxFilter] = useState('all');
     const [txVisible, setTxVisible] = useState(5);
 
-    useEffect(() => {
-        if (user?.email) {
-            fetchBalanceData();
-        }
-    }, [user]);
+    const fetchBalanceData = useCallback(async () => {
+        if (!user?.email) return;
 
-    const fetchBalanceData = async () => {
         setLoading(true);
         try {
             const [balanceRes, transactionsRes, methodsRes] = await Promise.all([
@@ -116,7 +112,11 @@ const Balance = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [axiosSecure, user?.email]);
+
+    useEffect(() => {
+        fetchBalanceData();
+    }, [fetchBalanceData]);
 
     // Fix: filter by current month only
     const now = new Date();
