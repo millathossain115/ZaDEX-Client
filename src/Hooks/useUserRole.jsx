@@ -8,16 +8,17 @@ const useUserRole = () => {
 
     const roleQueryEnabled = !loading && !!user?.email;
 
-    const { data: userData = {}, isLoading, isFetching, refetch } = useQuery({
+    const { data: userData = {}, isLoading, refetch } = useQuery({
         queryKey: ['userRole', user?.email],
         enabled: roleQueryEnabled,
+        staleTime: 5 * 60 * 1000,
         queryFn: async () => {
             const res = await axiosSecure.get(`/users/role?email=${user.email}`);
             return res.data;
         }
     });
 
-    return [userData, roleQueryEnabled && (isLoading || isFetching), refetch];
+    return [userData, roleQueryEnabled && isLoading, refetch];
 };
 
 export default useUserRole;

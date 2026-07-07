@@ -8,9 +8,10 @@ const useAdmin = () => {
 
     const adminQueryEnabled = !loading && !!user?.email;
 
-    const { data: isAdmin = false, isLoading, isFetching } = useQuery({
+    const { data: isAdmin = false, isLoading } = useQuery({
         queryKey: ['isAdmin', user?.email],
         enabled: adminQueryEnabled,   // only runs once Firebase is ready
+        staleTime: 5 * 60 * 1000,
         queryFn: async () => {
             const res = await axiosSecure.get(`/users/role?email=${user.email}`);
             console.log(`🔍 Role check for ${user.email}:`, res.data.role);
@@ -18,7 +19,7 @@ const useAdmin = () => {
         }
     });
 
-    return [isAdmin, adminQueryEnabled && (isLoading || isFetching)];
+    return [isAdmin, adminQueryEnabled && isLoading];
 };
 
 export default useAdmin;

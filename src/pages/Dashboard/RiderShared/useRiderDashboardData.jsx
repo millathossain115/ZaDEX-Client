@@ -25,20 +25,11 @@ const useRiderDashboardData = () => {
         setError('');
 
         try {
-            const [parcelsRes, transactionsRes, methodsRes] = await Promise.allSettled([
-                axiosSecure.get('/rider/parcels'),
-                axiosSecure.get(`/transactions?email=${user.email}`),
-                axiosSecure.get(`/payment-methods?email=${user.email}`),
-            ]);
+            const parcelsRes = await axiosSecure.get('/rider/parcels');
 
-            if (parcelsRes.status === 'fulfilled') {
-                setParcels(parcelsRes.value.data || []);
-            } else {
-                throw parcelsRes.reason;
-            }
-
-            setTransactions(transactionsRes.status === 'fulfilled' ? (transactionsRes.value.data || []) : []);
-            setPaymentMethods(methodsRes.status === 'fulfilled' ? (methodsRes.value.data || []) : []);
+            setParcels(parcelsRes.data || []);
+            setTransactions([]);
+            setPaymentMethods([]);
         } catch (err) {
             console.error('Failed to load rider dashboard data:', err);
             setError('Failed to load rider dashboard data.');
