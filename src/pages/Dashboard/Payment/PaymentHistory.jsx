@@ -164,21 +164,28 @@ const PaymentHistory = () => {
                 </div>
             ) : (
                 <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="hidden xl:grid grid-cols-7 gap-4 px-8 py-5 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
-                        <div className="col-span-2">Transaction Details</div>
+                    <div className="hidden xl:grid grid-cols-8 gap-x-5 gap-y-4 px-8 py-5 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                        <div>Transaction Details</div>
+                        <div>Transaction ID</div>
                         <div>Receiver</div>
                         <div>Date</div>
                         <div>Method & Acc</div>
                         <div>Amount</div>
-                        <div className="text-right">Action</div>
+                        <div>Status</div>
+                        <div>Invoice</div>
                     </div>
                     
-                    <div className="divide-y divide-gray-50">
-                        {payments.map(payment => (
-                            <div key={payment._id} className="grid grid-cols-1 xl:grid-cols-7 gap-4 px-8 py-6 items-center hover:bg-gray-50/50 transition-colors">
-                                <div className="col-span-2">
+                    <div>
+                        {payments.map((payment, index) => (
+                            <div key={payment._id}>
+                            <div className="grid grid-cols-1 xl:grid-cols-8 gap-x-5 gap-y-4 px-8 py-6 items-center transition-all duration-200 hover:bg-[#03373D]/5 hover:shadow-sm">
+                                <div>
                                     <p className="font-bold text-gray-900 mb-1">{payment.parcelName || payment.name || 'Parcel Booking'}</p>
-                                    <p className="text-xs font-mono text-gray-400 truncate pr-4">ID: {payment.transactionId || payment._id}</p>
+                                    <p className="text-xs font-mono text-gray-400 truncate pr-4">Parcel: {payment._id}</p>
+                                </div>
+
+                                <div>
+                                    <p className="text-xs font-mono font-semibold text-gray-600 break-all">{payment.transactionId || payment._id}</p>
                                 </div>
                                 
                                 <div>
@@ -212,13 +219,16 @@ const PaymentHistory = () => {
                                     <p className="text-base font-extrabold text-gray-900">৳{payment.totalCost || payment.price}</p>
                                 </div>
                                 
-                                <div className="flex xl:justify-end items-center gap-3">
-                                    <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                <div>
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
                                         <svg className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                         </svg>
                                         Success
                                     </span>
+                                </div>
+
+                                <div className="flex">
                                     <button 
                                         onClick={() => generateInvoice(payment)}
                                         className="p-2 sm:px-3 sm:py-1.5 bg-[#03373D]/5 text-[#03373D] border border-[#03373D]/10 hover:bg-[#03373D] hover:text-white rounded-xl transition flex items-center gap-1.5"
@@ -228,6 +238,8 @@ const PaymentHistory = () => {
                                         <span className="text-xs font-bold sm:hidden">Invoice</span>
                                     </button>
                                 </div>
+                            </div>
+                            {index < payments.length - 1 && <hr className="border-gray-200" />}
                             </div>
                         ))}
                     </div>
