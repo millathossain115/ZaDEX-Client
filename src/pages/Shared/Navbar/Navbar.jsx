@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import logo from '../../../assets/LOGOS/Zadex-fav.svg';
 import { AuthContext } from '../../../Contexts/AuthContext/AuthContext';
@@ -6,6 +6,8 @@ import useUserRole from '../../../Hooks/useUserRole';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
+    const lastScrollY = useRef(0);
     const navigate = useNavigate();
     const { user, logOut } = useContext(AuthContext);
     const [userData] = useUserRole();
@@ -19,6 +21,22 @@ const Navbar = () => {
             .then(() => navigate('/'))
             .catch(err => console.error('Logout failed:', err));
     };
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (isOpen) return;
+            const currentScrollY = window.scrollY;
+            if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
+                setIsVisible(false);
+            } else {
+                setIsVisible(true);
+            }
+            lastScrollY.current = currentScrollY;
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [isOpen]);
 
     // Shared style function for NavLink active state
     const navLinkClass = ({ isActive }) =>
@@ -36,7 +54,7 @@ const Navbar = () => {
         }`;
 
     return (
-        <nav className="bg-white shadow-lg drop-shadow-md">
+        <nav className={`sticky top-0 z-50 bg-white shadow-lg drop-shadow-md transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
