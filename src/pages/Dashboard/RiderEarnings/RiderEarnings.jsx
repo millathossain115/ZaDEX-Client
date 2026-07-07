@@ -18,6 +18,11 @@ const RiderEarnings = () => {
         id: parcel._id,
         date: parcel.deliveredAt || parcel.updatedAt || parcel.pickupDate,
         parcelId: parcel._id?.slice(-6),
+        parcelName: parcel.parcelName || 'Parcel Delivery',
+        receiverName: parcel.receiverName || 'Unknown receiver',
+        receiverPhone: parcel.receiverPhone || 'No phone',
+        route: `${parcel.senderDistrict || 'Pickup'} to ${parcel.receiverDistrict || 'Drop-off'}`,
+        paymentStatus: parcel.paymentStatus || 'earned',
         amount: parcel.riderReward,
     })), [completedTasks]);
 
@@ -53,8 +58,8 @@ const RiderEarnings = () => {
     if (loading) {
         return (
             <RiderAccessGate>
-                <div className="flex items-center justify-center min-h-[60vh]">
-                    <p className="text-gray-500 font-medium">Loading earnings...</p>
+                <div className="flex min-h-[42vh] items-center justify-center rounded-2xl border border-gray-100 bg-white">
+                    <p className="text-sm font-semibold text-gray-500">Loading earnings...</p>
                 </div>
             </RiderAccessGate>
         );
@@ -62,107 +67,129 @@ const RiderEarnings = () => {
 
     return (
         <RiderAccessGate>
-            <div className="space-y-8">
-                <div>
-                    <h1 className="text-3xl font-extrabold text-gray-900">My Earnings</h1>
-                    <p className="text-gray-500 mt-1">Track your balance, request withdrawals, and review payment logs.</p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <MoneyCard title="Total Earnings" value={formatCurrency(stats.totalEarnings)} />
-                    <MoneyCard title="Current Balance" value={formatCurrency(stats.currentBalance)} />
-                    <MoneyCard title="Delivered Jobs" value={stats.completedCount} />
-                </div>
-
-                <div className="grid grid-cols-1 xl:grid-cols-[1.1fr_1.6fr] gap-8 items-start">
-                    <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
-                        <h2 className="text-xl font-bold text-gray-900">Withdraw Earnings</h2>
-                        <p className="text-sm text-gray-500 mt-1">Send your balance to bKash or Nagad whenever you are ready.</p>
-
-                        <form onSubmit={handleWithdraw} className="space-y-5 mt-6">
-                            <Field label="Mobile Banking Number">
-                                <input
-                                    type="tel"
-                                    value={withdrawNumber}
-                                    onChange={(e) => setWithdrawNumber(e.target.value)}
-                                    placeholder="01XXXXXXXXX"
-                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#03373D]/20"
-                                />
-                            </Field>
-
-                            <Field label="Amount">
-                                <input
-                                    type="number"
-                                    value={withdrawAmount}
-                                    onChange={(e) => setWithdrawAmount(e.target.value)}
-                                    min={MIN_WITHDRAWAL}
-                                    max={stats.currentBalance}
-                                    placeholder={`Minimum ${MIN_WITHDRAWAL}`}
-                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#03373D]/20"
-                                />
-                            </Field>
-
-                            {paymentMethods.length > 0 && (
-                                <Field label="Saved Method">
-                                    <select
-                                        value={selectedMethod}
-                                        onChange={(e) => setSelectedMethod(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#03373D]/20 cursor-pointer"
-                                    >
-                                        <option value="">Use typed number</option>
-                                        {paymentMethods.map(method => (
-                                            <option key={method.id} value={method.id}>{method.name} - {method.details}</option>
-                                        ))}
-                                    </select>
-                                </Field>
-                            )}
-
-                            <button
-                                type="submit"
-                                disabled={submitting || !withdrawNumber || !withdrawAmount}
-                                className="w-full py-4 rounded-2xl bg-[#03373D] text-white text-sm font-bold uppercase tracking-[0.2em] hover:bg-[#025a63] transition disabled:opacity-50 cursor-pointer"
-                            >
-                                {submitting ? 'Submitting...' : 'Withdraw'}
-                            </button>
-
-                            <p className="text-xs text-gray-400">Minimum withdrawal is ৳{MIN_WITHDRAWAL}. If transaction history is unavailable, current balance falls back to your delivered earnings total.</p>
-                        </form>
+            <div className="space-y-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                        <h1 className="text-2xl font-extrabold text-gray-900">My Earnings</h1>
+                        <p className="mt-1 text-sm text-gray-500">Track balance, withdrawals, and delivery payment logs.</p>
                     </div>
+                    <div className="w-fit rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-black uppercase tracking-[0.16em] text-gray-500">
+                        {paymentLogs.length} logs
+                    </div>
+                </div>
 
-                    <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
-                        <div className="px-6 py-5 border-b border-gray-100">
-                            <h2 className="text-xl font-bold text-gray-900">Payment Logs</h2>
-                            <p className="text-sm text-gray-500 mt-1">Date, parcel, and amount earned from successful deliveries.</p>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                    <MoneyCard title="Total Earnings" value={formatCurrency(stats.totalEarnings)} theme="emerald" />
+                    <MoneyCard title="Current Balance" value={formatCurrency(stats.currentBalance)} theme="sky" />
+                    <MoneyCard title="Delivered Jobs" value={stats.completedCount} theme="amber" />
+                    <MoneyCard title="Ledger Entries" value={transactions.length} theme="indigo" />
+                </div>
+
+                <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+                    <div className="flex flex-col gap-1 border-b border-gray-100 pb-3 sm:flex-row sm:items-end sm:justify-between">
+                        <div>
+                            <h2 className="text-lg font-black text-gray-900">Withdraw Earnings</h2>
+                            <p className="text-sm text-gray-500">Minimum ৳{MIN_WITHDRAWAL}. Current balance {formatCurrency(stats.currentBalance)}.</p>
                         </div>
-
-                        {paymentLogs.length === 0 ? (
-                            <div className="p-12 text-center">
-                                <h3 className="text-lg font-bold text-gray-900 mb-2">No payment logs yet</h3>
-                                <p className="text-gray-500 text-sm">Each delivered parcel will create an earning record here.</p>
-                            </div>
-                        ) : (
-                            <>
-                                <div className="hidden md:grid grid-cols-3 gap-4 px-6 py-4 bg-gray-50 border-b border-gray-100 text-xs font-black uppercase tracking-[0.22em] text-gray-400">
-                                    <div>Date</div>
-                                    <div>Parcel ID</div>
-                                    <div className="text-right">Earned</div>
-                                </div>
-                                {paymentLogs.map(log => (
-                                    <div key={log.id} className="grid grid-cols-1 md:grid-cols-3 gap-4 px-6 py-4 border-b border-gray-100 last:border-b-0">
-                                        <div className="font-semibold text-gray-900">{formatDate(log.date)}</div>
-                                        <div className="text-gray-600">#{log.parcelId}</div>
-                                        <div className="md:text-right font-black text-emerald-600">{formatCurrency(log.amount)}</div>
-                                    </div>
-                                ))}
-                            </>
-                        )}
-
-                        {transactions.length > 0 && (
-                            <div className="px-6 py-5 border-t border-gray-100 bg-gray-50">
-                                <p className="text-sm text-gray-500">Recorded balance ledger entries: <span className="font-bold text-gray-900">{transactions.length}</span></p>
-                            </div>
-                        )}
                     </div>
+
+                    <form onSubmit={handleWithdraw} className="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-[1fr_0.8fr_1fr_auto] lg:items-end">
+                        <Field label="Mobile Banking Number">
+                            <input
+                                type="tel"
+                                value={withdrawNumber}
+                                onChange={(e) => setWithdrawNumber(e.target.value)}
+                                placeholder="01XXXXXXXXX"
+                                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#03373D]/20"
+                            />
+                        </Field>
+
+                        <Field label="Amount">
+                            <input
+                                type="number"
+                                value={withdrawAmount}
+                                onChange={(e) => setWithdrawAmount(e.target.value)}
+                                min={MIN_WITHDRAWAL}
+                                max={stats.currentBalance}
+                                placeholder={`Minimum ${MIN_WITHDRAWAL}`}
+                                className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#03373D]/20"
+                            />
+                        </Field>
+
+                        {paymentMethods.length > 0 ? (
+                            <Field label="Saved Method">
+                                <select
+                                    value={selectedMethod}
+                                    onChange={(e) => setSelectedMethod(e.target.value)}
+                                    className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#03373D]/20 cursor-pointer"
+                                >
+                                    <option value="">Use typed number</option>
+                                    {paymentMethods.map(method => (
+                                        <option key={method.id} value={method.id}>{method.name} - {method.details}</option>
+                                    ))}
+                                </select>
+                            </Field>
+                        ) : (
+                            <div className="hidden lg:block" />
+                        )}
+
+                        <button
+                            type="submit"
+                            disabled={submitting || !withdrawNumber || !withdrawAmount}
+                            className="rounded-xl bg-[#03373D] px-5 py-2.5 text-xs font-black uppercase tracking-[0.16em] text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-emerald-600 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+                        >
+                            {submitting ? 'Submitting...' : 'Withdraw'}
+                        </button>
+                    </form>
+                </div>
+
+                <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+                    <div className="flex flex-col gap-1 border-b border-gray-100 px-4 py-3 sm:flex-row sm:items-end sm:justify-between">
+                        <div>
+                            <h2 className="text-lg font-black text-gray-900">Payment Logs</h2>
+                            <p className="text-sm text-gray-500">Full-width earnings records from completed deliveries.</p>
+                        </div>
+                        <p className="text-xs font-semibold text-gray-500">{transactions.length} ledger entries</p>
+                    </div>
+
+                    {paymentLogs.length === 0 ? (
+                        <div className="px-5 py-8 text-center">
+                            <h3 className="mb-2 text-lg font-bold text-gray-900">No payment logs yet</h3>
+                            <p className="text-sm text-gray-500">Each delivered parcel will create an earning record here.</p>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="hidden grid-cols-[0.85fr_1.2fr_1fr_0.85fr_1.25fr_0.75fr_0.75fr_0.75fr] gap-3 bg-gray-50 px-4 py-3 text-[11px] font-black uppercase tracking-[0.16em] text-gray-400 xl:grid">
+                                <div>Date</div>
+                                <div>Parcel</div>
+                                <div>Receiver</div>
+                                <div>Phone</div>
+                                <div>Route</div>
+                                <div>Status</div>
+                                <div>Parcel ID</div>
+                                <div className="text-right">Earned</div>
+                            </div>
+
+                            {paymentLogs.map(log => (
+                                <div key={log.id}>
+                                    <div className="grid grid-cols-1 gap-2 px-4 py-3 transition hover:bg-emerald-100/70 xl:grid-cols-[0.85fr_1.2fr_1fr_0.85fr_1.25fr_0.75fr_0.75fr_0.75fr] xl:items-center xl:gap-3">
+                                        <DataCell label="Date" value={formatDate(log.date)} />
+                                        <DataCell label="Parcel" value={log.parcelName} strong />
+                                        <DataCell label="Receiver" value={log.receiverName} />
+                                        <DataCell label="Phone" value={log.receiverPhone} />
+                                        <DataCell label="Route" value={log.route} />
+                                        <DataCell label="Status" value={log.paymentStatus} />
+                                        <DataCell label="Parcel ID" value={`#${log.parcelId || 'N/A'}`} />
+                                        <div className="flex items-center justify-between gap-3 xl:block xl:text-right">
+                                            <span className="text-[11px] font-black uppercase tracking-[0.16em] text-gray-400 xl:hidden">Earned</span>
+                                            <p className="text-sm font-black text-emerald-600">{formatCurrency(log.amount)}</p>
+                                        </div>
+                                    </div>
+                                    <hr className="border-gray-200" />
+                                </div>
+                            ))}
+                        </>
+                    )}
                 </div>
             </div>
         </RiderAccessGate>
@@ -171,15 +198,29 @@ const RiderEarnings = () => {
 
 const Field = ({ label, children }) => (
     <label className="block">
-        <span className="block text-sm font-semibold text-gray-700 mb-2">{label}</span>
+        <span className="mb-1.5 block text-xs font-black uppercase tracking-[0.14em] text-gray-500">{label}</span>
         {children}
     </label>
 );
 
-const MoneyCard = ({ title, value }) => (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-        <p className="text-xs font-black uppercase tracking-[0.22em] text-gray-400">{title}</p>
-        <p className="text-3xl font-black text-gray-900 mt-4">{value}</p>
+const moneyThemes = {
+    emerald: 'border-emerald-200 bg-emerald-50 text-emerald-700',
+    sky: 'border-sky-200 bg-sky-50 text-sky-700',
+    amber: 'border-amber-200 bg-amber-50 text-amber-700',
+    indigo: 'border-indigo-200 bg-indigo-50 text-indigo-700',
+};
+
+const MoneyCard = ({ title, value, theme = 'emerald' }) => (
+    <div className={`rounded-2xl border px-4 py-3 shadow-sm ${moneyThemes[theme]}`}>
+        <p className="text-[11px] font-black uppercase tracking-[0.16em] opacity-75">{title}</p>
+        <p className="mt-1 text-xl font-black">{value}</p>
+    </div>
+);
+
+const DataCell = ({ label, value, strong = false }) => (
+    <div className="flex min-w-0 items-center justify-between gap-3 xl:block">
+        <span className="text-[11px] font-black uppercase tracking-[0.16em] text-gray-400 xl:hidden">{label}</span>
+        <p className={`min-w-0 truncate text-sm ${strong ? 'font-black text-gray-900' : 'font-semibold text-gray-700'}`}>{value}</p>
     </div>
 );
 

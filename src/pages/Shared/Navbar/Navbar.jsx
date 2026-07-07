@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import logo from '../../../assets/LOGOS/Logo2.png';
+import logo from '../../../assets/LOGOS/Zadex-fav.svg';
 import { AuthContext } from '../../../Contexts/AuthContext/AuthContext';
 import useUserRole from '../../../Hooks/useUserRole';
 
