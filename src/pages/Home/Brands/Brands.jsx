@@ -29,7 +29,7 @@ const Brands = () => {
                         key={idx}
                         src={src}
                         alt={`brand-${idx}`}
-                        className="h-6 mx-[100px] object-contain"
+                        className="h-12 mx-[80px] object-contain"
                     />
                 ))}
             </Marquee>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="300" height="80">
+  <polygon points="25,40 45,20 65,40 45,60" fill="#006BB6" />
+  <polygon points="35,40 45,30 55,40 45,50" fill="#FFD200" />
+  <text x="85" y="53" font-family="'Century Gothic', sans-serif" font-size="34" font-weight="bold" fill="#006BB6" letter-spacing="2">BEXIMCO</text>
+</svg>

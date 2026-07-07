@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import useAuth from '../../../Hooks/useAuth';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import bkashLogo from '../../../assets/payment/bkash-logo.svg';
+import nagadLogo from '../../../assets/payment/nagad-logo.svg';
 
 const Payment = () => {
     const { id } = useParams();
@@ -161,8 +163,12 @@ const Payment = () => {
                             onClick={() => setSelectedMethod('bkash')}
                             className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all cursor-pointer ${selectedMethod === 'bkash' ? 'border-[#e2136e] bg-white shadow-md' : 'border-transparent bg-white shadow-sm hover:border-gray-300'}`}
                         >
-                            <div className={`w-8 h-8 mb-2 flex items-center justify-center rounded-full ${selectedMethod === 'bkash' ? 'bg-[#e2136e] text-white' : 'bg-gray-100 text-gray-400'}`}>
-                                <span className="font-extrabold italic text-sm">b</span>
+                            <div className="mb-2 flex h-8 w-16 items-center justify-center">
+                                <img
+                                    src={bkashLogo}
+                                    alt="bKash"
+                                    className={`max-h-8 max-w-full object-contain transition ${selectedMethod === 'bkash' ? 'opacity-100' : 'opacity-70'}`}
+                                />
                             </div>
                             <span className={`text-xs font-bold ${selectedMethod === 'bkash' ? 'text-gray-900' : 'text-gray-500'}`}>bKash</span>
                         </div>
@@ -172,8 +178,12 @@ const Payment = () => {
                             onClick={() => setSelectedMethod('nagad')}
                             className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all cursor-pointer ${selectedMethod === 'nagad' ? 'border-[#f37021] bg-white shadow-md' : 'border-transparent bg-white shadow-sm hover:border-gray-300'}`}
                         >
-                            <div className={`w-8 h-8 mb-2 flex items-center justify-center rounded-full ${selectedMethod === 'nagad' ? 'bg-[#f37021] text-white' : 'bg-gray-100 text-gray-400'}`}>
-                                <span className="font-extrabold text-sm">N</span>
+                            <div className="mb-2 flex h-8 w-16 items-center justify-center">
+                                <img
+                                    src={nagadLogo}
+                                    alt="Nagad"
+                                    className={`max-h-8 max-w-full object-contain transition ${selectedMethod === 'nagad' ? 'opacity-100' : 'opacity-70'}`}
+                                />
                             </div>
                             <span className={`text-xs font-bold ${selectedMethod === 'nagad' ? 'text-gray-900' : 'text-gray-500'}`}>Nagad</span>
                         </div>
