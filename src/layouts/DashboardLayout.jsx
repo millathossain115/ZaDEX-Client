@@ -3,7 +3,7 @@ import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import useAdmin from '../Hooks/useAdmin';
 import useAuth from '../Hooks/useAuth';
 import useUserRole from '../Hooks/useUserRole';
-import logo from '../assets/LOGOS/Logo2.png';
+import logo from '../assets/LOGOS/Zadex-fav.svg';
 
 const DashboardLayout = () => {
     const { user, logOut } = useAuth();
