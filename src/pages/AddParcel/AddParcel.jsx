@@ -210,48 +210,48 @@ const AddParcel = () => {
     };
 
     // Shared input styling
-    const inputClass = "w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-800 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#03373D]/30 focus:border-[#03373D] transition-all duration-200";
-    const selectClass = "w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#03373D]/30 focus:border-[#03373D] transition-all duration-200 appearance-none cursor-pointer";
-    const labelClass = "block text-sm font-semibold text-gray-700 mb-1.5";
+    const inputClass = "w-full pl-11 pr-4 py-2 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-800 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#03373D]/30 focus:border-[#03373D] transition-all duration-200";
+    const selectClass = "w-full pl-11 pr-4 py-2 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-[#03373D]/30 focus:border-[#03373D] transition-all duration-200 appearance-none cursor-pointer";
+    const labelClass = "block text-sm font-semibold text-gray-700 mb-1";
 
     return (
         <div className="bg-[#F0F0F0] min-h-screen">
             {/* Hero Section */}
-            <div className="max-w-9/10 mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-6">
-                <div className="text-center mb-10">
-                    <div className="inline-flex items-center gap-2 bg-[#03373D]/10 px-4 py-1.5 rounded-full mb-4">
+            <div className="max-w-9/10 mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-3">
+                <div className="text-center mb-4">
+                    <div className="inline-flex items-center gap-2 bg-[#03373D]/10 px-4 py-1 rounded-full mb-2">
                         <svg className="w-4 h-4 text-[#03373D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                         </svg>
                         <span className="text-xs font-bold text-[#03373D] tracking-wide uppercase">New Booking</span>
                     </div>
-                    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+                    <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">
                         Enter your <span className="text-[#03373D]">Parcel Details</span>
                     </h1>
-                    <p className="text-gray-500 max-w-2xl mx-auto text-lg leading-relaxed">
+                    <p className="text-gray-500 max-w-2xl mx-auto text-base leading-relaxed">
                         Fill in the form below with your sender and receiver information to book a parcel delivery across Bangladesh.
                     </p>
                 </div>
             </div>
 
             {/* Form Section */}
-            <div className="max-w-9/10 mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+            <div className="max-w-9/10 mx-auto px-4 sm:px-6 lg:px-8 pb-10">
                 <form onSubmit={handleBookingClick}>
                     {/* ========== PARCEL INFO CARD ========== */}
-                    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
-                        <div className="flex items-center gap-3 mb-8">
-                            <div className="w-10 h-10 bg-[#03373D] rounded-xl flex items-center justify-center">
+                    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-5 mb-4">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="w-9 h-9 bg-[#03373D] rounded-xl flex items-center justify-center">
                                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                                 </svg>
                             </div>
                             <div>
-                                <h2 className="text-xl font-bold text-gray-900">Parcel Information</h2>
-                                <p className="text-sm text-gray-500">What are you sending?</p>
+                                <h2 className="text-lg font-bold text-gray-900">Parcel Information</h2>
+                                <p className="text-xs text-gray-500">What are you sending?</p>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             {/* Parcel Type */}
                             <div>
                                 <label htmlFor="parcelType" className={labelClass}>Parcel Type</label>
@@ -296,9 +296,9 @@ const AddParcel = () => {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
                                         </svg>
                                     </div>
-                                    <input id="parcelWeight" type="number" step="0.1" min="0.1" max="30" value={parcelWeight} onChange={(e) => setParcelWeight(e.target.value)} placeholder="Enter weight in kg" className={`${inputClass} pr-16`} />
-                                    <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                                        <span className="text-sm font-semibold text-gray-400">KG</span>
+                                    <input id="parcelWeight" type="number" step="0.1" min="0.1" max="30" value={parcelWeight} onChange={(e) => setParcelWeight(e.target.value)} placeholder="0.0" className={`${inputClass} pr-12`} />
+                                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                        <span className="text-xs font-semibold text-gray-400">KG</span>
                                     </div>
                                 </div>
                             </div>
@@ -306,37 +306,37 @@ const AddParcel = () => {
                     </div>
 
                     {/* ========== HORIZONTAL DIVIDER ========== */}
-                    <div className="flex items-center gap-4 mb-8">
-                        <div className="flex-1 h-px bg-linear-to-r from-transparent via-gray-300 to-transparent"></div>
-                        <div className="flex items-center gap-2 text-gray-400">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="flex-1 h-px bg-gray-200"></div>
+                        <div className="flex items-center gap-1.5 text-gray-400">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                             </svg>
-                            <span className="text-xs font-bold tracking-widest uppercase">Sender & Receiver</span>
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <span className="text-[10px] font-bold tracking-widest uppercase">Sender & Receiver</span>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                             </svg>
                         </div>
-                        <div className="flex-1 h-px bg-linear-to-r from-transparent via-gray-300 to-transparent"></div>
+                        <div className="flex-1 h-px bg-gray-200"></div>
                     </div>
 
                     {/* ========== SENDER & RECEIVER SIDE BY SIDE ========== */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
                         {/* --- SENDER CARD --- */}
-                        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
-                            <div className="flex items-center gap-3 mb-8">
-                                <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center">
+                        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-5">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="w-9 h-9 bg-emerald-500 rounded-xl flex items-center justify-center">
                                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 11l7-7 7 7M5 19l7-7 7 7" />
                                     </svg>
                                 </div>
                                 <div>
-                                    <h2 className="text-xl font-bold text-gray-900">Sender Details</h2>
-                                    <p className="text-sm text-gray-500">Who is sending the parcel?</p>
+                                    <h2 className="text-lg font-bold text-gray-900">Sender Details</h2>
+                                    <p className="text-xs text-gray-500">Who is sending the parcel?</p>
                                 </div>
                             </div>
 
-                            <div className="space-y-5">
+                            <div className="space-y-3">
                                 {/* Sender Name */}
                                 <div>
                                     <label htmlFor="senderName" className={labelClass}>Full Name</label>
@@ -407,27 +407,27 @@ const AddParcel = () => {
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                             </svg>
                                         </div>
-                                        <textarea id="pickupInstruction" value={pickupInstruction} onChange={(e) => setPickupInstruction(e.target.value)} placeholder="e.g. Ring doorbell, call before arrival..." rows={3} className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-800 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#03373D]/30 focus:border-[#03373D] transition-all duration-200 resize-none" />
+                                        <textarea id="pickupInstruction" value={pickupInstruction} onChange={(e) => setPickupInstruction(e.target.value)} placeholder="e.g. Ring doorbell, call before arrival..." rows={2} className="w-full pl-11 pr-4 py-2 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-800 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#03373D]/30 focus:border-[#03373D] transition-all duration-200 resize-none" />
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         {/* --- RECEIVER CARD --- */}
-                        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
-                            <div className="flex items-center gap-3 mb-8">
-                                <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center">
+                        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-5">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="w-9 h-9 bg-blue-500 rounded-xl flex items-center justify-center">
                                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 13l-7 7-7-7m14-8l-7 7-7-7" />
                                     </svg>
                                 </div>
                                 <div>
-                                    <h2 className="text-xl font-bold text-gray-900">Receiver Details</h2>
-                                    <p className="text-sm text-gray-500">Who is receiving the parcel?</p>
+                                    <h2 className="text-lg font-bold text-gray-900">Receiver Details</h2>
+                                    <p className="text-xs text-gray-500">Who is receiving the parcel?</p>
                                 </div>
                             </div>
 
-                            <div className="space-y-5">
+                            <div className="space-y-3">
                                 {/* Receiver Name */}
                                 <div>
                                     <label htmlFor="receiverName" className={labelClass}>Full Name</label>
@@ -498,7 +498,7 @@ const AddParcel = () => {
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                             </svg>
                                         </div>
-                                        <textarea id="deliveryInstruction" value={deliveryInstruction} onChange={(e) => setDeliveryInstruction(e.target.value)} placeholder="e.g. Leave at the door, call upon arrival..." rows={3} className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-800 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#03373D]/30 focus:border-[#03373D] transition-all duration-200 resize-none" />
+                                        <textarea id="deliveryInstruction" value={deliveryInstruction} onChange={(e) => setDeliveryInstruction(e.target.value)} placeholder="e.g. Leave at the door, call upon arrival..." rows={2} className="w-full pl-11 pr-4 py-2 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-800 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#03373D]/30 focus:border-[#03373D] transition-all duration-200 resize-none" />
                                     </div>
                                 </div>
                             </div>
@@ -506,20 +506,20 @@ const AddParcel = () => {
                     </div>
 
                     {/* ========== PICKUP TIME CARD ========== */}
-                    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 mb-8">
-                        <div className="flex items-center gap-3 mb-8">
-                            <div className="w-10 h-10 bg-amber-500 rounded-xl flex items-center justify-center">
+                    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-5 mb-4">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="w-9 h-9 bg-amber-500 rounded-xl flex items-center justify-center">
                                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                             </div>
                             <div>
-                                <h2 className="text-xl font-bold text-gray-900">Pickup Time Info <span className="text-sm font-normal text-gray-400">(Approx)</span></h2>
-                                <p className="text-sm text-gray-500">When should we pick up your parcel?</p>
+                                <h2 className="text-lg font-bold text-gray-900">Pickup Time Info <span className="text-sm font-normal text-gray-400">(Approx)</span></h2>
+                                <p className="text-xs text-gray-500">When should we pick up your parcel?</p>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* Pickup Date */}
                             <div>
                                 <label htmlFor="pickupDate" className={labelClass}>Preferred Pickup Date</label>
@@ -573,9 +573,9 @@ const AddParcel = () => {
                     <button
                         type="submit"
                         id="confirmBookingBtn"
-                        className="w-full py-4 bg-[#03373D] text-white font-bold text-lg rounded-2xl hover:bg-[#025a63] shadow-lg shadow-[#03373D]/20 hover:shadow-[#03373D]/30 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer flex items-center justify-center gap-3"
+                        className="w-full py-3 bg-[#03373D] text-white font-bold text-base rounded-2xl hover:bg-[#025a63] shadow-lg shadow-[#03373D]/20 hover:shadow-[#03373D]/30 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer flex items-center justify-center gap-3"
                     >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Confirm Booking
