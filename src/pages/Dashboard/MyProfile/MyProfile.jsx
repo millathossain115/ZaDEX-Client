@@ -131,21 +131,21 @@ const MyProfile = () => {
         }
     };
 
-    const inputClass = "w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 text-gray-800 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#03373D]/30 focus:border-[#03373D] transition-all duration-200";
-    const labelClass = "block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5";
+    const inputClass = "w-full px-3 py-2.5 rounded-lg border border-gray-200 bg-gray-50/70 text-gray-800 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#03373D]/20 focus:border-[#03373D] transition-all duration-200";
+    const labelClass = "block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1";
 
     return (
-        <div>
+        <div className="space-y-4">
             {/* Page Header */}
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-gray-900">My Profile</h1>
-                    <p className="text-gray-500 mt-1">Manage your account information</p>
+                    <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">My Profile</h1>
+                    <p className="text-sm text-gray-500 mt-0.5">Manage account, contact, and address details.</p>
                 </div>
                 {!isEditing ? (
                     <button
                         onClick={() => setIsEditing(true)}
-                        className="flex items-center gap-2 px-5 py-2.5 bg-[#03373D] text-white font-semibold text-sm rounded-xl hover:bg-[#025a63] transition-all duration-200 shadow-lg shadow-[#03373D]/20 cursor-pointer"
+                        className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#03373D] text-white font-semibold text-sm rounded-lg hover:bg-[#025a63] transition-all duration-200 shadow-md shadow-[#03373D]/15 cursor-pointer"
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -153,20 +153,20 @@ const MyProfile = () => {
                         Edit Profile
                     </button>
                 ) : (
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
                         <button
                             onClick={handleCancel}
-                            className="px-5 py-2.5 border border-gray-300 text-gray-600 font-semibold text-sm rounded-xl hover:bg-gray-50 transition cursor-pointer"
+                            className="px-4 py-2 border border-gray-300 text-gray-600 font-semibold text-sm rounded-lg hover:bg-gray-50 transition cursor-pointer"
                         >
                             Cancel
                         </button>
                         <button
                             onClick={handleSave}
                             disabled={isSaving}
-                            className={`flex items-center gap-2 px-5 py-2.5 text-white font-semibold text-sm rounded-xl transition-all duration-200 shadow-lg cursor-pointer ${
+                            className={`flex items-center gap-2 px-4 py-2 text-white font-semibold text-sm rounded-lg transition-all duration-200 shadow-md cursor-pointer ${
                                 isSaving
                                     ? 'bg-[#03373D]/60 cursor-not-allowed shadow-none'
-                                    : 'bg-[#03373D] hover:bg-[#025a63] shadow-[#03373D]/20'
+                                    : 'bg-[#03373D] hover:bg-[#025a63] shadow-[#03373D]/15'
                             }`}
                         >
                             {isSaving ? (
@@ -192,7 +192,7 @@ const MyProfile = () => {
 
             {/* Success/Error Message */}
             {saveMessage.text && (
-                <div className={`mb-6 p-4 rounded-xl flex items-center gap-3 ${
+                <div className={`p-3 rounded-lg flex items-center gap-3 ${
                     saveMessage.type === 'success'
                         ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                         : 'bg-red-50 text-red-700 border border-red-200'
@@ -215,15 +215,15 @@ const MyProfile = () => {
                 </div>
             )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-4">
                 {/* Left Column - Profile Photo */}
-                <div className="lg:col-span-1">
-                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4">Profile Photo</h3>
+                <div>
+                    <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+                        <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-3">Profile Photo</h3>
 
                         {/* Avatar */}
                         <div className="flex flex-col items-center">
-                            <div className="w-32 h-32 rounded-2xl bg-[#03373D] flex items-center justify-center text-white font-bold text-5xl overflow-hidden shadow-xl shadow-[#03373D]/20 mb-4">
+                            <div className="w-24 h-24 rounded-2xl bg-[#03373D] flex items-center justify-center text-white font-bold text-4xl overflow-hidden shadow-lg shadow-[#03373D]/15 mb-3">
                                 {photoPreview ? (
                                     <img
                                         src={photoPreview}
@@ -237,7 +237,7 @@ const MyProfile = () => {
                             </div>
 
                             {isEditing ? (
-                                <div className="w-full mt-2">
+                                <div className="w-full mt-1">
                                     <label className={labelClass}>Upload New Photo</label>
                                     <input
                                         type="file"
@@ -249,9 +249,9 @@ const MyProfile = () => {
                                                 setPhotoPreview(URL.createObjectURL(file));
                                             }
                                         }}
-                                        className={`${inputClass} py-2.5! bg-white cursor-pointer file:cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 transition-all`}
+                                        className={`${inputClass} py-2! bg-white cursor-pointer file:cursor-pointer file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 transition-all`}
                                     />
-                                    <p className="text-xs text-gray-400 mt-2 text-center">Choose an image file to update your avatar</p>
+                                    <p className="text-[11px] text-gray-400 mt-1.5 text-center">Choose an image file to update your avatar</p>
                                 </div>
                             ) : (
                                 <div className="text-center">
@@ -262,26 +262,26 @@ const MyProfile = () => {
                         </div>
 
                         {/* Account Info (always visible) */}
-                        <div className="mt-6 pt-6 border-t border-gray-100 space-y-3">
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+                        <div className="mt-4 pt-4 border-t border-gray-100 space-y-2.5">
+                            <div className="flex items-center gap-2.5">
+                                <div className="w-8 h-8 bg-emerald-50 rounded-lg flex items-center justify-center">
                                     <svg className="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                                     </svg>
                                 </div>
                                 <div>
-                                    <p className="text-xs text-gray-400">Status</p>
+                                    <p className="text-[11px] text-gray-400">Status</p>
                                     <p className="text-sm font-semibold text-emerald-600">Verified</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <div className="flex items-center gap-2.5">
+                                <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center">
                                     <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                     </svg>
                                 </div>
                                 <div>
-                                    <p className="text-xs text-gray-400">Member Since</p>
+                                    <p className="text-[11px] text-gray-400">Member Since</p>
                                     <p className="text-sm font-semibold text-gray-800">
                                         {user?.metadata?.creationTime
                                             ? new Date(user.metadata.creationTime).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
@@ -294,22 +294,22 @@ const MyProfile = () => {
                 </div>
 
                 {/* Right Column - Profile Details */}
-                <div className="lg:col-span-2 space-y-6">
+                <div className="space-y-4">
                     {/* Personal Information */}
-                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="w-10 h-10 bg-[#03373D]/10 rounded-xl flex items-center justify-center">
-                                <svg className="w-5 h-5 text-[#03373D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+                        <div className="flex items-center gap-2.5 mb-4">
+                            <div className="w-8 h-8 bg-[#03373D]/10 rounded-lg flex items-center justify-center">
+                                <svg className="w-4 h-4 text-[#03373D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
                             </div>
                             <div>
-                                <h3 className="font-bold text-gray-900">Personal Information</h3>
+                                <h3 className="text-sm font-bold text-gray-900">Personal Information</h3>
                                 <p className="text-xs text-gray-400">Your basic account details</p>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                             {/* Full Name */}
                             <div>
                                 <label className={labelClass}>Full Name</label>
@@ -322,7 +322,7 @@ const MyProfile = () => {
                                         className={inputClass}
                                     />
                                 ) : (
-                                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                                    <div className="flex items-center gap-2.5 px-3 py-2.5 bg-gray-50 rounded-lg border border-gray-100">
                                         <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                         </svg>
@@ -334,12 +334,12 @@ const MyProfile = () => {
                             {/* Email (always read-only) */}
                             <div>
                                 <label className={labelClass}>Email</label>
-                                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                                <div className="flex items-center gap-2.5 px-3 py-2.5 bg-gray-50 rounded-lg border border-gray-100">
                                     <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                     </svg>
-                                    <p className="text-sm font-semibold text-gray-800">{user?.email}</p>
-                                    <span className="ml-auto text-xs bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full">Read only</span>
+                                    <p className="text-sm font-semibold text-gray-800 truncate">{user?.email}</p>
+                                    <span className="ml-auto text-[10px] bg-gray-200 text-gray-500 px-2 py-0.5 rounded-full whitespace-nowrap">Read only</span>
                                 </div>
                             </div>
 
@@ -355,7 +355,7 @@ const MyProfile = () => {
                                         className={inputClass}
                                     />
                                 ) : (
-                                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                                    <div className="flex items-center gap-2.5 px-3 py-2.5 bg-gray-50 rounded-lg border border-gray-100">
                                         <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                         </svg>
@@ -384,7 +384,7 @@ const MyProfile = () => {
                                         </svg>
                                     </div>
                                 ) : (
-                                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                                    <div className="flex items-center gap-2.5 px-3 py-2.5 bg-gray-50 rounded-lg border border-gray-100">
                                         <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -397,20 +397,20 @@ const MyProfile = () => {
                     </div>
 
                     {/* Address Information */}
-                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                        <div className="flex items-center gap-3 mb-6">
-                            <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                                <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+                        <div className="flex items-center gap-2.5 mb-4">
+                            <div className="w-8 h-8 bg-amber-50 rounded-lg flex items-center justify-center">
+                                <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                 </svg>
                             </div>
                             <div>
-                                <h3 className="font-bold text-gray-900">Address</h3>
+                                <h3 className="text-sm font-bold text-gray-900">Address</h3>
                                 <p className="text-xs text-gray-400">Your delivery and pickup address</p>
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                             {/* Full Address */}
                             <div className="md:col-span-2">
                                 <label className={labelClass}>Full Address</label>
@@ -419,11 +419,11 @@ const MyProfile = () => {
                                         value={address}
                                         onChange={(e) => setAddress(e.target.value)}
                                         placeholder="Enter your full address (House, Road, Area)"
-                                        rows={3}
+                                        rows={2}
                                         className={`${inputClass} resize-none`}
                                     />
                                 ) : (
-                                    <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
+                                    <div className="flex items-start gap-2.5 px-3 py-2.5 bg-gray-50 rounded-lg border border-gray-100">
                                         <svg className="w-4 h-4 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                         </svg>
@@ -444,7 +444,7 @@ const MyProfile = () => {
                                         className={inputClass}
                                     />
                                 ) : (
-                                    <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                                    <div className="flex items-center gap-2.5 px-3 py-2.5 bg-gray-50 rounded-lg border border-gray-100">
                                         <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                                         </svg>
@@ -456,7 +456,7 @@ const MyProfile = () => {
                             {/* District (display only in address section when not editing) */}
                             <div>
                                 <label className={labelClass}>District</label>
-                                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                                <div className="flex items-center gap-2.5 px-3 py-2.5 bg-gray-50 rounded-lg border border-gray-100">
                                     <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
