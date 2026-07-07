@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import logo from '../../../assets/LOGOS/fav-icon.svg';
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
@@ -10,8 +11,9 @@ const Footer = () => {
                 <div className="text-center">
                     {/* Logo */}
                     <div className="mb-6">
-                        <Link to="/" className="text-4xl font-bold text-white inline-block">
-                            Zadex
+                        <Link to="/" className="flex items-center justify-center gap-3 text-4xl font-bold text-white">
+                            <img src={logo} alt="Zadex" className="h-10" />
+                            <span>Zadex</span>
                         </Link>
                     </div>
 
