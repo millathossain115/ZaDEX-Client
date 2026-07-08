@@ -76,7 +76,7 @@ export const router = createBrowserRouter([
     },
     {
         path: "dashboard",
-        element: <PrivateRoute><DashboardLayout /></PrivateRoute>,
+        element: <DashboardLayout />,
         handle: { title: "Dashboard" },
         children: [
             // Default index — resolved dynamically by DashboardLayout based on role

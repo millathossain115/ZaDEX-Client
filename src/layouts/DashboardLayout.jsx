@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import useAdmin from '../Hooks/useAdmin';
 import useAuth from '../Hooks/useAuth';
 import useUserRole from '../Hooks/useUserRole';
@@ -7,13 +7,18 @@ import logo from '../assets/LOGOS/Zadex-fav.svg';
 import RouteTitle from '../components/RouteTitle';
 
 const DashboardLayout = () => {
-    const { user, logOut } = useAuth();
+    const { user, loading: authLoading, logOut } = useAuth();
     const [isAdmin, isAdminLoading] = useAdmin();
     const [userData, isRoleLoading] = useUserRole();
+    const location = useLocation();
     const navigate = useNavigate();
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const isRider = userData?.role === 'rider';
+
+    if (!authLoading && !user) {
+        return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+    }
 
     const handleLogout = () => {
         logOut()
@@ -289,12 +294,12 @@ const DashboardLayout = () => {
                         </div>
 
                         <div className="flex items-center gap-4">
-                            {isAdmin && (
+                            {!isAdminLoading && isAdmin && (
                                 <span className="hidden sm:inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-bold bg-[#03373D]/10 text-[#03373D] uppercase tracking-wider">
                                     Admin
                                 </span>
                             )}
-                            {!isAdmin && isRider && (
+                            {!isAdminLoading && !isAdmin && !isRoleLoading && isRider && (
                                 <span className="hidden sm:inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-bold bg-amber-100 text-amber-700 uppercase tracking-wider">
                                     Rider
                                 </span>
@@ -351,16 +356,9 @@ const DashboardLayout = () => {
                             </div>
                         </div>
 
-                        {isAdminLoading || isRoleLoading ? (
-                            <div className="flex-1 flex items-center justify-center">
-                                <svg className="w-6 h-6 animate-spin text-gray-300" fill="none" viewBox="0 0 24 24">
-                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-                                </svg>
-                            </div>
-                        ) : isAdmin ? (
+                        {!isAdminLoading && isAdmin ? (
                             renderAdminNav()
-                        ) : isRider ? (
+                        ) : !isRoleLoading && isRider ? (
                             renderRiderNav()
                         ) : (
                             renderUserNav()
