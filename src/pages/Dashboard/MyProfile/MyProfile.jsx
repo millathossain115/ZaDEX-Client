@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import useAuth from '../../../Hooks/useAuth';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
-import { MyProfileLoader } from '../../../components/loaders';
+import useAuth from '../../../hooks/useAuth';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import { MyProfileLoader } from '../../../components/ui';
 
 const MyProfile = () => {
     const { user, loading: authLoading, updateUserProfile } = useAuth();

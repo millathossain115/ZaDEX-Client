@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { HomeLoader } from '../../components/loaders';
-import Banner from './Banner/Banner';
-import BecomeMerchant from './BecomeMerchant/BecomeMerchant';
-import Benefits from './Benefits/Benefits';
-import Brands from './Brands/Brands';
-import FAQ from './FAQ/FAQ';
-import Services from './Services/Services';
-import WorkProcess from './WorkProcess/WorkProcess';
+import { HomeLoader } from '../../components/ui';
+import Banner from '../../components/sections/home/Banner/Banner';
+import BecomeMerchant from '../../components/sections/home/BecomeMerchant/BecomeMerchant';
+import Benefits from '../../components/sections/home/Benefits/Benefits';
+import Brands from '../../components/sections/home/Brands/Brands';
+import FAQ from '../../components/sections/home/FAQ/FAQ';
+import Services from '../../components/sections/home/Services/Services';
+import WorkProcess from '../../components/sections/home/WorkProcess/WorkProcess';
 
 const Home = () => {
     const location = useLocation();

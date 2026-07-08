@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import useAuth from '../../../Hooks/useAuth';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
-import { BalanceLoader } from '../../../components/loaders';
+import useAuth from '../../../hooks/useAuth';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import { BalanceLoader } from '../../../components/ui';
 
 // SVG icons
 const BankIcon = () => (

@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
-import RiderAccessGate from '../RiderShared/RiderAccessGate';
-import useRiderDashboardData from '../RiderShared/useRiderDashboardData';
-import { formatCurrency, formatDate, getStatusBadgeClass, getStatusLabel, normalizeStatus } from '../RiderShared/riderUtils';
-import { RiderOngoingTasksLoader } from '../../../components/loaders';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import RiderAccessGate from '../_shared/RiderAccessGate';
+import useRiderDashboardData from '../_shared/useRiderDashboardData';
+import { formatCurrency, formatDate, getStatusBadgeClass, getStatusLabel, normalizeStatus } from '../_shared/riderUtils';
+import { RiderOngoingTasksLoader } from '../../../components/ui';
 
 const RiderOngoingTasks = () => {
     const axiosSecure = useAxiosSecure();

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import useAuth from '../../../Hooks/useAuth';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
-import { createAuthToken } from '../../../Utils/authToken';
-import SocialLogin from '../SocialLogin/SocialLogin';
+import useAuth from '../../../hooks/useAuth';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import { createAuthToken } from '../../../utils/authToken';
+import SocialLogin from '../../../components/shared/SocialLogin/SocialLogin';
 
 const DEMO_ACCOUNTS = {
     user: {

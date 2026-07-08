@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useAuth from '../../Hooks/useAuth';
-import useAxiosSecure from '../../Hooks/useAxiosSecure';
+import useAuth from '../../hooks/useAuth';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
 
 const parcelTypes = [
     { value: '', label: 'Select parcel type' },

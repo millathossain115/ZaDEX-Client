@@ -1,8 +1,8 @@
 import React from 'react';
 import { Outlet } from 'react-router';
-import Navbar from '../pages/Shared/Navbar/Navbar';
-import Footer from '../pages/Shared/Footer/Footer';
-import RouteTitle from '../components/RouteTitle';
+import Navbar from '../components/shared/Navbar/Navbar';
+import Footer from '../components/shared/Footer/Footer';
+import RouteTitle from '../components/shared/RouteTitle';
 
 const RootLayout = () => {
     return (

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import useAuth from '../../../Hooks/useAuth';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import useAuth from '../../../hooks/useAuth';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { PaymentHistoryLoader } from '../../../components/loaders';
+import { PaymentHistoryLoader } from '../../../components/ui';
 
 const PaymentHistory = () => {
     const { user } = useAuth();

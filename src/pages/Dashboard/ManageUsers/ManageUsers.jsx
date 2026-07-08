@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
-import useAuth from '../../../Hooks/useAuth';
-import { ManageUsersLoader } from '../../../components/loaders';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import useAuth from '../../../hooks/useAuth';
+import { ManageUsersLoader } from '../../../components/ui';
 
 const ManageUsers = () => {
     const axiosSecure = useAxiosSecure();

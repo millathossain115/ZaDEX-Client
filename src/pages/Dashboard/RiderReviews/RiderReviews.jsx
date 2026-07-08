@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
-import { RiderReviewsLoader } from '../../../components/loaders';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import { RiderReviewsLoader } from '../../../components/ui';
 
 const RiderReviews = () => {
     const axiosSecure = useAxiosSecure();

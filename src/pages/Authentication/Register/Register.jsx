@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import useAuth from '../../../Hooks/useAuth';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
-import SocialLogin from '../SocialLogin/SocialLogin';
+import useAuth from '../../../hooks/useAuth';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import SocialLogin from '../../../components/shared/SocialLogin/SocialLogin';
 
 const Register = () => {
     const [name, setName] = useState('');

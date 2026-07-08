@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import useAxiosSecure from '../../../../Hooks/useAxiosSecure';
+import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 
 const DeleteParcelModal = ({ parcel, onClose, onDelete, showToast }) => {
     const axiosSecure = useAxiosSecure();

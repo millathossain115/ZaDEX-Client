@@ -1,7 +1,7 @@
 import { Link, Outlet } from 'react-router-dom';
 import authImage from '../assets/Authentication.png';
-import logo from '../assets/LOGOS/Zadex-fav.svg';
-import RouteTitle from '../components/RouteTitle';
+import logo from '../assets/logos/Zadex-fav.svg';
+import RouteTitle from '../components/shared/RouteTitle';
 
 const AuthLayout = () => {
     return (

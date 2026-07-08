@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import CountUp from 'react-countup';
-import { AdminStatisticsLoader } from '../../../components/loaders';
+import { AdminStatisticsLoader } from '../../../components/ui';
 
 const AdminStatistics = () => {
     const axiosSecure = useAxiosSecure();

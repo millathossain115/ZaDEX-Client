@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
-import RiderAccessGate from '../RiderShared/RiderAccessGate';
-import useRiderDashboardData from '../RiderShared/useRiderDashboardData';
-import { formatCurrency, formatDate, getStatusBadgeClass, getStatusLabel } from '../RiderShared/riderUtils';
-import { RiderDeliveryListLoader } from '../../../components/loaders';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import RiderAccessGate from '../_shared/RiderAccessGate';
+import useRiderDashboardData from '../_shared/useRiderDashboardData';
+import { formatCurrency, formatDate, getStatusBadgeClass, getStatusLabel } from '../_shared/riderUtils';
+import { RiderDeliveryListLoader } from '../../../components/ui';
 
 const RiderDeliveryList = () => {
     const axiosSecure = useAxiosSecure();

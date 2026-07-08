@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import useAdmin from '../Hooks/useAdmin';
-import useAuth from '../Hooks/useAuth';
-import useUserRole from '../Hooks/useUserRole';
-import logo from '../assets/LOGOS/Zadex-fav.svg';
-import RouteTitle from '../components/RouteTitle';
+import useAdmin from '../hooks/useAdmin';
+import useAuth from '../hooks/useAuth';
+import useUserRole from '../hooks/useUserRole';
+import logo from '../assets/logos/Zadex-fav.svg';
+import RouteTitle from '../components/shared/RouteTitle';
 
 const DashboardLayout = () => {
     const { user, loading: authLoading, logOut } = useAuth();

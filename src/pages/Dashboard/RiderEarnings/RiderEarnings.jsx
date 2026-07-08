@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
-import RiderAccessGate from '../RiderShared/RiderAccessGate';
-import useRiderDashboardData from '../RiderShared/useRiderDashboardData';
-import { formatCurrency, formatDate } from '../RiderShared/riderUtils';
-import { RiderEarningsLoader } from '../../../components/loaders';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import RiderAccessGate from '../_shared/RiderAccessGate';
+import useRiderDashboardData from '../_shared/useRiderDashboardData';
+import { formatCurrency, formatDate } from '../_shared/riderUtils';
+import { RiderEarningsLoader } from '../../../components/ui';
 
 const MIN_WITHDRAWAL = 100;
 

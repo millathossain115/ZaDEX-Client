@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
-import { calculateRiderReward } from '../RiderShared/riderUtils';
-import { AssignParcelsLoader } from '../../../components/loaders';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import { calculateRiderReward } from '../_shared/riderUtils';
+import { AssignParcelsLoader } from '../../../components/ui';
 
 const AssignParcels = () => {
     const axiosSecure = useAxiosSecure();

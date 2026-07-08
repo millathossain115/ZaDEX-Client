@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import RiderAccessGate from '../RiderShared/RiderAccessGate';
-import { RiderDashboardLoader } from '../../../components/loaders';
-import useRiderDashboardData from '../RiderShared/useRiderDashboardData';
-import { formatCurrency, formatDate } from '../RiderShared/riderUtils';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import RiderAccessGate from '../_shared/RiderAccessGate';
+import { RiderDashboardLoader } from '../../../components/ui';
+import useRiderDashboardData from '../_shared/useRiderDashboardData';
+import { formatCurrency, formatDate } from '../_shared/riderUtils';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
 
 const RiderOverview = () => {
     const { stats, deliveryList, ongoingTasks, transactions, completedTasks, loading, error, refetch } = useRiderDashboardData();

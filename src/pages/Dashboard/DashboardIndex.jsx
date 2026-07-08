@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import useUserRole from '../../Hooks/useUserRole';
+import useUserRole from '../../hooks/useUserRole';
 import AdminStatistics from './AdminStatistics/AdminStatistics';
 import MyParcels from './MyParcels/MyParcels';
-import { MyParcelsLoader } from '../../components/loaders';
+import { MyParcelsLoader } from '../../components/ui';
 import RiderOverview from './RiderOverview/RiderOverview';
 
 const DashboardIndex = () => {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import CountUp from 'react-countup';
-import { AdminPaymentLogsLoader } from '../../../components/loaders';
+import { AdminPaymentLogsLoader } from '../../../components/ui';
 
 const AdminPaymentLogs = () => {
     const axiosSecure = useAxiosSecure();

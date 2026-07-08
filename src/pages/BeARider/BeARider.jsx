@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import useAuth from '../../Hooks/useAuth';
-import useAxiosSecure from '../../Hooks/useAxiosSecure';
-import useUserRole from '../../Hooks/useUserRole';
-import { BeARiderLoader } from '../../components/loaders';
+import useAuth from '../../hooks/useAuth';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
+import useUserRole from '../../hooks/useUserRole';
+import { BeARiderLoader } from '../../components/ui';
 
 const BeARider = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);

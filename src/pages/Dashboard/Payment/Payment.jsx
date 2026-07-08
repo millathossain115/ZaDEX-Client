@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import useAuth from '../../../Hooks/useAuth';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import useAuth from '../../../hooks/useAuth';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import bkashLogo from '../../../assets/payment/bkash-logo.svg';
 import nagadLogo from '../../../assets/payment/nagad-logo.svg';
-import { PaymentPageLoader } from '../../../components/loaders';
+import { PaymentPageLoader } from '../../../components/ui';
 
 const Payment = () => {
     const { id } = useParams();

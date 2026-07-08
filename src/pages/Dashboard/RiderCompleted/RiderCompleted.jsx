@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import RiderAccessGate from '../RiderShared/RiderAccessGate';
-import useRiderDashboardData from '../RiderShared/useRiderDashboardData';
-import { formatCurrency, formatDate } from '../RiderShared/riderUtils';
-import { RiderCompletedLoader } from '../../../components/loaders';
+import RiderAccessGate from '../_shared/RiderAccessGate';
+import useRiderDashboardData from '../_shared/useRiderDashboardData';
+import { formatCurrency, formatDate } from '../_shared/riderUtils';
+import { RiderCompletedLoader } from '../../../components/ui';
 
 const RiderCompleted = () => {
     const { completedTasks, loading } = useRiderDashboardData();

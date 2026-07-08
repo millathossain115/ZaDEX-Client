@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import useAuth from '../../../Hooks/useAuth';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import useAuth from '../../../hooks/useAuth';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import ParcelStats from './components/ParcelStats';
 import ParcelRow from './components/ParcelRow';
 import EditParcelModal from './components/EditParcelModal';
 import DeleteParcelModal from './components/DeleteParcelModal';
-import { MyParcelsLoader } from '../../../components/loaders';
+import { MyParcelsLoader } from '../../../components/ui';
 
 const MyParcels = () => {
     const axiosSecure = useAxiosSecure();

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
-import { PendingRidersLoader } from '../../../components/loaders';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import { PendingRidersLoader } from '../../../components/ui';
 
 const PendingRider = () => {
     const axiosSecure = useAxiosSecure();

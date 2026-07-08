@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
-import { calculateRiderReward } from '../RiderShared/riderUtils';
-import { AllParcelsLoader } from '../../../components/loaders';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import { calculateRiderReward } from '../_shared/riderUtils';
+import { AllParcelsLoader } from '../../../components/ui';
 
 const ITEMS_PER_PAGE = 10;
 

@@ -1,6 +1,6 @@
-import RiderAccessGate from '../RiderShared/RiderAccessGate';
-import useRiderDashboardData from '../RiderShared/useRiderDashboardData';
-import { RiderMyReviewsLoader } from '../../../components/loaders';
+import RiderAccessGate from '../_shared/RiderAccessGate';
+import useRiderDashboardData from '../_shared/useRiderDashboardData';
+import { RiderMyReviewsLoader } from '../../../components/ui';
 
 const RiderMyReviews = () => {
     const { completedTasks, stats, loading } = useRiderDashboardData();

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import useAxiosSecure from '../../../Hooks/useAxiosSecure';
-import { ActiveRidersLoader } from '../../../components/loaders';
+import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import { ActiveRidersLoader } from '../../../components/ui';
 
 const ActiveRider = () => {
     const axiosSecure = useAxiosSecure();
