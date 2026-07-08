@@ -4,6 +4,7 @@ import useAdmin from '../Hooks/useAdmin';
 import useAuth from '../Hooks/useAuth';
 import useUserRole from '../Hooks/useUserRole';
 import logo from '../assets/LOGOS/Zadex-fav.svg';
+import RouteTitle from '../components/RouteTitle';
 
 const DashboardLayout = () => {
     const { user, logOut } = useAuth();
@@ -268,6 +269,7 @@ const DashboardLayout = () => {
 
     return (
         <div className="min-h-screen bg-[#F0F0F0]">
+            <RouteTitle />
             <nav className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-40">
                 <div className="px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16">

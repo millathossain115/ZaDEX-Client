@@ -1,8 +1,13 @@
+import { useEffect } from 'react';
 import Lottie from 'lottie-react';
 import { Link } from 'react-router-dom';
 import animationData from '../../assets/Animation/404 Error Lottie animation.json';
 
 const ErrorPage = () => {
+    useEffect(() => {
+        document.title = 'Page Not Found | Zadex';
+    }, []);
+
     return (
         <div className="min-h-screen bg-[#F0F0F0] flex flex-col items-center justify-center px-4">
             {/* Lottie Animation */}

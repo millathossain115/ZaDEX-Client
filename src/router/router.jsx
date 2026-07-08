@@ -40,148 +40,182 @@ export const router = createBrowserRouter([
     {
         path: "/",
         Component: RootLayout,
+        handle: { title: "Home" },
         children: [
             {
                 index: true,
-                Component: Home
+                Component: Home,
+                handle: { title: "Home" }
             },
             {
                 path: "coverage",
-                Component: Coverage
+                Component: Coverage,
+                handle: { title: "Coverage" }
             },
             {
                 path: "pricing",
-                Component: PricingCalculator
+                Component: PricingCalculator,
+                handle: { title: "Pricing" }
             },
             {
                 path: "about",
-                Component: AboutUs
+                Component: AboutUs,
+                handle: { title: "About Us" }
             },
             {
                 path: "rider",
-                element: <PrivateRoute><BeARider /></PrivateRoute>
+                element: <PrivateRoute><BeARider /></PrivateRoute>,
+                handle: { title: "Become a Rider" }
             },
             {
                 path: "add-parcel",
-                element: <PrivateRoute><AddParcel /></PrivateRoute>
+                element: <PrivateRoute><AddParcel /></PrivateRoute>,
+                handle: { title: "Add Parcel" }
             }
         ]
     },
     {
         path: "dashboard",
         element: <PrivateRoute><DashboardLayout /></PrivateRoute>,
+        handle: { title: "Dashboard" },
         children: [
             // Default index — resolved dynamically by DashboardLayout based on role
             // Admin lands on AdminStatistics, User lands on MyParcels
             {
                 index: true,
-                element: <DashboardIndex />
+                element: <DashboardIndex />,
+                handle: { title: "Dashboard" }
             },
             {
                 path: "profile",
-                element: <MyProfile />
+                element: <MyProfile />,
+                handle: { title: "My Profile" }
             },
             {
                 path: "payment/:id",
-                element: <Payment />
+                element: <Payment />,
+                handle: { title: "Payment" }
             },
             {
                 path: "payment-history",
-                element: <PaymentHistory />
+                element: <PaymentHistory />,
+                handle: { title: "Payment History" }
             },
             {
                 path: "balance",
-                element: <Balance />
+                element: <Balance />,
+                handle: { title: "My Balance" }
             },
             {
                 path: "view/:id",
-                element: <ViewParcel />
+                element: <ViewParcel />,
+                handle: { title: "View Parcel" }
             },
             {
                 path: "track",
-                element: <Trackparcel />
+                element: <Trackparcel />,
+                handle: { title: "Track Parcel" }
             },
             {
                 path: "rider-overview",
-                element: <RiderOverview />
+                element: <RiderOverview />,
+                handle: { title: "Rider Overview" }
             },
             {
                 path: "delivery-list",
-                element: <RiderDeliveryList />
+                element: <RiderDeliveryList />,
+                handle: { title: "Delivery List" }
             },
             {
                 path: "ongoing-tasks",
-                element: <RiderOngoingTasks />
+                element: <RiderOngoingTasks />,
+                handle: { title: "Ongoing Tasks" }
             },
             {
                 path: "completed",
-                element: <RiderCompleted />
+                element: <RiderCompleted />,
+                handle: { title: "Completed Deliveries" }
             },
             {
                 path: "earnings",
-                element: <RiderEarnings />
+                element: <RiderEarnings />,
+                handle: { title: "Rider Earnings" }
             },
             {
                 path: "my-reviews",
-                element: <RiderMyReviews />
+                element: <RiderMyReviews />,
+                handle: { title: "My Reviews" }
             },
 
             // ===== ADMIN-ONLY ROUTES =====
             {
                 path: "statistics",
-                element: <AdminRoute><AdminStatistics /></AdminRoute>
+                element: <AdminRoute><AdminStatistics /></AdminRoute>,
+                handle: { title: "Admin Statistics" }
             },
             {
                 path: "all-parcels",
-                element: <AdminRoute><AllParcels /></AdminRoute>
+                element: <AdminRoute><AllParcels /></AdminRoute>,
+                handle: { title: "All Parcels" }
             },
             {
                 path: "assign-parcels",
-                element: <AdminRoute><AssignParcels /></AdminRoute>
+                element: <AdminRoute><AssignParcels /></AdminRoute>,
+                handle: { title: "Assign Parcels" }
             },
             {
                 path: "payment-logs",
-                element: <AdminRoute><AdminPaymentLogs /></AdminRoute>
+                element: <AdminRoute><AdminPaymentLogs /></AdminRoute>,
+                handle: { title: "Payment Logs" }
             },
             {
                 path: "manage-riders",
-                element: <AdminRoute><ManageRiders /></AdminRoute>
+                element: <AdminRoute><ManageRiders /></AdminRoute>,
+                handle: { title: "Manage Riders" }
             },
             {
                 path: "rider-reviews",
-                element: <AdminRoute><RiderReviews /></AdminRoute>
+                element: <AdminRoute><RiderReviews /></AdminRoute>,
+                handle: { title: "Rider Reviews" }
             },
             // Legacy routes (still protected)
             {
                 path: "pending-rider",
-                element: <AdminRoute><PendingRider /></AdminRoute>
+                element: <AdminRoute><PendingRider /></AdminRoute>,
+                handle: { title: "Pending Riders" }
             },
             {
                 path: "active-rider",
-                element: <AdminRoute><ActiveRider /></AdminRoute>
+                element: <AdminRoute><ActiveRider /></AdminRoute>,
+                handle: { title: "Active Riders" }
             },
             {
                 path: "manage-users",
-                element: <AdminRoute><ManageUsers /></AdminRoute>
+                element: <AdminRoute><ManageUsers /></AdminRoute>,
+                handle: { title: "Manage Users" }
             }
         ]
     },
     {
         path: "/",
         Component: AuthLayout,
+        handle: { title: "Authentication" },
         children: [
             {
                 path: "login",
-                Component: Login
+                Component: Login,
+                handle: { title: "Login" }
             },
             {
                 path: "register",
-                Component: Register
+                Component: Register,
+                handle: { title: "Register" }
             }
         ]
     },
     {
         path: "*",
-        Component: ErrorPage
+        Component: ErrorPage,
+        handle: { title: "Page Not Found" }
     }
 ]);

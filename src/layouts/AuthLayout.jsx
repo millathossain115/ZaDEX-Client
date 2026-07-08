@@ -1,10 +1,12 @@
 import { Link, Outlet } from 'react-router-dom';
 import authImage from '../assets/Authentication.png';
 import logo from '../assets/LOGOS/Zadex-fav.svg';
+import RouteTitle from '../components/RouteTitle';
 
 const AuthLayout = () => {
     return (
         <div className="min-h-screen flex bg-white">
+            <RouteTitle />
             {/* Left Side - Illustration */}
             <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-orange-50 via-orange-100/50 to-amber-50">
                 {/* Decorative blobs */}
