@@ -1,0 +1,509 @@
+import { useCallback, useEffect, useState } from 'react';
+import useAuth from '@/shared/hooks/useAuth';
+import useAxiosSecure from '@/shared/hooks/useAxiosSecure';
+import { BalanceLoader } from '@/shared/ui';
+
+// SVG icons
+const BankIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 21h18M3 10h18M5 10V7l7-4 7 4v3M9 21v-5a1 1 0 011-1h4a1 1 0 011 1v5" />
+    </svg>
+);
+
+const MobileIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+    </svg>
+);
+
+const CardIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1M3 6h18a1 1 0 011 1v10a1 1 0 01-1 1H3a1 1 0 01-1-1V7a1 1 0 011-1z" />
+    </svg>
+);
+
+const MIN_WITHDRAWAL = 100;
+
+// Simple in-component toast
+const Toast = ({ toasts, dismiss }) => (
+    <div className="fixed top-5 right-5 z-50 space-y-2 pointer-events-none">
+        {toasts.map(t => (
+            <div
+                key={t.id}
+                className={`flex items-center gap-2.5 px-4 py-2.5 rounded-lg shadow-lg text-sm font-medium text-white pointer-events-auto transition-all
+                    ${t.type === 'success' ? 'bg-emerald-600' : t.type === 'error' ? 'bg-red-500' : 'bg-gray-700'}`}
+            >
+                {t.type === 'success' && (
+                    <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                )}
+                {t.type === 'error' && (
+                    <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                )}
+                <span>{t.message}</span>
+                <button onClick={() => dismiss(t.id)} className="ml-2 opacity-70 hover:opacity-100 cursor-pointer">✕</button>
+            </div>
+        ))}
+    </div>
+);
+
+const useToast = () => {
+    const [toasts, setToasts] = useState([]);
+    const show = (message, type = 'info') => {
+        const id = Date.now();
+        setToasts(prev => [...prev, { id, message, type }]);
+        setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 4000);
+    };
+    const dismiss = (id) => setToasts(prev => prev.filter(t => t.id !== id));
+    return { toasts, dismiss, success: m => show(m, 'success'), error: m => show(m, 'error') };
+};
+
+const Balance = () => {
+    const { user } = useAuth();
+    const axiosSecure = useAxiosSecure();
+    const toast = useToast();
+
+    const [balance, setBalance] = useState(0);
+    const [transactions, setTransactions] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [withdrawAmount, setWithdrawAmount] = useState('');
+    const [paymentMethods, setPaymentMethods] = useState([]);
+    const [selectedMethod, setSelectedMethod] = useState('');
+    const [newMethod, setNewMethod] = useState({ type: 'bank', name: '', details: '' });
+    const [showAddMethod, setShowAddMethod] = useState(false);
+    const [confirmWithdraw, setConfirmWithdraw] = useState(false);
+    const [withdrawing, setWithdrawing] = useState(false);
+    const [txFilter, setTxFilter] = useState('all');
+    const [txVisible, setTxVisible] = useState(5);
+
+    const fetchBalanceData = useCallback(async () => {
+        if (!user?.email) return;
+
+        setLoading(true);
+        try {
+            const [balanceRes, transactionsRes, methodsRes] = await Promise.all([
+                axiosSecure.get(`/balance?email=${user.email}`),
+                axiosSecure.get(`/transactions?email=${user.email}`),
+                axiosSecure.get(`/payment-methods?email=${user.email}`)
+            ]);
+            setBalance(balanceRes.data.balance || 0);
+            setTransactions(transactionsRes.data || []);
+            setPaymentMethods(methodsRes.data || []);
+            if (methodsRes.data.length > 0) setSelectedMethod(methodsRes.data[0].id);
+        } catch {
+            // Mock data for demonstration
+            setBalance(1250.75);
+            setTransactions([
+                { id: 1, date: '2026-04-01', description: 'Parcel Delivery Fee', amount: 150.00, type: 'credit' },
+                { id: 2, date: '2026-04-10', description: 'Withdrawal to Bank', amount: -500.00, type: 'debit' },
+                { id: 3, date: '2026-03-05', description: 'Parcel Delivery Fee', amount: 200.00, type: 'credit' },
+                { id: 4, date: '2026-03-01', description: 'Service Charge', amount: -25.00, type: 'debit' },
+                { id: 5, date: '2026-02-28', description: 'Parcel Delivery Fee', amount: 175.50, type: 'credit' },
+                { id: 6, date: '2026-02-20', description: 'Parcel Delivery Fee', amount: 300.00, type: 'credit' },
+                { id: 7, date: '2026-02-15', description: 'Service Charge', amount: -15.00, type: 'debit' },
+            ]);
+            setPaymentMethods([
+                { id: '1', type: 'bank', name: 'DBBL Bank', details: 'Account ****1234' },
+                { id: '2', type: 'mobile', name: 'bKash', details: '017********' },
+            ]);
+            setSelectedMethod('1');
+        } finally {
+            setLoading(false);
+        }
+    }, [axiosSecure, user?.email]);
+
+    useEffect(() => {
+        fetchBalanceData();
+    }, [fetchBalanceData]);
+
+    // Fix: filter by current month only
+    const now = new Date();
+    const thisMonthCredits = transactions
+        .filter(t => {
+            const d = new Date(t.date);
+            return t.type === 'credit' && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+        })
+        .reduce((sum, t) => sum + t.amount, 0);
+
+    const totalWithdrawn = Math.abs(
+        transactions.filter(t => t.type === 'debit').reduce((sum, t) => sum + t.amount, 0)
+    );
+
+    const handleWithdrawSubmit = (e) => {
+        e.preventDefault();
+        const amount = parseFloat(withdrawAmount);
+        if (!withdrawAmount || amount <= 0) return toast.error('Please enter a valid amount');
+        if (amount < MIN_WITHDRAWAL) return toast.error(`Minimum withdrawal is ৳${MIN_WITHDRAWAL}`);
+        if (amount > balance) return toast.error('Insufficient balance');
+        if (!selectedMethod) return toast.error('Please select a payment method');
+        setConfirmWithdraw(true);
+    };
+
+    const handleWithdrawConfirm = async () => {
+        setWithdrawing(true);
+        try {
+            const response = await axiosSecure.post('/withdraw', {
+                email: user.email,
+                amount: parseFloat(withdrawAmount),
+                methodId: selectedMethod
+            });
+            if (response.data.success) {
+                toast.success('Withdrawal request submitted successfully!');
+                setWithdrawAmount('');
+                setConfirmWithdraw(false);
+                fetchBalanceData();
+            }
+        } catch {
+            toast.error('Withdrawal failed. Please try again.');
+        } finally {
+            setWithdrawing(false);
+            setConfirmWithdraw(false);
+        }
+    };
+
+    const handleAddPaymentMethod = async (e) => {
+        e.preventDefault();
+        if (!newMethod.name.trim()) return toast.error('Please enter a name for this payment method');
+        if (!newMethod.details.trim()) return toast.error('Please enter payment method details');
+        try {
+            const response = await axiosSecure.post('/payment-methods', {
+                email: user.email,
+                type: newMethod.type,
+                name: newMethod.name,
+                details: newMethod.details
+            });
+            if (response.data.success) {
+                toast.success('Payment method added successfully!');
+                setNewMethod({ type: 'bank', name: '', details: '' });
+                setShowAddMethod(false);
+                fetchBalanceData();
+            }
+        } catch {
+            toast.error('Failed to add payment method. Please try again.');
+        }
+    };
+
+    const handleRemoveMethod = async (methodId) => {
+        try {
+            await axiosSecure.delete(`/payment-methods/${methodId}?email=${user.email}`);
+            toast.success('Payment method removed.');
+            setPaymentMethods(prev => prev.filter(m => m.id !== methodId));
+            if (selectedMethod === methodId) {
+                const remaining = paymentMethods.filter(m => m.id !== methodId);
+                setSelectedMethod(remaining.length > 0 ? remaining[0].id : '');
+            }
+        } catch {
+            toast.error('Failed to remove payment method.');
+        }
+    };
+
+    const filteredTransactions = transactions.filter(t =>
+        txFilter === 'all' ? true : t.type === txFilter
+    );
+
+    const methodForWithdraw = paymentMethods.find(m => m.id === selectedMethod);
+
+    if (loading) {
+        return <BalanceLoader />;
+    }
+
+    return (
+        <>
+            <Toast toasts={toast.toasts} dismiss={toast.dismiss} />
+
+            {/* Withdrawal Confirmation Modal */}
+            {confirmWithdraw && (
+                <div className="fixed inset-0 bg-black/40 z-40 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-xl shadow-xl p-5 w-full max-w-sm">
+                        <h3 className="text-lg font-bold text-gray-900 mb-1">Confirm Withdrawal</h3>
+                        <p className="text-sm text-gray-500 mb-3">Please review the details before confirming.</p>
+                        <div className="bg-gray-50 rounded-lg p-3 space-y-1.5 text-sm mb-4">
+                            <div className="flex justify-between">
+                                <span className="text-gray-500">Amount</span>
+                                <span className="font-bold text-gray-900">৳{parseFloat(withdrawAmount).toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-gray-500">Processing fee (1%)</span>
+                                <span className="font-medium text-gray-700">-৳{(parseFloat(withdrawAmount) * 0.01).toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between border-t border-gray-200 pt-2 mt-2">
+                                <span className="text-gray-500">You receive</span>
+                                <span className="font-bold text-emerald-600">৳{(parseFloat(withdrawAmount) * 0.99).toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between">
+                                <span className="text-gray-500">To</span>
+                                <span className="font-medium text-gray-700">{methodForWithdraw?.name} · {methodForWithdraw?.details}</span>
+                            </div>
+                        </div>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setConfirmWithdraw(false)}
+                                className="flex-1 py-2.5 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition cursor-pointer"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleWithdrawConfirm}
+                                disabled={withdrawing}
+                                className="flex-1 py-2.5 rounded-lg bg-[#03373D] text-white text-sm font-bold transition hover:bg-[#025a63] disabled:opacity-60 cursor-pointer"
+                            >
+                                {withdrawing ? 'Processing...' : 'Confirm'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            <div className="space-y-4">
+                {/* Header */}
+                <div>
+                    <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">My Balance</h1>
+                    <p className="text-sm text-gray-500 mt-0.5">Manage earnings, withdrawals, and payment methods.</p>
+                </div>
+
+                {/* Balance Overview Card */}
+                <div className="bg-gradient-to-br from-[#03373D] to-[#025a63] rounded-xl p-5 text-white shadow-sm">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <p className="text-xs font-bold text-white/70 uppercase tracking-widest">Current Balance</p>
+                            <p className="text-4xl font-black mt-1 leading-none">৳{balance.toFixed(2)}</p>
+                            <p className="text-xs text-white/60 mt-2">Available for withdrawal</p>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 md:min-w-[300px]">
+                            <div className="bg-white/15 rounded-lg p-3">
+                                <p className="text-[10px] font-bold uppercase tracking-widest text-white/65">This Month</p>
+                                <p className="text-xl font-black mt-1">৳{thisMonthCredits.toFixed(2)}</p>
+                            </div>
+                            <div className="bg-white/15 rounded-lg p-3">
+                                <p className="text-[10px] font-bold uppercase tracking-widest text-white/65">Withdrawn</p>
+                                <p className="text-xl font-black mt-1">৳{totalWithdrawn.toFixed(2)}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 xl:grid-cols-[0.95fr_1.05fr] gap-4 items-start">
+                    {/* Left Column */}
+                    <div className="space-y-4">
+                        {/* Withdrawal Form */}
+                        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+                            <h2 className="text-base font-bold text-gray-900 mb-4">Withdraw Funds</h2>
+                            <form onSubmit={handleWithdrawSubmit} className="space-y-4">
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Amount to Withdraw (৳)</label>
+                                    <input
+                                        type="number"
+                                        value={withdrawAmount}
+                                        onChange={(e) => setWithdrawAmount(e.target.value)}
+                                        placeholder="Enter amount"
+                                        className="w-full px-3 py-2.5 rounded-lg border border-gray-200 bg-gray-50 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#03373D]/20 focus:border-[#03373D] transition-all"
+                                        min={MIN_WITHDRAWAL}
+                                        max={balance}
+                                        step="0.01"
+                                    />
+                                    <div className="flex justify-between mt-1.5">
+                                        <p className="text-xs text-gray-400">Minimum: ৳{MIN_WITHDRAWAL}</p>
+                                        <p className="text-xs text-gray-400">Maximum: ৳{balance.toFixed(2)}</p>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Payment Method</label>
+                                    {paymentMethods.length > 0 ? (
+                                        <select
+                                            value={selectedMethod}
+                                            onChange={(e) => setSelectedMethod(e.target.value)}
+                                            className="w-full px-3 py-2.5 rounded-lg border border-gray-200 bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#03373D]/20 focus:border-[#03373D] transition-all cursor-pointer"
+                                        >
+                                            {paymentMethods.map(method => (
+                                                <option key={method.id} value={method.id}>
+                                                    {method.name} – {method.details}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    ) : (
+                                        <p className="text-gray-500 text-sm">No payment methods added. Please add one below.</p>
+                                    )}
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={!withdrawAmount || parseFloat(withdrawAmount) < MIN_WITHDRAWAL || paymentMethods.length === 0}
+                                    className="w-full py-3 bg-[#03373D] text-white text-xs font-black uppercase tracking-widest rounded-lg shadow-md hover:bg-[#025a63] active:scale-[0.98] transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                                >
+                                    Request Withdrawal
+                                </button>
+                            </form>
+                            <div className="mt-4 pt-4 border-t border-gray-100">
+                                <p className="text-xs text-gray-500">
+                                    Withdrawal requests are processed within 1–3 business days. A 1% processing fee applies.
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Payment Methods */}
+                        <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+                            <div className="flex items-center justify-between mb-4">
+                                <h2 className="text-base font-bold text-gray-900">Payment Methods</h2>
+                                <button
+                                    onClick={() => setShowAddMethod(!showAddMethod)}
+                                    className="px-3 py-1.5 bg-gray-100 text-gray-700 text-xs font-bold rounded-lg hover:bg-gray-200 transition cursor-pointer"
+                                >
+                                    {showAddMethod ? 'Cancel' : 'Add New'}
+                                </button>
+                            </div>
+
+                            {showAddMethod && (
+                                <form onSubmit={handleAddPaymentMethod} className="mb-4 p-3 bg-gray-50 rounded-lg space-y-3">
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Type</label>
+                                        <select
+                                            value={newMethod.type}
+                                            onChange={(e) => setNewMethod({ ...newMethod, type: e.target.value })}
+                                            className="w-full px-3 py-2.5 rounded-lg border border-gray-200 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#03373D]/20 focus:border-[#03373D] transition-all cursor-pointer"
+                                        >
+                                            <option value="bank">Bank Account</option>
+                                            <option value="mobile">Mobile Banking</option>
+                                            <option value="card">Card</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Name</label>
+                                        <input
+                                            type="text"
+                                            value={newMethod.name}
+                                            onChange={(e) => setNewMethod({ ...newMethod, name: e.target.value })}
+                                            placeholder="e.g., DBBL Bank, bKash"
+                                            className="w-full px-3 py-2.5 rounded-lg border border-gray-200 bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#03373D]/20 focus:border-[#03373D] transition-all"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Details</label>
+                                        <input
+                                            type="text"
+                                            value={newMethod.details}
+                                            onChange={(e) => setNewMethod({ ...newMethod, details: e.target.value })}
+                                            placeholder="e.g., Account number, bKash number"
+                                            className="w-full px-3 py-2.5 rounded-lg border border-gray-200 bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#03373D]/20 focus:border-[#03373D] transition-all"
+                                        />
+                                    </div>
+                                    <button
+                                        type="submit"
+                                        className="w-full py-2.5 bg-emerald-600 text-white text-sm font-bold rounded-lg hover:bg-emerald-700 transition cursor-pointer"
+                                    >
+                                        Add Payment Method
+                                    </button>
+                                </form>
+                            )}
+
+                            {paymentMethods.length > 0 ? (
+                                <div className="space-y-2.5">
+                                    {paymentMethods.map(method => (
+                                        <div key={method.id} className="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition">
+                                            <div className="flex items-center gap-2.5 min-w-0">
+                                                <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
+                                                    method.type === 'bank' ? 'bg-blue-100 text-blue-600' :
+                                                    method.type === 'mobile' ? 'bg-green-100 text-green-600' :
+                                                    'bg-purple-100 text-purple-600'
+                                                }`}>
+                                                    {method.type === 'bank' ? <BankIcon /> : method.type === 'mobile' ? <MobileIcon /> : <CardIcon />}
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <p className="font-semibold text-sm text-gray-900 truncate">{method.name}</p>
+                                                    <p className="text-xs text-gray-500 truncate">{method.details}</p>
+                                                </div>
+                                            </div>
+                                            <button
+                                                onClick={() => handleRemoveMethod(method.id)}
+                                                className="text-red-500 hover:text-red-700 text-xs font-bold cursor-pointer shrink-0 ml-2"
+                                            >
+                                                Remove
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center py-6">
+                                    <p className="text-gray-500">No payment methods added yet.</p>
+                                    <p className="text-sm text-gray-400 mt-2">Add a payment method to withdraw your earnings.</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Right Column: Transaction History */}
+                    <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+                        <div className="flex items-center justify-between gap-3 mb-4">
+                            <h2 className="text-base font-bold text-gray-900">Transaction History</h2>
+                            <select
+                                value={txFilter}
+                                onChange={(e) => { setTxFilter(e.target.value); setTxVisible(5); }}
+                                className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#03373D]/20 cursor-pointer"
+                            >
+                                <option value="all">All</option>
+                                <option value="credit">Credits</option>
+                                <option value="debit">Debits</option>
+                            </select>
+                        </div>
+
+                        {filteredTransactions.length > 0 ? (
+                            <>
+                                <div className="space-y-2.5">
+                                    {filteredTransactions.slice(0, txVisible).map(transaction => (
+                                        <div key={transaction.id} className="flex items-center justify-between p-3 border border-gray-100 rounded-lg hover:bg-gray-50 transition">
+                                            <div className="min-w-0">
+                                                <p className="font-semibold text-sm text-gray-900 truncate">{transaction.description}</p>
+                                                <p className="text-xs text-gray-500">{new Date(transaction.date).toLocaleDateString('en-US', {
+                                                    year: 'numeric',
+                                                    month: 'short',
+                                                    day: 'numeric'
+                                                })}</p>
+                                            </div>
+                                            <div className={`text-right shrink-0 ml-4 ${transaction.type === 'credit' ? 'text-emerald-600' : 'text-red-600'}`}>
+                                                <p className="font-black text-sm">{transaction.type === 'credit' ? '+' : '-'}৳{Math.abs(transaction.amount).toFixed(2)}</p>
+                                                <p className="text-[10px] uppercase font-bold tracking-wider">{transaction.type === 'credit' ? 'Credit' : 'Debit'}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                {filteredTransactions.length > txVisible && (
+                                    <button
+                                        onClick={() => setTxVisible(v => v + 5)}
+                                        className="w-full mt-3 py-2 text-sm font-semibold text-[#03373D] border border-[#03373D]/30 rounded-lg hover:bg-[#03373D]/5 transition cursor-pointer"
+                                    >
+                                        Show more
+                                    </button>
+                                )}
+                            </>
+                        ) : (
+                            <div className="text-center py-6">
+                                <p className="text-gray-500">No transactions found.</p>
+                                <p className="text-sm text-gray-400 mt-2">Your transaction history will appear here.</p>
+                            </div>
+                        )}
+
+                        <div className="mt-4 pt-4 border-t border-gray-100">
+                            <div className="flex justify-between text-sm">
+                                <span className="text-gray-500">Total Credits</span>
+                                <span className="font-bold text-emerald-600">
+                                    +৳{transactions.filter(t => t.type === 'credit').reduce((sum, t) => sum + t.amount, 0).toFixed(2)}
+                                </span>
+                            </div>
+                            <div className="flex justify-between text-sm mt-2">
+                                <span className="text-gray-500">Total Debits</span>
+                                <span className="font-bold text-red-600">
+                                    -৳{totalWithdrawn.toFixed(2)}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+};
+
+export default Balance;
