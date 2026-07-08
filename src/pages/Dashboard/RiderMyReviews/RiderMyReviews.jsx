@@ -1,5 +1,6 @@
 import RiderAccessGate from '../RiderShared/RiderAccessGate';
 import useRiderDashboardData from '../RiderShared/useRiderDashboardData';
+import { RiderMyReviewsLoader } from '../../../components/loaders';
 
 const RiderMyReviews = () => {
     const { completedTasks, stats, loading } = useRiderDashboardData();
@@ -15,13 +16,7 @@ const RiderMyReviews = () => {
     }));
 
     if (loading) {
-        return (
-            <RiderAccessGate>
-                <div className="flex items-center justify-center min-h-[60vh]">
-                    <p className="text-gray-500 font-medium">Loading reviews...</p>
-                </div>
-            </RiderAccessGate>
-        );
+        return <RiderAccessGate><RiderMyReviewsLoader /></RiderAccessGate>;
     }
 
     return (

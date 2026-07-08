@@ -3,6 +3,7 @@ import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import RiderAccessGate from '../RiderShared/RiderAccessGate';
 import useRiderDashboardData from '../RiderShared/useRiderDashboardData';
 import { formatCurrency, formatDate, getStatusBadgeClass, getStatusLabel, normalizeStatus } from '../RiderShared/riderUtils';
+import { RiderOngoingTasksLoader } from '../../../components/loaders';
 
 const RiderOngoingTasks = () => {
     const axiosSecure = useAxiosSecure();
@@ -48,13 +49,7 @@ const RiderOngoingTasks = () => {
     };
 
     if (loading) {
-        return (
-            <RiderAccessGate>
-                <div className="flex min-h-[42vh] items-center justify-center rounded-2xl border border-gray-100 bg-white">
-                    <p className="text-sm font-semibold text-gray-500">Loading ongoing tasks...</p>
-                </div>
-            </RiderAccessGate>
-        );
+        return <RiderAccessGate><RiderOngoingTasksLoader /></RiderAccessGate>;
     }
 
     return (

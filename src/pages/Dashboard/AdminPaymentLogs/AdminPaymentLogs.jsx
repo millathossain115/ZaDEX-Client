@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import CountUp from 'react-countup';
+import { AdminPaymentLogsLoader } from '../../../components/loaders';
 
 const AdminPaymentLogs = () => {
     const axiosSecure = useAxiosSecure();
@@ -65,37 +66,7 @@ const AdminPaymentLogs = () => {
     };
 
     if (loading) {
-        return (
-            <div className="space-y-8 animate-pulse">
-                {/* Header Skeleton */}
-                <div className="mb-8">
-                    <div className="h-9 w-64 bg-gray-200 rounded-xl mb-3"></div>
-                    <div className="h-4 w-96 max-w-full bg-gray-100 rounded-lg"></div>
-                </div>
-                {/* Stats Card Skeleton */}
-                <div className="h-28 w-full max-w-sm bg-gray-200 rounded-2xl mb-8"></div>
-                
-                {/* Search Bar Skeleton */}
-                <div className="flex justify-end mb-4">
-                    <div className="h-12 w-full md:w-80 bg-gray-200 rounded-xl"></div>
-                </div>
-                
-                {/* Table Skeleton */}
-                <div className="border border-gray-100 rounded-3xl overflow-hidden bg-white shadow-sm">
-                    <div className="h-14 bg-gray-50 border-b border-gray-100"></div>
-                    {[1, 2, 3, 4, 5].map(i => (
-                        <div key={i} className="h-24 border-b border-gray-50 flex items-center px-8 gap-6">
-                            <div className="h-4 bg-gray-200 rounded w-[25%]"></div>
-                            <div className="h-4 bg-gray-200 rounded w-[15%]"></div>
-                            <div className="h-4 bg-gray-200 rounded w-[15%]"></div>
-                            <div className="h-4 bg-gray-200 rounded w-[15%]"></div>
-                            <div className="h-4 bg-gray-200 rounded w-[15%]"></div>
-                            <div className="h-4 bg-gray-200 rounded w-[15%]"></div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        );
+        return <AdminPaymentLogsLoader />;
     }
 
     return (

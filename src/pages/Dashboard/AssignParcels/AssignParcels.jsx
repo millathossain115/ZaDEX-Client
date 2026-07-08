@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import { calculateRiderReward } from '../RiderShared/riderUtils';
+import { AssignParcelsLoader } from '../../../components/loaders';
 
 const AssignParcels = () => {
     const axiosSecure = useAxiosSecure();
@@ -90,56 +91,7 @@ const AssignParcels = () => {
     };
 
     if (loading) {
-        return (
-            <div className="space-y-5 animate-pulse">
-                {/* Page Header Skeleton */}
-                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
-                    <div>
-                        <div className="h-7 w-52 bg-gray-200 rounded-lg mb-2"></div>
-                        <div className="h-3 w-80 max-w-full bg-gray-100 rounded-lg"></div>
-                    </div>
-                    <div className="flex gap-2">
-                        <div className="h-9 w-28 bg-gray-100 rounded-lg"></div>
-                        <div className="h-9 w-28 bg-gray-100 rounded-lg"></div>
-                    </div>
-                </div>
-
-                {/* Info Bar Skeleton */}
-                <div className="h-10 bg-white border border-gray-100 rounded-xl shadow-sm"></div>
-
-                {/* Parcels Skeleton */}
-                <div className="space-y-2">
-                    {[1, 2, 3, 4].map(i => (
-                        <div key={i} className="bg-white rounded-xl border border-gray-100 shadow-sm p-3 overflow-hidden">
-                            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <div className="h-4 w-36 bg-gray-200 rounded"></div>
-                                        <div className="h-4 w-10 bg-gray-100 rounded"></div>
-                                        <div className="h-4 w-12 bg-gray-100 rounded"></div>
-                                    </div>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                        <div className="bg-gray-50 border border-gray-100 rounded-lg p-2.5">
-                                            <div className="h-2 w-16 bg-gray-200 rounded mb-2"></div>
-                                            <div className="h-3.5 w-28 bg-gray-300 rounded mb-1"></div>
-                                            <div className="h-3 w-44 bg-gray-200 rounded"></div>
-                                        </div>
-                                        <div className="bg-gray-50 border border-gray-100 rounded-lg p-2.5">
-                                            <div className="h-2 w-16 bg-gray-200 rounded mb-2"></div>
-                                            <div className="h-3.5 w-28 bg-gray-300 rounded mb-1"></div>
-                                            <div className="h-3 w-44 bg-gray-200 rounded"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="flex shrink-0 border-t lg:border-t-0 lg:border-l border-gray-100 pt-2 lg:pt-0 lg:pl-3 w-full lg:w-32">
-                                    <div className="w-full h-8 bg-gray-200 rounded-lg"></div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        );
+        return <AssignParcelsLoader />;
     }
 
     return (

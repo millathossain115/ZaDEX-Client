@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import CountUp from 'react-countup';
+import { AdminStatisticsLoader } from '../../../components/loaders';
 
 const AdminStatistics = () => {
     const axiosSecure = useAxiosSecure();
@@ -127,84 +128,8 @@ const AdminStatistics = () => {
 
     const deliveryRate = stats.totalParcels > 0 ? Math.round((stats.deliveredCount / stats.totalParcels) * 100) : 0;
 
-    // --- Skeleton Components ---
-    const CardSkeleton = () => (
-        <div className="bg-white rounded-2xl border border-gray-100 p-5 animate-pulse">
-            <div className="flex items-center justify-between mb-4">
-                <div className="w-11 h-11 bg-gray-100 rounded-xl"></div>
-                <div className="w-16 h-5 bg-gray-100 rounded-md"></div>
-            </div>
-            <div className="space-y-2 flex flex-col items-end">
-                <div className="w-12 h-3 bg-gray-50 rounded-full"></div>
-                <div className="w-24 h-8 bg-gray-100 rounded-lg"></div>
-            </div>
-        </div>
-    );
-
-    const StatRowSkeleton = () => (
-        <div className="flex items-center gap-4 py-4 px-3 animate-pulse border-b border-gray-50">
-            <div className="w-10 h-10 bg-gray-100 rounded-xl"></div>
-            <div className="flex-1 space-y-2">
-                <div className="w-32 h-4 bg-gray-100 rounded-full"></div>
-                <div className="w-20 h-2 bg-gray-50 rounded-full"></div>
-            </div>
-            <div className="w-24 h-4 bg-gray-100 rounded-full"></div>
-            <div className="w-16 h-4 bg-gray-50 rounded-full"></div>
-            <div className="w-20 h-8 bg-gray-100 rounded-xl"></div>
-        </div>
-    );
-
     if (loading) {
-        return (
-            <div className="space-y-6">
-                <div className="animate-pulse space-y-2">
-                    <div className="w-48 h-8 bg-gray-100 rounded-lg"></div>
-                    <div className="w-64 h-3 bg-gray-50 rounded-full"></div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-                    {[1, 2, 3, 4].map(i => <CardSkeleton key={i} />)}
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-                    {[1, 2, 3, 4].map(i => (
-                        <div key={i} className="bg-white rounded-xl border border-gray-100 p-4 flex items-center gap-3 animate-pulse">
-                            <div className="w-10 h-10 bg-gray-100 rounded-xl"></div>
-                            <div className="space-y-1.5">
-                                <div className="w-8 h-5 bg-gray-100 rounded-md"></div>
-                                <div className="w-20 h-2 bg-gray-50 rounded-full"></div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                     {[1, 2, 3].map(i => (
-                        <div key={i} className="bg-gray-50 rounded-2xl p-5 border border-gray-100 animate-pulse">
-                            <div className="w-24 h-2 bg-gray-200 rounded-full mb-3"></div>
-                            <div className="w-32 h-5 bg-gray-200 rounded-md mb-4"></div>
-                            <div className="flex justify-between items-end">
-                                <div className="w-12 h-8 bg-gray-200 rounded-lg"></div>
-                                <div className="w-20 h-4 bg-gray-200/50 rounded-md"></div>
-                            </div>
-                        </div>
-                     ))}
-                </div>
-
-                <div className="bg-white rounded-2xl border border-gray-100 p-6 space-y-6 animate-pulse">
-                    <div className="flex justify-between items-center">
-                        <div className="space-y-2">
-                             <div className="w-48 h-5 bg-gray-100 rounded-md"></div>
-                             <div className="w-64 h-2 bg-gray-50 rounded-full"></div>
-                        </div>
-                        <div className="w-32 h-10 bg-gray-100 rounded-xl"></div>
-                    </div>
-                    <div className="space-y-4">
-                         {[1, 2, 3].map(i => <div key={i} className="h-16 bg-gray-50 rounded-xl border border-gray-100"></div>)}
-                    </div>
-                </div>
-            </div>
-        );
+        return <AdminStatisticsLoader />;
     }
 
     return (

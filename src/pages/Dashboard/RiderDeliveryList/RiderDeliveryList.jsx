@@ -3,6 +3,7 @@ import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import RiderAccessGate from '../RiderShared/RiderAccessGate';
 import useRiderDashboardData from '../RiderShared/useRiderDashboardData';
 import { formatCurrency, formatDate, getStatusBadgeClass, getStatusLabel } from '../RiderShared/riderUtils';
+import { RiderDeliveryListLoader } from '../../../components/loaders';
 
 const RiderDeliveryList = () => {
     const axiosSecure = useAxiosSecure();
@@ -38,13 +39,7 @@ const RiderDeliveryList = () => {
     };
 
     if (loading) {
-        return (
-            <RiderAccessGate>
-                <div className="flex min-h-[42vh] items-center justify-center rounded-2xl border border-gray-100 bg-white">
-                    <p className="text-sm font-semibold text-gray-500">Loading delivery list...</p>
-                </div>
-            </RiderAccessGate>
-        );
+        return <RiderAccessGate><RiderDeliveryListLoader /></RiderAccessGate>;
     }
 
     return (

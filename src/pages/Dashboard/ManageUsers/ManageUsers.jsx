@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import useAuth from '../../../Hooks/useAuth';
+import { ManageUsersLoader } from '../../../components/loaders';
 
 const ManageUsers = () => {
     const axiosSecure = useAxiosSecure();
@@ -205,23 +206,7 @@ const ManageUsers = () => {
     };
 
     // ─── Loading / Error ─────────────────────────────────────
-    if (isLoading) return (
-        <div className="space-y-6">
-            <div className="animate-pulse space-y-2">
-                <div className="w-48 h-8 bg-gray-100 rounded-lg"></div>
-                <div className="w-64 h-3 bg-gray-50 rounded-full"></div>
-            </div>
-            <div className="flex gap-2">
-                {[1,2,3,4,5].map(i => <div key={i} className="w-24 h-9 bg-gray-100 rounded-xl animate-pulse"></div>)}
-            </div>
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden animate-pulse">
-                <div className="h-14 bg-gray-50 border-b border-gray-100"></div>
-                <div className="p-6 space-y-4">
-                    {[1,2,3,4,5].map(i => <div key={i} className="h-16 bg-gray-50 rounded-xl"></div>)}
-                </div>
-            </div>
-        </div>
-    );
+    if (isLoading) return <ManageUsersLoader />;
 
     if (isError) return (
         <div className="bg-red-50 p-6 rounded-2xl text-red-600 text-center">

@@ -3,6 +3,7 @@ import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import RiderAccessGate from '../RiderShared/RiderAccessGate';
 import useRiderDashboardData from '../RiderShared/useRiderDashboardData';
 import { formatCurrency, formatDate } from '../RiderShared/riderUtils';
+import { RiderEarningsLoader } from '../../../components/loaders';
 
 const MIN_WITHDRAWAL = 100;
 
@@ -56,13 +57,7 @@ const RiderEarnings = () => {
     };
 
     if (loading) {
-        return (
-            <RiderAccessGate>
-                <div className="flex min-h-[42vh] items-center justify-center rounded-2xl border border-gray-100 bg-white">
-                    <p className="text-sm font-semibold text-gray-500">Loading earnings...</p>
-                </div>
-            </RiderAccessGate>
-        );
+        return <RiderAccessGate><RiderEarningsLoader /></RiderAccessGate>;
     }
 
     return (

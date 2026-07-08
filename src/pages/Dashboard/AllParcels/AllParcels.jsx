@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import { calculateRiderReward } from '../RiderShared/riderUtils';
+import { AllParcelsLoader } from '../../../components/loaders';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -331,44 +332,7 @@ const AllParcels = () => {
     ];
 
     if (loading) {
-        return (
-            <div className="space-y-8">
-                 <div className="animate-pulse space-y-2">
-                    <div className="w-64 h-9 bg-gray-100 rounded-xl"></div>
-                    <div className="w-96 h-4 bg-gray-50 rounded-full"></div>
-                </div>
-
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                    {[1, 2, 3, 4].map(i => (
-                        <div key={i} className="bg-white rounded-2xl p-5 border border-gray-50 shadow-sm animate-pulse">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gray-100 rounded-xl shrink-0"></div>
-                                <div className="space-y-2 flex-1">
-                                    <div className="w-12 h-6 bg-gray-100 rounded-md"></div>
-                                    <div className="w-20 h-3 bg-gray-50 rounded-full"></div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-
-                <div className="flex justify-between items-center animate-pulse">
-                    <div className="w-48 h-10 bg-gray-100 rounded-xl"></div>
-                    <div className="w-72 h-10 bg-gray-100 rounded-xl"></div>
-                </div>
-
-                <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden animate-pulse">
-                    <div className="h-14 bg-gray-50 border-b border-gray-100 mb-4 px-8 flex items-center gap-10">
-                         {[1, 2, 3, 4, 5, 6].map(i => <div key={i} className="flex-1 h-3 bg-gray-200 rounded-full"></div>)}
-                    </div>
-                    <div className="p-8 space-y-6">
-                         {[1, 2, 3, 4, 5].map(i => (
-                             <div key={i} className="h-16 bg-gray-50 rounded-2xl border border-gray-100"></div>
-                         ))}
-                    </div>
-                </div>
-            </div>
-        );
+        return <AllParcelsLoader />;
     }
 
     return (

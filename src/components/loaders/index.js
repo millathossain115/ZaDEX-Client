@@ -1,0 +1,28 @@
+export { default as HomeLoader } from './HomeLoader';
+export { default as SkeletonBlock } from './SkeletonBlock';
+export {
+    AdminPaymentLogsLoader,
+    AdminStatisticsLoader,
+    AllParcelsLoader,
+    AssignParcelsLoader,
+    ActiveRidersLoader,
+    BalanceLoader,
+    BeARiderLoader,
+    DashboardTableLoader,
+    DetailPageLoader,
+    ManageUsersLoader,
+    ManageRidersLoader,
+    MyParcelsLoader,
+    MyProfileLoader,
+    PaymentHistoryLoader,
+    PaymentPageLoader,
+    PendingRidersLoader,
+    RiderDashboardLoader,
+    RiderCompletedLoader,
+    RiderDeliveryListLoader,
+    RiderEarningsLoader,
+    RiderMyReviewsLoader,
+    RiderOngoingTasksLoader,
+    RiderReviewsLoader,
+    RouteGateLoader,
+} from './DashboardLoaders';

@@ -6,7 +6,7 @@ import ParcelStats from './components/ParcelStats';
 import ParcelRow from './components/ParcelRow';
 import EditParcelModal from './components/EditParcelModal';
 import DeleteParcelModal from './components/DeleteParcelModal';
-import MyParcelsLoader from './components/MyParcelsLoader';
+import { MyParcelsLoader } from '../../../components/loaders';
 
 const MyParcels = () => {
     const axiosSecure = useAxiosSecure();

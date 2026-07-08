@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import { ActiveRidersLoader } from '../../../components/loaders';
 
 const ActiveRider = () => {
     const axiosSecure = useAxiosSecure();
@@ -27,11 +28,7 @@ const ActiveRider = () => {
     }, [fetchActiveRiders]);
 
     if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-[60vh]">
-                <div className="w-12 h-12 border-4 border-[#03373D]/20 border-t-[#03373D] rounded-full animate-spin"></div>
-            </div>
-        );
+        return <ActiveRidersLoader />;
     }
 
     return (

@@ -1,18 +1,13 @@
 import RiderAccessGate from '../RiderShared/RiderAccessGate';
 import useRiderDashboardData from '../RiderShared/useRiderDashboardData';
 import { formatCurrency, formatDate } from '../RiderShared/riderUtils';
+import { RiderCompletedLoader } from '../../../components/loaders';
 
 const RiderCompleted = () => {
     const { completedTasks, loading } = useRiderDashboardData();
 
     if (loading) {
-        return (
-            <RiderAccessGate>
-                <div className="flex items-center justify-center min-h-[60vh]">
-                    <p className="text-gray-500 font-medium">Loading completed deliveries...</p>
-                </div>
-            </RiderAccessGate>
-        );
+        return <RiderAccessGate><RiderCompletedLoader /></RiderAccessGate>;
     }
 
     const totalEarned = completedTasks.reduce((sum, parcel) => sum + Number(parcel.riderReward || 0), 0);

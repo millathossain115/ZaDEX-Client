@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import { PendingRidersLoader } from '../../../components/loaders';
 
 const PendingRider = () => {
     const axiosSecure = useAxiosSecure();
@@ -71,14 +72,7 @@ const PendingRider = () => {
     };
 
     if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-[60vh]">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="w-12 h-12 border-4 border-[#03373D]/20 border-t-[#03373D] rounded-full animate-spin"></div>
-                    <p className="text-gray-500 font-medium">Loading applications...</p>
-                </div>
-            </div>
-        );
+        return <PendingRidersLoader />;
     }
 
     return (

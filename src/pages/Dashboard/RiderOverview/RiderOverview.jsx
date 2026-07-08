@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import RiderAccessGate from '../RiderShared/RiderAccessGate';
+import { RiderDashboardLoader } from '../../../components/loaders';
 import useRiderDashboardData from '../RiderShared/useRiderDashboardData';
 import { formatCurrency, formatDate } from '../RiderShared/riderUtils';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
@@ -43,9 +44,7 @@ const RiderOverview = () => {
     if (loading) {
         return (
             <RiderAccessGate>
-                <div className="flex items-center justify-center min-h-[60vh]">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#03373D]"></div>
-                </div>
+                <RiderDashboardLoader />
             </RiderAccessGate>
         );
     }

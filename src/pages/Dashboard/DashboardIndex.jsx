@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import useUserRole from '../../Hooks/useUserRole';
 import AdminStatistics from './AdminStatistics/AdminStatistics';
 import MyParcels from './MyParcels/MyParcels';
-import MyParcelsLoader from './MyParcels/components/MyParcelsLoader';
+import { MyParcelsLoader } from '../../components/loaders';
 import RiderOverview from './RiderOverview/RiderOverview';
 
 const DashboardIndex = () => {
