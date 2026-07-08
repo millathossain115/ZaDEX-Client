@@ -289,10 +289,10 @@ const ManageUsers = () => {
                 />
             </div>
 
-            {/* Table — Desktop */}
-            <div className="hidden lg:block bg-white rounded-3xl border border-gray-100 shadow-sm overflow-x-auto">
+            {/* Table — Laptop / Desktop */}
+            <div className="hidden xl:block bg-white rounded-3xl border border-gray-200 shadow-sm overflow-x-auto">
                 {/* Table Header */}
-                <div className="sticky top-0 z-10 grid grid-cols-[2.5fr_1fr_1fr_1fr_1fr_0.8fr_0.8fr_0.8fr_0.5fr] gap-3 px-6 py-4 bg-gray-50 border-b border-gray-100 text-[10px] font-black text-gray-400 uppercase tracking-widest items-center min-w-275">
+                <div className="sticky top-0 z-10 grid grid-cols-[2.2fr_0.9fr_0.85fr_0.9fr_0.65fr_0.65fr_0.7fr_0.75fr_0.4fr] gap-2 px-5 py-4 bg-gray-50 border-b border-gray-200 text-[10px] font-black text-gray-400 uppercase tracking-widest items-center min-w-[1000px]">
                     <div>User</div>
                     <div>Phone</div>
                     <div>Joined</div>
@@ -305,11 +305,11 @@ const ManageUsers = () => {
                 </div>
 
                 {filteredUsers.length === 0 ? (
-                    <div className="p-16 text-center min-w-275">
+                    <div className="p-16 text-center min-w-[1000px]">
                         <p className="text-gray-400 text-sm font-bold uppercase tracking-widest">No users match your filters</p>
                     </div>
                 ) : (
-                    <div className="divide-y divide-gray-50 pb-32">
+                    <div className="divide-y divide-gray-200 pb-32">
                         {filteredUsers.map((user, index) => {
                             const isAdmin = user.role === 'admin';
                             const stats = user.role === 'rider'
@@ -320,7 +320,7 @@ const ManageUsers = () => {
                             const isLastItem = index >= filteredUsers.length - 2 && filteredUsers.length > 3;
 
                             return (
-                                <div key={user._id} className={`grid grid-cols-[2.5fr_1fr_1fr_1fr_1fr_0.8fr_0.8fr_0.8fr_0.5fr] gap-3 px-6 py-4 items-center transition-colors min-w-275 ${user.disabled ? 'bg-gray-50/70 opacity-60' : 'hover:bg-gray-50/50'}`}>
+                                <div key={user._id} className={`grid grid-cols-[2.2fr_0.9fr_0.85fr_0.9fr_0.65fr_0.65fr_0.7fr_0.75fr_0.4fr] gap-2 px-5 py-4 items-center transition-colors min-w-[1000px] ${user.disabled ? 'bg-gray-50/70 opacity-60' : 'hover:bg-gray-100'}`}>
 
                                     {/* User Info */}
                                     <div className="flex items-center gap-3">
@@ -451,7 +451,7 @@ const ManageUsers = () => {
                                                 {/* Delete */}
                                                 {!self && (
                                                     <>
-                                                        <div className="border-t border-gray-100 my-1"></div>
+                                                        <div className="border-t border-gray-200 my-1"></div>
                                                         <button
                                                             onClick={() => { setDeleteModal({ show: true, user }); setOpenMenuId(null); }}
                                                             className="w-full px-4 py-2.5 text-left text-xs font-bold text-red-600 hover:bg-red-50 flex items-center gap-3 transition cursor-pointer"
@@ -478,13 +478,13 @@ const ManageUsers = () => {
             </div>
 
             {/* Card List — Mobile / Tablet */}
-            <div className="lg:hidden bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+            <div className="xl:hidden bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
                 {filteredUsers.length === 0 ? (
                     <div className="p-16 text-center">
                         <p className="text-gray-400 text-sm font-bold uppercase tracking-widest">No users match your filters</p>
                     </div>
                 ) : (
-                    <div className="divide-y divide-gray-50">
+                    <div className="divide-y divide-gray-200">
                         {filteredUsers.map((user) => {
                             const isAdmin = user.role === 'admin';
                             const stats = user.role === 'rider'
