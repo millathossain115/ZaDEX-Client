@@ -4,6 +4,65 @@ import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
+const SkeletonBlock = ({ className = '', tone = 'bg-gray-100' }) => (
+    <div className={`rounded-lg ${tone} ${className}`}></div>
+);
+
+const PaymentHistoryLoader = () => (
+    <div className="animate-pulse">
+        <div className="mb-8">
+            <SkeletonBlock className="h-9 w-56 mb-3" />
+            <SkeletonBlock className="h-4 w-72 max-w-full" />
+        </div>
+
+        <div className="bg-linear-to-br from-[#03373D]/90 to-[#025a63]/90 rounded-2xl p-6 text-white mb-8 shadow-xl max-w-sm">
+            <div className="flex items-center gap-4">
+                <SkeletonBlock className="w-14 h-14 rounded-2xl bg-white/20" />
+                <div className="flex-1">
+                    <SkeletonBlock className="h-3 w-24 mb-3 bg-white/25" />
+                    <SkeletonBlock className="h-9 w-32 bg-white/30" />
+                </div>
+            </div>
+        </div>
+
+        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+            <div className="hidden xl:grid grid-cols-8 gap-x-5 gap-y-4 px-8 py-5 bg-gray-50 border-b border-gray-100">
+                {[0, 1, 2, 3, 4, 5, 6, 7].map((item) => (
+                    <SkeletonBlock key={item} className="h-3 w-full" />
+                ))}
+            </div>
+
+            {[0, 1, 2, 3, 4].map((row) => (
+                <div key={row}>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-8 gap-x-5 gap-y-4 px-6 sm:px-8 py-6 items-center">
+                        <div className="space-y-2">
+                            <SkeletonBlock className="h-4 w-36" />
+                            <SkeletonBlock className="h-3 w-28" />
+                        </div>
+                        <SkeletonBlock className="h-4 w-32" />
+                        <div className="space-y-2">
+                            <SkeletonBlock className="h-4 w-28" />
+                            <SkeletonBlock className="h-3 w-24" />
+                        </div>
+                        <div className="space-y-2">
+                            <SkeletonBlock className="h-4 w-24" />
+                            <SkeletonBlock className="h-3 w-16" />
+                        </div>
+                        <div className="space-y-2">
+                            <SkeletonBlock className="h-6 w-20 rounded" />
+                            <SkeletonBlock className="h-3 w-24" />
+                        </div>
+                        <SkeletonBlock className="h-5 w-20" />
+                        <SkeletonBlock className="h-8 w-24 rounded-xl bg-emerald-100" />
+                        <SkeletonBlock className="h-9 w-11 rounded-xl bg-[#03373D]/10" />
+                    </div>
+                    {row < 4 && <hr className="border-gray-100" />}
+                </div>
+            ))}
+        </div>
+    </div>
+);
+
 const PaymentHistory = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
@@ -39,17 +98,7 @@ const PaymentHistory = () => {
     }, [user, axiosSecure]);
 
     if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-[60vh]">
-                <div className="flex flex-col items-center gap-4">
-                    <svg className="w-10 h-10 animate-spin text-[#03373D]" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <p className="text-gray-500 font-medium">Loading history...</p>
-                </div>
-            </div>
-        );
+        return <PaymentHistoryLoader />;
     }
 
     const generateInvoice = (payment) => {

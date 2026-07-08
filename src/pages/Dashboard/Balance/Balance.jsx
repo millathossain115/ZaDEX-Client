@@ -23,6 +23,126 @@ const CardIcon = () => (
 
 const MIN_WITHDRAWAL = 100;
 
+const SkeletonBlock = ({ className = '', tone = 'bg-gray-100' }) => (
+    <div className={`rounded-lg ${tone} ${className}`}></div>
+);
+
+const BalanceLoader = () => (
+    <div className="space-y-4 animate-pulse">
+        <div>
+            <SkeletonBlock className="h-8 w-40 mb-2" />
+            <SkeletonBlock className="h-4 w-80 max-w-full" />
+        </div>
+
+        <div className="bg-gradient-to-br from-[#03373D]/90 to-[#025a63]/90 rounded-xl p-5 text-white shadow-sm">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <SkeletonBlock className="h-3 w-32 mb-3 bg-white/25" />
+                    <SkeletonBlock className="h-10 w-44 mb-3 bg-white/30" />
+                    <SkeletonBlock className="h-3 w-36 bg-white/20" />
+                </div>
+                <div className="grid grid-cols-2 gap-2 md:min-w-[300px]">
+                    {[0, 1].map((item) => (
+                        <div key={item} className="bg-white/15 rounded-lg p-3">
+                            <SkeletonBlock className="h-3 w-20 mb-3 bg-white/25" />
+                            <SkeletonBlock className="h-6 w-24 bg-white/30" />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+
+        <div className="grid grid-cols-1 xl:grid-cols-[0.95fr_1.05fr] gap-4 items-start">
+            <div className="space-y-4">
+                <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+                    <SkeletonBlock className="h-5 w-36 mb-4" />
+                    <div className="space-y-4">
+                        <div>
+                            <SkeletonBlock className="h-3 w-40 mb-2" />
+                            <SkeletonBlock className="h-11 w-full bg-gray-50 border border-gray-100" />
+                            <div className="flex justify-between mt-2">
+                                <SkeletonBlock className="h-3 w-24" />
+                                <SkeletonBlock className="h-3 w-28" />
+                            </div>
+                        </div>
+                        <div>
+                            <SkeletonBlock className="h-3 w-32 mb-2" />
+                            <SkeletonBlock className="h-11 w-full bg-gray-50 border border-gray-100" />
+                        </div>
+                        <SkeletonBlock className="h-11 w-full bg-[#03373D]/15" />
+                    </div>
+                    <div className="mt-4 pt-4 border-t border-gray-100">
+                        <SkeletonBlock className="h-4 w-full max-w-md" />
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+                    <div className="flex items-center justify-between mb-4">
+                        <SkeletonBlock className="h-5 w-40" />
+                        <SkeletonBlock className="h-8 w-20 bg-gray-100" />
+                    </div>
+
+                    <div className="space-y-2.5">
+                        {[0, 1, 2].map((item) => (
+                            <div key={item} className="flex items-center justify-between p-3 border border-gray-100 rounded-lg">
+                                <div className="flex items-center gap-2.5 min-w-0">
+                                    <SkeletonBlock
+                                        tone=""
+                                        className={`w-9 h-9 rounded-lg shrink-0 ${
+                                            item === 0 ? 'bg-blue-100' : item === 1 ? 'bg-green-100' : 'bg-purple-100'
+                                        }`}
+                                    />
+                                    <div className="space-y-2">
+                                        <SkeletonBlock className="h-4 w-28" />
+                                        <SkeletonBlock className="h-3 w-36" />
+                                    </div>
+                                </div>
+                                <SkeletonBlock className="h-4 w-14" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+                <div className="flex items-center justify-between gap-3 mb-4">
+                    <SkeletonBlock className="h-5 w-40" />
+                    <SkeletonBlock className="h-9 w-24 bg-gray-50 border border-gray-100" />
+                </div>
+
+                <div className="space-y-2.5">
+                    {[0, 1, 2, 3, 4].map((item) => (
+                        <div key={item} className="flex items-center justify-between p-3 border border-gray-100 rounded-lg">
+                            <div className="min-w-0 space-y-2">
+                                <SkeletonBlock className="h-4 w-40 max-w-full" />
+                                <SkeletonBlock className="h-3 w-28" />
+                            </div>
+                            <div className="space-y-2 shrink-0 ml-4">
+                                <SkeletonBlock className="h-4 w-20" />
+                                <SkeletonBlock
+                                    tone=""
+                                    className={`h-3 w-14 ml-auto ${item % 2 === 0 ? 'bg-emerald-100' : 'bg-red-100'}`}
+                                />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
+                    <div className="flex justify-between">
+                        <SkeletonBlock className="h-4 w-24" />
+                        <SkeletonBlock className="h-4 w-24 bg-emerald-100" />
+                    </div>
+                    <div className="flex justify-between">
+                        <SkeletonBlock className="h-4 w-24" />
+                        <SkeletonBlock className="h-4 w-24 bg-red-100" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+);
+
 // Simple in-component toast
 const Toast = ({ toasts, dismiss }) => (
     <div className="fixed top-5 right-5 z-50 space-y-2 pointer-events-none">
@@ -206,17 +326,7 @@ const Balance = () => {
     const methodForWithdraw = paymentMethods.find(m => m.id === selectedMethod);
 
     if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-[60vh]">
-                <div className="text-center">
-                    <svg className="w-8 h-8 animate-spin text-[#03373D] mx-auto" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-                    </svg>
-                    <p className="mt-4 text-gray-500">Loading balance information...</p>
-                </div>
-            </div>
-        );
+        return <BalanceLoader />;
     }
 
     return (

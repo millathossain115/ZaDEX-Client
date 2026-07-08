@@ -2,8 +2,95 @@ import { useEffect, useState } from 'react';
 import useAuth from '../../../Hooks/useAuth';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
 
+const SkeletonBlock = ({ className = '', tone = 'bg-gray-100' }) => (
+    <div className={`rounded-lg ${tone} ${className}`}></div>
+);
+
+const MyProfileLoader = () => (
+    <div className="space-y-4 animate-pulse">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+                <SkeletonBlock className="h-8 w-40 mb-2" />
+                <SkeletonBlock className="h-4 w-72 max-w-full" />
+            </div>
+            <SkeletonBlock className="h-10 w-32 bg-[#03373D]/15" />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-4">
+            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+                <SkeletonBlock className="h-3 w-28 mb-5" />
+
+                <div className="flex flex-col items-center">
+                    <SkeletonBlock className="w-24 h-24 rounded-2xl bg-[#03373D]/15 mb-3" />
+                    <SkeletonBlock className="h-5 w-36 mb-2" />
+                    <SkeletonBlock className="h-3 w-44" />
+                </div>
+
+                <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
+                    {[0, 1].map((item) => (
+                        <div key={item} className="flex items-center gap-2.5">
+                            <SkeletonBlock
+                                tone=""
+                                className={`w-8 h-8 rounded-lg ${item === 0 ? 'bg-emerald-100' : 'bg-blue-100'}`}
+                            />
+                            <div className="space-y-2">
+                                <SkeletonBlock className="h-3 w-16" />
+                                <SkeletonBlock className="h-4 w-24" />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            <div className="space-y-4">
+                <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+                    <div className="flex items-center gap-2.5 mb-4">
+                        <SkeletonBlock className="w-8 h-8 rounded-lg bg-[#03373D]/10" />
+                        <div>
+                            <SkeletonBlock className="h-4 w-40 mb-2" />
+                            <SkeletonBlock className="h-3 w-32" />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {[0, 1, 2, 3].map((item) => (
+                            <div key={item}>
+                                <SkeletonBlock className="h-3 w-24 mb-2" />
+                                <SkeletonBlock className="h-11 w-full bg-gray-50 border border-gray-100" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+                    <div className="flex items-center gap-2.5 mb-4">
+                        <SkeletonBlock className="w-8 h-8 rounded-lg bg-amber-100" />
+                        <div>
+                            <SkeletonBlock className="h-4 w-24 mb-2" />
+                            <SkeletonBlock className="h-3 w-44" />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div className="md:col-span-2">
+                            <SkeletonBlock className="h-3 w-24 mb-2" />
+                            <SkeletonBlock className="h-16 w-full bg-gray-50 border border-gray-100" />
+                        </div>
+                        {[0, 1].map((item) => (
+                            <div key={item}>
+                                <SkeletonBlock className="h-3 w-24 mb-2" />
+                                <SkeletonBlock className="h-11 w-full bg-gray-50 border border-gray-100" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+);
+
 const MyProfile = () => {
-    const { user, updateUserProfile } = useAuth();
+    const { user, loading: authLoading, updateUserProfile } = useAuth();
     const axiosSecure = useAxiosSecure();
 
     // Edit mode toggle
@@ -21,6 +108,7 @@ const MyProfile = () => {
 
     // Extra profile data from server
     const [serverProfile, setServerProfile] = useState(null);
+    const [isProfileLoading, setIsProfileLoading] = useState(true);
 
     // Photo preview
     const [photoPreview, setPhotoPreview] = useState('');
@@ -34,27 +122,45 @@ const MyProfile = () => {
 
     // Load profile data
     useEffect(() => {
-        if (user) {
-            setDisplayName(user.displayName || '');
-            setPhotoURL(user.photoURL || '');
-            setPhotoPreview(user.photoURL || '');
-
-            // Fetch extra profile data from server
-            axiosSecure.get(`/users/profile?email=${user.email}`)
-                .then(res => {
-                    if (res.data) {
-                        setServerProfile(res.data);
-                        setPhone(res.data.phone || '');
-                        setAddress(res.data.address || '');
-                        setCity(res.data.city || '');
-                        setDistrict(res.data.district || '');
-                    }
-                })
-                .catch(() => {
-                    // Profile doesn't exist on server yet, that's fine
-                });
+        if (authLoading) {
+            return;
         }
-    }, [user, axiosSecure]);
+
+        if (!user?.email) {
+            setIsProfileLoading(false);
+            return;
+        }
+
+        let isMounted = true;
+        setIsProfileLoading(true);
+        setDisplayName(user.displayName || '');
+        setPhotoURL(user.photoURL || '');
+        setPhotoPreview(user.photoURL || '');
+
+        // Fetch extra profile data from server
+        axiosSecure.get(`/users/profile?email=${user.email}`)
+            .then(res => {
+                if (isMounted && res.data) {
+                    setServerProfile(res.data);
+                    setPhone(res.data.phone || '');
+                    setAddress(res.data.address || '');
+                    setCity(res.data.city || '');
+                    setDistrict(res.data.district || '');
+                }
+            })
+            .catch(() => {
+                // Profile doesn't exist on server yet, that's fine
+            })
+            .finally(() => {
+                if (isMounted) {
+                    setIsProfileLoading(false);
+                }
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, [authLoading, user, axiosSecure]);
 
 
 
@@ -133,6 +239,10 @@ const MyProfile = () => {
 
     const inputClass = "w-full px-3 py-2.5 rounded-lg border border-gray-200 bg-gray-50/70 text-gray-800 placeholder-gray-400 text-sm focus:outline-none focus:ring-2 focus:ring-[#03373D]/20 focus:border-[#03373D] transition-all duration-200";
     const labelClass = "block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1";
+
+    if (authLoading || isProfileLoading) {
+        return <MyProfileLoader />;
+    }
 
     return (
         <div className="space-y-4">
