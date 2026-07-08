@@ -339,7 +339,7 @@ const AllParcels = () => {
         <div className="space-y-6 relative">
             {/* Bulk Action Bar */}
             {selectedIds.length > 0 && (
-                <div className="fixed bottom-4 sm:bottom-10 left-1/2 -translate-x-1/2 z-MAX bg-[#03373D] text-white p-3 sm:px-8 sm:py-4 rounded-2xl sm:rounded-3xl shadow-2xl flex items-center gap-2 flex-wrap sm:flex-nowrap sm:gap-8 animate-in slide-in-from-bottom-5 w-[95%] sm:w-auto max-w-xl justify-center sm:justify-start">
+                <div className="fixed bottom-4 sm:bottom-10 left-1/2 -translate-x-1/2 z-[9999] bg-[#03373D] text-white p-3 sm:px-8 sm:py-4 rounded-2xl sm:rounded-3xl shadow-2xl flex items-center gap-2 flex-wrap sm:flex-nowrap sm:gap-8 animate-in slide-in-from-bottom-5 w-[95%] sm:w-auto max-w-xl justify-center sm:justify-start">
                     <div className="flex items-center gap-3">
                          <span className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-black text-sm">{selectedIds.length}</span>
                          <span className="hidden sm:inline text-xs font-black uppercase tracking-widest text-white/70">Selected</span>
@@ -410,11 +410,12 @@ const AllParcels = () => {
                 })}
             </div>
 
-            {/* Date Filter + Search Row */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <span className="text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Time Range:</span>
-                    <div className="flex flex-wrap gap-1">
+            {/* Filter + Search Controls */}
+            <div className="rounded-2xl border border-gray-100 bg-white p-3 shadow-sm">
+                <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                        <span className="text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Time Range:</span>
+                        <div className="flex flex-wrap gap-1">
                         {['all', 'today', '7days', 'month'].map((range) => (
                              <button
                                  key={range}
@@ -426,18 +427,19 @@ const AllParcels = () => {
                                  {range}
                              </button>
                         ))}
+                        </div>
                     </div>
-                </div>
-                <div className="relative">
-                    <svg className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    <input type="text" placeholder="Search by Name, ID, or Phone..." value={search} onChange={e => setSearch(e.target.value)} className="pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm font-medium text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#03373D]/30 w-full md:w-72 shadow-sm"/>
+                    <div className="relative w-full lg:max-w-sm">
+                        <svg className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        <input type="text" placeholder="Search by Name, ID, or Phone..." value={search} onChange={e => setSearch(e.target.value)} className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-4 text-sm font-medium text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#03373D]/30"/>
+                    </div>
                 </div>
             </div>
 
             {/* Table — Desktop */}
             <div className="hidden lg:block bg-white rounded-3xl border border-gray-100 shadow-sm overflow-x-auto overflow-y-auto h-[calc(100vh-300px)]">
-                <div className="sticky top-0 z-20 grid grid-cols-12 gap-4 px-6 py-4 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-widest items-center shadow-sm min-w-[1100px]">
-                    <div className="col-span-1 flex justify-center">
+                <div className="sticky top-0 z-20 grid grid-cols-[44px_repeat(7,minmax(0,1fr))] gap-4 px-6 py-4 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-widest items-center shadow-sm min-w-[1100px]">
+                    <div className="flex justify-center">
                          <input 
                             type="checkbox" 
                             onChange={handleSelectAll} 
@@ -445,13 +447,13 @@ const AllParcels = () => {
                             className="w-4 h-4 rounded-lg accent-[#03373D] cursor-pointer"
                         />
                     </div>
-                    <div className="col-span-2">Sender</div>
-                    <div className="col-span-2">Receiver</div>
-                    <div className="col-span-2">Route</div>
-                    <div className="col-span-1">Value</div>
-                    <div className="col-span-1">Payment</div>
-                    <div className="col-span-1">Shipment</div>
-                    <div className="col-span-2 text-right">Actions</div>
+                    <div>Sender</div>
+                    <div>Receiver</div>
+                    <div>Route</div>
+                    <div>Value</div>
+                    <div>Payment</div>
+                    <div>Shipment</div>
+                    <div className="text-right">Actions</div>
                 </div>
 
                 {paginatedParcels.length === 0 ? (
@@ -460,8 +462,8 @@ const AllParcels = () => {
                     </div>
                 ) : (
                     paginatedParcels.map(parcel => (
-                        <div key={parcel._id} className={`grid grid-cols-12 gap-4 px-6 py-5 items-center border-b border-gray-50 transition group min-w-[1100px] ${selectedIds.includes(parcel._id) ? 'bg-[#03373D]/5' : 'hover:bg-gray-50/50'}`}>
-                            <div className="col-span-1 flex justify-center">
+                        <div key={parcel._id} className={`grid grid-cols-[44px_repeat(7,minmax(0,1fr))] gap-4 px-6 py-5 items-center border-b border-gray-50 transition group min-w-[1100px] ${selectedIds.includes(parcel._id) ? 'bg-[#03373D]/5' : 'hover:bg-gray-50/50'}`}>
+                            <div className="flex justify-center">
                                 <input 
                                     type="checkbox" 
                                     checked={selectedIds.includes(parcel._id)}
@@ -469,34 +471,34 @@ const AllParcels = () => {
                                     className="w-4 h-4 rounded-lg accent-[#03373D] cursor-pointer"
                                 />
                             </div>
-                            <div className="col-span-2">
+                            <div className="min-w-0">
                                  <p className="text-sm font-bold text-gray-900 truncate">{parcel.senderName}</p>
-                                 <p className="text-xs text-gray-400">{parcel.email}</p>
+                                 <p className="text-xs text-gray-400 truncate">{parcel.email}</p>
                             </div>
-                            <div className="col-span-2">
+                            <div className="min-w-0">
                                  <p className="text-sm font-bold text-gray-900 truncate">{parcel.receiverName}</p>
-                                 <p className="text-xs text-gray-400">{parcel.receiverPhone}</p>
+                                 <p className="text-xs text-gray-400 truncate">{parcel.receiverPhone}</p>
                             </div>
-                            <div className="col-span-2 flex items-center gap-1.5 overflow-hidden">
+                            <div className="flex min-w-0 items-center gap-1.5 overflow-hidden">
                                 <span className="text-xs font-bold text-emerald-600 shrink-0">{parcel.senderDistrict}</span>
                                 <div className="w-6 h-px bg-gray-200 shrink-0"></div>
-                                <span className="text-xs font-bold text-blue-600 shrink-0">{parcel.receiverDistrict}</span>
+                                <span className="text-xs font-bold text-blue-600 truncate">{parcel.receiverDistrict}</span>
                             </div>
-                            <div className="col-span-1">
+                            <div className="min-w-0">
                                 <span className="text-sm font-bold text-gray-900">৳{parcel.totalCost || parcel.price}</span>
                                 <p className="text-[10px] text-gray-400 mt-1">{parcel.parcelWeight || parcel.weight} kg</p>
                             </div>
-                            <div className="col-span-1">
+                            <div className="min-w-0">
                                 <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border ${getPaymentStatusColor(parcel.paymentStatus)}`}>
                                     {parcel.paymentStatus || 'Unpaid'}
                                 </span>
                             </div>
-                            <div className="col-span-1">
+                            <div className="min-w-0">
                                 <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest border ${getStatusColor(parcel.status)}`}>
                                     {parcel.status || 'Pending'}
                                 </span>
                             </div>
-                            <div className="col-span-2 flex items-center justify-end gap-1.5 transition-opacity flex-wrap">
+                            <div className="flex items-center justify-end gap-1.5 transition-opacity flex-wrap">
                                 <button onClick={() => { setSelectedParcel(parcel); setViewModal(true); }} className="w-8 h-8 flex items-center justify-center bg-gray-100 text-gray-500 hover:bg-[#03373D] hover:text-white rounded-lg transition cursor-pointer" title="Details"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button>
                                 <button onClick={() => { setSelectedParcel(parcel); setEditData({ parcelName: parcel.parcelName, weight: parcel.parcelWeight }); setEditModal(true); }} className="w-8 h-8 flex items-center justify-center bg-gray-100 text-[#03373D] hover:bg-[#03373D] hover:text-white rounded-lg transition cursor-pointer" title="Edit"><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
                                 <button onClick={() => navigate('/dashboard/assign-parcels')} disabled={parcel.status === 'delivered' || !!parcel.assignedRider} className="w-8 h-8 flex items-center justify-center bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white rounded-lg transition disabled:opacity-20 cursor-pointer" title={parcel.assignedRider ? 'Already Assigned' : 'Assign Rider'}><svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg></button>
@@ -668,7 +670,7 @@ const AllParcels = () => {
 
             {/* Modals remain the same... */}
             {bulkAssignModal && (
-                <div className="fixed inset-0 z-MAX flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in transition-all">
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in transition-all">
                     <div className="bg-white rounded-[2.5rem] w-full max-w-md overflow-hidden shadow-2xl animate-in zoom-in duration-300 flex flex-col max-h-[90vh]">
                         <div className="p-6 sm:p-8 bg-emerald-50 border-b border-emerald-100 text-center shrink-0">
                             <div className="w-12 h-12 sm:w-16 sm:h-16 bg-emerald-500 rounded-2xl sm:rounded-3xl flex items-center justify-center text-white mx-auto mb-4 shadow-xl shadow-emerald-500/30">
@@ -699,7 +701,7 @@ const AllParcels = () => {
             )}
 
             {viewModal && selectedParcel && (
-                <div className="fixed inset-0 z-MAX flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
                     <div className="bg-white rounded-[2.5rem] w-full max-w-2xl overflow-hidden shadow-2xl">
                         <div className="p-6 sm:p-8 flex justify-between items-start shrink-0 border-b border-gray-50">
                              <div className="min-w-0 pr-4">
@@ -750,7 +752,7 @@ const AllParcels = () => {
             )}
             
             {editModal && selectedParcel && (
-                <div className="fixed inset-0 z-MAX flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+                <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
                     <div className="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl animate-in slide-in-from-top-12 duration-300 border border-gray-100 flex flex-col max-h-[90vh]">
                          <div className="p-5 sm:p-6 border-b border-gray-50 flex items-center justify-between shrink-0">
                             <h2 className="text-lg font-black uppercase tracking-widest text-[#03373D]">Modify Metrics</h2>

@@ -8,6 +8,8 @@ const AdminPaymentLogs = () => {
     const [payments, setPayments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
+    const [methodFilter, setMethodFilter] = useState('all');
+    const [dateFilter, setDateFilter] = useState('all');
 
     useEffect(() => {
         // Fetch all parcels, then we'll filter only the paid ones locally for the logs
@@ -29,17 +31,103 @@ const AdminPaymentLogs = () => {
             });
     }, [axiosSecure]);
 
-    // Local filtering by transaction ID (and potentially receiver phone or email as fallback)
-    const filteredPayments = payments.filter(p => {
-        if (!searchQuery.trim()) return true;
-        const q = searchQuery.toLowerCase();
-        return (
-            (p.transactionId && p.transactionId.toLowerCase().includes(q)) ||
-            (p._id && p._id.toLowerCase().includes(q)) ||
-            (p.senderEmail && p.senderEmail.toLowerCase().includes(q)) ||
-            (p.receiverPhone && p.receiverPhone.includes(q))
-        );
-    });
+    const getPaymentAmount = (payment) => parseFloat(payment.totalCost || payment.price || 0) || 0;
+
+    const getPaymentDate = (payment) => {
+        const fallbackTime = payment._id ? parseInt(payment._id.substring(0, 8), 16) * 1000 : 0;
+        const date = new Date(payment.paymentDate || fallbackTime || 0);
+        return Number.isNaN(date.getTime()) ? null : date;
+    };
+
+    const getPaymentMethodKey = (method) => {
+        const lowerMethod = method?.toLowerCase() || '';
+        if (lowerMethod.includes('bkash')) return 'bkash';
+        if (lowerMethod.includes('nagad')) return 'nagad';
+        if (lowerMethod.includes('bank')) return 'bank';
+        return 'card';
+    };
+
+    const isWithinDateFilter = (payment) => {
+        if (dateFilter === 'all') return true;
+
+        const paymentDate = getPaymentDate(payment);
+        if (!paymentDate) return false;
+
+        const now = new Date();
+        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+        if (dateFilter === 'today') {
+            return paymentDate >= startOfToday;
+        }
+
+        const days = dateFilter === '7d' ? 7 : 30;
+        const startDate = new Date(startOfToday);
+        startDate.setDate(startDate.getDate() - (days - 1));
+        return paymentDate >= startDate;
+    };
+
+    const filteredPayments = (() => {
+        const q = searchQuery.trim().toLowerCase();
+
+        return payments.filter(payment => {
+            const paymentMethod = payment.paymentMethod || payment.paymentType;
+            const matchesMethod = methodFilter === 'all' || getPaymentMethodKey(paymentMethod) === methodFilter;
+            const matchesDate = isWithinDateFilter(payment);
+
+            if (!matchesMethod || !matchesDate) return false;
+            if (!q) return true;
+
+            return [
+                payment.transactionId,
+                payment._id,
+                payment.senderName,
+                payment.senderEmail,
+                payment.receiverName,
+                payment.receiverPhone,
+                payment.parcelName,
+                payment.name,
+            ].some(value => (value || '').toString().toLowerCase().includes(q));
+        });
+    })();
+
+    const totalRevenue = payments.reduce((sum, payment) => sum + getPaymentAmount(payment), 0);
+    const filteredRevenue = filteredPayments.reduce((sum, payment) => sum + getPaymentAmount(payment), 0);
+    const averagePayment = payments.length ? Math.round(totalRevenue / payments.length) : 0;
+    const latestPaymentDate = payments[0] ? getPaymentDate(payments[0]) : null;
+
+    const kpiCards = [
+        {
+            label: 'Total Revenue',
+            value: totalRevenue,
+            prefix: '৳',
+            suffix: '',
+            note: `${payments.length} successful payments`,
+            theme: 'primary',
+        },
+        {
+            label: 'Filtered Revenue',
+            value: filteredRevenue,
+            prefix: '৳',
+            suffix: '',
+            note: `${filteredPayments.length} visible records`,
+            theme: 'emerald',
+        },
+        {
+            label: 'Average Payment',
+            value: averagePayment,
+            prefix: '৳',
+            suffix: '',
+            note: 'Per successful parcel',
+            theme: 'blue',
+        },
+        {
+            label: 'Latest Payment',
+            value: latestPaymentDate ? latestPaymentDate.toLocaleDateString() : 'No payments',
+            note: latestPaymentDate ? latestPaymentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Waiting for first record',
+            theme: 'amber',
+            textValue: true,
+        },
+    ];
 
     const getPaymentMethodUI = (method, accNumber) => {
         const lowerMethod = method?.toLowerCase() || '';
@@ -70,33 +158,22 @@ const AdminPaymentLogs = () => {
     }
 
     return (
-        <div>
+        <div className="space-y-6">
             {/* Page Header */}
-            <div className="mb-8">
+            <div>
                 <h1 className="text-3xl font-extrabold text-gray-900">Payment Logs</h1>
                 <p className="text-gray-500 mt-1">Review all successful transactions across the platform.</p>
             </div>
 
-            {/* Total Collected Stats */}
-            <div className="bg-linear-to-br from-[#03373D] to-[#025a63] rounded-2xl p-6 text-white mb-8 shadow-xl max-w-sm">
-                <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center">
-                        <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <div>
-                        <p className="text-white/60 text-sm font-semibold uppercase tracking-wider mb-0.5">Total Revenue</p>
-                        <h2 className="text-3xl font-extrabold flex items-center pr-1">
-                            ৳<CountUp end={payments.reduce((sum, p) => sum + (parseFloat(p.totalCost || p.price || 0)), 0)} separator="," duration={2.5} />
-                        </h2>
-                    </div>
-                </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                {kpiCards.map(card => (
+                    <KpiCard key={card.label} card={card} />
+                ))}
             </div>
 
             {/* Search Controls (Above table) */}
-            <div className="flex flex-col md:flex-row md:items-center justify-end gap-4 mb-4">
-                <div className="relative w-full md:w-80 border-2 border-gray-100 rounded-xl bg-white shadow-sm focus-within:border-[#03373D]/30 focus-within:ring-4 focus-within:ring-[#03373D]/10 transition-all">
+            <div className="flex flex-col gap-3 rounded-2xl border border-gray-100 bg-white p-3 shadow-sm lg:flex-row lg:items-center lg:justify-between">
+                <div className="relative w-full border-2 border-gray-100 rounded-xl bg-white focus-within:border-[#03373D]/30 focus-within:ring-4 focus-within:ring-[#03373D]/10 transition-all lg:max-w-md">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -104,11 +181,36 @@ const AdminPaymentLogs = () => {
                     </div>
                     <input
                         type="text"
-                        placeholder="Search by Transaction ID..."
+                        placeholder="Search transaction, sender, receiver, parcel..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="block w-full pl-10 pr-3 py-3 rounded-xl border-none focus:ring-0 text-sm placeholder-gray-400"
                     />
+                </div>
+
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:w-[420px]">
+                    <select
+                        value={methodFilter}
+                        onChange={(e) => setMethodFilter(e.target.value)}
+                        className="h-12 rounded-xl border-2 border-gray-100 bg-white px-3 text-sm font-bold text-gray-600 outline-none transition focus:border-[#03373D]/30 focus:ring-4 focus:ring-[#03373D]/10 cursor-pointer"
+                    >
+                        <option value="all">All methods</option>
+                        <option value="bkash">bKash</option>
+                        <option value="nagad">Nagad</option>
+                        <option value="bank">Bank</option>
+                        <option value="card">Card / Other</option>
+                    </select>
+
+                    <select
+                        value={dateFilter}
+                        onChange={(e) => setDateFilter(e.target.value)}
+                        className="h-12 rounded-xl border-2 border-gray-100 bg-white px-3 text-sm font-bold text-gray-600 outline-none transition focus:border-[#03373D]/30 focus:ring-4 focus:ring-[#03373D]/10 cursor-pointer"
+                    >
+                        <option value="all">All dates</option>
+                        <option value="today">Today</option>
+                        <option value="7d">Last 7 days</option>
+                        <option value="30d">Last 30 days</option>
+                    </select>
                 </div>
             </div>
 
@@ -122,11 +224,13 @@ const AdminPaymentLogs = () => {
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 mb-2">No Transactions Found</h3>
                     <p className="text-gray-500">
-                        {searchQuery ? `No matching transaction found for "${searchQuery}".` : "There are currently no paid parcels in the system."}
+                        {searchQuery || methodFilter !== 'all' || dateFilter !== 'all'
+                            ? 'No matching transaction found for the selected search or filters.'
+                            : 'There are currently no paid parcels in the system.'}
                     </p>
                 </div>
             ) : (
-                <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                     <div className="hidden lg:grid grid-cols-7 gap-4 px-8 py-5 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
                         <div className="col-span-2">Sender & Parcel</div>
                         <div>Receiver</div>
@@ -138,7 +242,7 @@ const AdminPaymentLogs = () => {
                     
                     <div className="divide-y divide-gray-50">
                         {filteredPayments.map(payment => (
-                            <div key={payment._id} className="grid grid-cols-1 lg:grid-cols-7 gap-4 px-8 py-6 items-center hover:bg-gray-50/50 transition-colors">
+                            <div key={payment._id} className="grid grid-cols-1 lg:grid-cols-7 gap-4 px-8 py-6 items-center hover:bg-emerald-50/70 transition-colors">
                                 <div className="col-span-2">
                                     <p className="font-bold text-gray-900 mb-1">{payment.senderName || 'N/A'}</p>
                                     {/* <p className="text-xs text-gray-500">{payment.senderEmail || 'N/A'}</p> */}
@@ -189,5 +293,48 @@ const AdminPaymentLogs = () => {
         </div>
     );
 };
+
+const cardThemes = {
+    primary: 'bg-linear-to-br from-[#03373D] to-[#025a63] text-white border-transparent shadow-xl shadow-[#03373D]/15 hover:shadow-[#03373D]/25',
+    emerald: 'bg-white text-gray-900 border-emerald-100 hover:border-emerald-200 hover:shadow-emerald-100',
+    blue: 'bg-white text-gray-900 border-blue-100 hover:border-blue-200 hover:shadow-blue-100',
+    amber: 'bg-white text-gray-900 border-amber-100 hover:border-amber-200 hover:shadow-amber-100',
+};
+
+const iconThemes = {
+    primary: 'bg-white/20 text-white',
+    emerald: 'bg-emerald-50 text-emerald-600',
+    blue: 'bg-blue-50 text-blue-600',
+    amber: 'bg-amber-50 text-amber-600',
+};
+
+const KpiCard = ({ card }) => (
+    <div className={`rounded-2xl border p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-xl ${cardThemes[card.theme]}`}>
+        <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+                <p className={`text-[10px] font-black uppercase tracking-widest ${card.theme === 'primary' ? 'text-white/60' : 'text-gray-400'}`}>
+                    {card.label}
+                </p>
+                <h2 className="mt-2 min-w-0 truncate text-3xl font-extrabold leading-tight">
+                    {card.textValue ? (
+                        card.value
+                    ) : (
+                        <>
+                            {card.prefix}<CountUp end={card.value} separator="," duration={2.2} />{card.suffix}
+                        </>
+                    )}
+                </h2>
+                <p className={`mt-2 text-xs font-semibold ${card.theme === 'primary' ? 'text-white/60' : 'text-gray-500'}`}>
+                    {card.note}
+                </p>
+            </div>
+            <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${iconThemes[card.theme]}`}>
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V7m0 10v-1m9-4a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+        </div>
+    </div>
+);
 
 export default AdminPaymentLogs;

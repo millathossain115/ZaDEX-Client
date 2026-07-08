@@ -860,27 +860,74 @@ export const AssignParcelsLoader = () => (
 );
 
 export const AdminPaymentLogsLoader = () => (
-    <div className="space-y-8 animate-pulse">
+    <div className="space-y-6 animate-pulse">
         <HeaderSkeleton title="w-64" subtitle="w-96" />
-        <div className="w-full max-w-sm rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-            <div className="flex items-center gap-4">
-                <SkeletonBlock className="h-14 w-14 rounded-2xl bg-[#03373D]/10" />
-                <div className="space-y-3">
-                    <SkeletonBlock className="h-3 w-28" />
-                    <SkeletonBlock className="h-8 w-32" />
-                    <SkeletonBlock className="h-3 w-40" />
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {[0, 1, 2, 3].map(item => (
+                <div
+                    key={item}
+                    className={`rounded-2xl border p-5 shadow-sm ${
+                        item === 0
+                            ? 'border-transparent bg-linear-to-br from-[#03373D]/90 to-[#025a63]/90 text-white'
+                            : 'border-gray-100 bg-white'
+                    }`}
+                >
+                    <div className="flex items-start justify-between gap-4">
+                        <div className="space-y-3">
+                            <SkeletonBlock className={`h-3 w-28 ${item === 0 ? 'bg-white/25' : ''}`} />
+                            <SkeletonBlock className={`h-8 w-32 ${item === 0 ? 'bg-white/30' : ''}`} />
+                            <SkeletonBlock className={`h-3 w-36 ${item === 0 ? 'bg-white/20' : ''}`} />
+                        </div>
+                        <SkeletonBlock
+                            tone=""
+                            className={`h-11 w-11 rounded-xl ${
+                                item === 0 ? 'bg-white/20' : item === 1 ? 'bg-emerald-100' : item === 2 ? 'bg-blue-100' : 'bg-amber-100'
+                            }`}
+                        />
+                    </div>
                 </div>
+            ))}
+        </div>
+
+        <div className="flex flex-col gap-3 rounded-2xl border border-gray-100 bg-white p-3 shadow-sm lg:flex-row lg:items-center lg:justify-between">
+            <SkeletonBlock className="h-12 w-full rounded-xl bg-gray-50 border border-gray-100 lg:max-w-md" />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:w-[420px]">
+                {[0, 1].map(item => (
+                    <SkeletonBlock key={item} className="h-12 w-full rounded-xl bg-gray-50 border border-gray-100" />
+                ))}
             </div>
         </div>
-        <div className="flex justify-end">
-            <SkeletonBlock className="h-12 w-full md:w-80 rounded-xl" />
+
+        <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+            <div className="hidden grid-cols-7 gap-4 border-b border-gray-100 bg-gray-50 px-8 py-5 lg:grid">
+                {[0, 1, 2, 3, 4, 5].map(item => (
+                    <SkeletonBlock key={item} className={`${item === 0 ? 'col-span-2' : ''} h-3 w-full`} />
+                ))}
+            </div>
+            {[0, 1, 2, 3, 4].map(row => (
+                <div key={row}>
+                    <div className="grid grid-cols-1 gap-4 px-8 py-6 lg:grid-cols-7 lg:items-center">
+                        <div className="space-y-2 lg:col-span-2">
+                            <SkeletonBlock className="h-4 w-36" />
+                            <SkeletonBlock className="h-3 w-44 max-w-full" />
+                        </div>
+                        <div className="space-y-2">
+                            <SkeletonBlock className="h-4 w-28" />
+                            <SkeletonBlock className="h-3 w-24" />
+                        </div>
+                        <div className="space-y-2">
+                            <SkeletonBlock className="h-4 w-24" />
+                            <SkeletonBlock className="h-3 w-16" />
+                        </div>
+                        <SkeletonBlock className="h-6 w-20 rounded bg-gray-100" />
+                        <SkeletonBlock className="h-5 w-20" />
+                        <SkeletonBlock className="h-8 w-32 rounded-lg bg-gray-100 lg:justify-self-end" />
+                    </div>
+                    {row < 4 && <hr className="border-gray-100" />}
+                </div>
+            ))}
         </div>
-        <AdminDesktopTableSkeleton
-            columns={7}
-            rows={5}
-            minWidth="900px"
-            template="1fr 1.1fr 1.15fr 1fr 0.85fr 0.85fr 0.75fr"
-        />
     </div>
 );
 

@@ -242,42 +242,45 @@ const ManageUsers = () => {
                 </div>
             </div>
 
-            {/* Tabs */}
-            <div className="flex flex-wrap gap-2">
-                {tabs.map(tab => (
-                    <button
-                        key={tab.key}
-                        onClick={() => setActiveTab(tab.key)}
-                        className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all cursor-pointer flex items-center gap-2 ${
-                            activeTab === tab.key
-                                ? `${tab.color} text-white shadow-lg`
-                                : 'bg-white text-gray-500 border border-gray-100 hover:bg-gray-50 shadow-sm'
-                        }`}
-                    >
-                        {tab.label}
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-black ${
-                            activeTab === tab.key ? 'bg-white/20' : 'bg-gray-100'
-                        }`}>{tab.count}</span>
-                    </button>
-                ))}
-            </div>
+            {/* Filter + Search Controls */}
+            <div className="rounded-2xl border border-gray-100 bg-white p-3 shadow-sm">
+                <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+                    <div className="flex flex-wrap gap-2">
+                        {tabs.map(tab => (
+                            <button
+                                key={tab.key}
+                                onClick={() => setActiveTab(tab.key)}
+                                className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all cursor-pointer flex items-center gap-2 ${
+                                    activeTab === tab.key
+                                        ? `${tab.color} text-white shadow-lg`
+                                        : 'bg-gray-50 text-gray-500 border border-gray-100 hover:bg-gray-100'
+                                }`}
+                            >
+                                {tab.label}
+                                <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-black ${
+                                    activeTab === tab.key ? 'bg-white/20' : 'bg-white'
+                                }`}>{tab.count}</span>
+                            </button>
+                        ))}
+                    </div>
 
-            {/* Search Bar */}
-            <div className="relative">
-                <svg className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                <input
-                    type="text"
-                    placeholder="Search by Name, Email, or Phone..."
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                    className="pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm font-medium text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#03373D]/30 w-full md:w-96 shadow-sm"
-                />
+                    <div className="relative w-full xl:max-w-sm">
+                        <svg className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        <input
+                            type="text"
+                            placeholder="Search by Name, Email, or Phone..."
+                            value={search}
+                            onChange={e => setSearch(e.target.value)}
+                            className="w-full rounded-xl border border-gray-200 bg-gray-50 py-2.5 pl-10 pr-4 text-sm font-medium text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#03373D]/30"
+                        />
+                    </div>
+                </div>
             </div>
 
             {/* Table — Laptop / Desktop */}
             <div className="hidden xl:block bg-white rounded-3xl border border-gray-200 shadow-sm overflow-x-auto">
                 {/* Table Header */}
-                <div className="sticky top-0 z-10 grid grid-cols-[2.2fr_0.9fr_0.85fr_0.9fr_0.65fr_0.65fr_0.7fr_0.75fr_0.4fr] gap-2 px-5 py-4 bg-gray-50 border-b border-gray-200 text-[10px] font-black text-gray-400 uppercase tracking-widest items-center min-w-[1000px]">
+                <div className="sticky top-0 z-10 grid grid-cols-[2.2fr_0.9fr_0.85fr_0.9fr_0.65fr_0.65fr_0.7fr_0.75fr_0.55fr] gap-2 px-5 py-4 bg-gray-50 border-b border-gray-200 text-[10px] font-black text-gray-400 uppercase tracking-widest items-center min-w-[1000px]">
                     <div>User</div>
                     <div>Phone</div>
                     <div>Joined</div>
@@ -286,7 +289,7 @@ const ManageUsers = () => {
                     <div>Role</div>
                     <div>Set Role</div>
                     <div>Status</div>
-                    <div className="text-right">⋯</div>
+                    <div className="text-right">Action</div>
                 </div>
 
                 {filteredUsers.length === 0 ? (
@@ -305,7 +308,7 @@ const ManageUsers = () => {
                             const isLastItem = index >= filteredUsers.length - 2 && filteredUsers.length > 3;
 
                             return (
-                                <div key={user._id} className={`grid grid-cols-[2.2fr_0.9fr_0.85fr_0.9fr_0.65fr_0.65fr_0.7fr_0.75fr_0.4fr] gap-2 px-5 py-4 items-center transition-colors min-w-[1000px] ${user.disabled ? 'bg-gray-50/70 opacity-60' : 'hover:bg-gray-100'}`}>
+                                <div key={user._id} className={`grid grid-cols-[2.2fr_0.9fr_0.85fr_0.9fr_0.65fr_0.65fr_0.7fr_0.75fr_0.55fr] gap-2 px-5 py-4 items-center transition-colors min-w-[1000px] ${user.disabled ? 'bg-gray-50/70 opacity-60' : 'hover:bg-gray-100'}`}>
 
                                     {/* User Info */}
                                     <div className="flex items-center gap-3">

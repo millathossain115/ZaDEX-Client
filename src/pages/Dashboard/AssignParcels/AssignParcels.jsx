@@ -10,6 +10,9 @@ const AssignParcels = () => {
     const [loading, setLoading] = useState(true);
     const [assigning, setAssigning] = useState(null);
     const [toast, setToast] = useState({ show: false, type: '', message: '' });
+    const [parcelSearchQuery, setParcelSearchQuery] = useState('');
+    const [paymentFilter, setPaymentFilter] = useState('all');
+    const [routeFilter, setRouteFilter] = useState('all');
     
     // Modal State
     const [selectedParcelForModal, setSelectedParcelForModal] = useState(null);
@@ -28,6 +31,41 @@ const AssignParcels = () => {
             riderStatusFilter === 'inactive' ? rStatus !== 'active' : true;
             
         return matchesSearch && matchesStatus;
+    });
+
+    const filteredParcels = parcels.filter(parcel => {
+        const q = parcelSearchQuery.trim().toLowerCase();
+        const matchesSearch = !q || [
+            parcel._id,
+            parcel.parcelName,
+            parcel.name,
+            parcel.senderName,
+            parcel.senderPhone,
+            parcel.senderAddress,
+            parcel.senderArea,
+            parcel.senderDistrict,
+            parcel.receiverName,
+            parcel.receiverPhone,
+            parcel.receiverAddress,
+            parcel.receiverArea,
+            parcel.receiverDistrict,
+        ].some(value => (value || '').toString().toLowerCase().includes(q));
+
+        const normalizedPayment = parcel.paymentStatus?.toLowerCase() || 'unpaid';
+        const matchesPayment = paymentFilter === 'all' || (
+            paymentFilter === 'paid'
+                ? normalizedPayment === 'paid'
+                : normalizedPayment !== 'paid'
+        );
+
+        const isSameDistrict = parcel.senderDistrict && parcel.receiverDistrict && parcel.senderDistrict === parcel.receiverDistrict;
+        const matchesRoute = routeFilter === 'all' || (
+            routeFilter === 'same'
+                ? isSameDistrict
+                : !isSameDistrict
+        );
+
+        return matchesSearch && matchesPayment && matchesRoute;
     });
 
     useEffect(() => {
@@ -239,6 +277,40 @@ const AssignParcels = () => {
                 </div>
             </div>
 
+            {/* Search and Filter Controls */}
+            <div className="rounded-xl border border-gray-100 bg-white p-3 shadow-sm">
+                <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_180px_180px]">
+                    <div className="relative">
+                        <svg className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <input
+                            type="text"
+                            placeholder="Search parcel, sender, receiver, phone, or district..."
+                            value={parcelSearchQuery}
+                            onChange={(e) => setParcelSearchQuery(e.target.value)}
+                            className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2.5 pl-9 pr-3 text-sm font-medium text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#03373D]/20"
+                        />
+                    </div>
+                    <select
+                        value={paymentFilter}
+                        onChange={(e) => setPaymentFilter(e.target.value)}
+                        className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm font-bold text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#03373D]/20 cursor-pointer"
+                    >
+                        <option value="all">All payments</option>
+                        <option value="paid">Paid only</option>
+                        <option value="unpaid">Unpaid only</option>
+                    </select>
+                    <select
+                        value={routeFilter}
+                        onChange={(e) => setRouteFilter(e.target.value)}
+                        className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5 text-sm font-bold text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#03373D]/20 cursor-pointer"
+                    >
+                        <option value="all">All routes</option>
+                        <option value="same">Same district</option>
+                        <option value="cross">Inter district</option>
+                    </select>
+                </div>
+            </div>
+
             {/* Work Queue */}
             <div className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
                 <div className="px-3 py-2.5 border-b border-gray-100 bg-gray-50 flex items-center justify-between gap-3">
@@ -248,7 +320,7 @@ const AssignParcels = () => {
                         </svg>
                         <p className="text-xs font-black uppercase tracking-widest text-gray-500 truncate">Dispatch queue</p>
                     </div>
-                    <p className="text-xs text-gray-400 hidden sm:block">{parcels.length} waiting for assignment</p>
+                    <p className="text-xs text-gray-400 hidden sm:block">{filteredParcels.length} of {parcels.length} waiting for assignment</p>
                 </div>
 
                 {parcels.length === 0 ? (
@@ -261,12 +333,22 @@ const AssignParcels = () => {
                         <h3 className="text-base font-bold text-gray-900 mb-1">All caught up</h3>
                         <p className="text-gray-500 text-sm">No parcels need assignment right now.</p>
                     </div>
+                ) : filteredParcels.length === 0 ? (
+                    <div className="p-8 text-center">
+                        <div className="w-14 h-14 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <svg className="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12A9 9 0 113 12a9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 className="text-base font-bold text-gray-900 mb-1">No matching parcels</h3>
+                        <p className="text-gray-500 text-sm">Try changing the search or filters.</p>
+                    </div>
                 ) : (
                 <div>
-                    {parcels.map((parcel, index) => (
+                    {filteredParcels.map((parcel, index) => (
                         <div key={parcel._id}>
                         <div className="p-3 hover:bg-gray-50/80 transition">
-                            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+                            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_8rem] lg:items-center">
                                 <div className="flex-1 min-w-0">
                                     <div className="flex flex-wrap items-center gap-2 mb-2">
                                         <h3 className="font-bold text-gray-900 text-sm sm:text-base tracking-tight truncate max-w-full">{parcel.parcelName || parcel.name || 'Unnamed Parcel'}</h3>
@@ -274,7 +356,7 @@ const AssignParcels = () => {
                                         <span className="bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded text-[10px] whitespace-nowrap">৳{parcel.totalCost || parcel.price || 0}</span>
                                     </div>
                                     
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                         {/* Sender Column */}
                                         <div className="bg-gray-50 border border-gray-100 rounded-lg p-2.5">
                                             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1 flex items-center gap-1">
@@ -302,7 +384,7 @@ const AssignParcels = () => {
                                 </div>
 
                                 {/* Assign Action */}
-                                <div className="flex items-center shrink-0 border-t lg:border-t-0 lg:border-l border-gray-100 pt-2 lg:pt-0 lg:pl-3 w-full lg:w-32">
+                                <div className="flex items-center shrink-0 border-t lg:border-t-0 lg:border-l border-gray-100 pt-3 lg:pt-0 lg:pl-4 w-full lg:w-32">
                                     <button 
                                         onClick={() => setSelectedParcelForModal(parcel)}
                                         className="w-full bg-[#03373D] text-white py-2 rounded-lg text-xs font-bold shadow-sm hover:bg-[#025a63] hover:shadow-md transition active:scale-[0.98] cursor-pointer"
@@ -312,7 +394,7 @@ const AssignParcels = () => {
                                 </div>
                             </div>
                         </div>
-                        {index < parcels.length - 1 && <hr className="border-gray-200" />}
+                        {index < filteredParcels.length - 1 && <hr className="border-gray-200" />}
                         </div>
                     ))}
                 </div>
