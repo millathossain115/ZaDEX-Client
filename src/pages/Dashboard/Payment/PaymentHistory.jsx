@@ -10,22 +10,40 @@ const SkeletonBlock = ({ className = '', tone = 'bg-gray-100' }) => (
 
 const PaymentHistoryLoader = () => (
     <div className="animate-pulse">
-        <div className="mb-8">
+        <div className="mb-6">
             <SkeletonBlock className="h-9 w-56 mb-3" />
             <SkeletonBlock className="h-4 w-72 max-w-full" />
         </div>
 
-        <div className="bg-linear-to-br from-[#03373D]/90 to-[#025a63]/90 rounded-2xl p-6 text-white mb-8 shadow-xl max-w-sm">
-            <div className="flex items-center gap-4">
-                <SkeletonBlock className="w-14 h-14 rounded-2xl bg-white/20" />
-                <div className="flex-1">
-                    <SkeletonBlock className="h-3 w-24 mb-3 bg-white/25" />
-                    <SkeletonBlock className="h-9 w-32 bg-white/30" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="bg-linear-to-br from-[#03373D]/90 to-[#025a63]/90 rounded-2xl p-6 text-white shadow-xl">
+                <div className="flex items-center gap-4">
+                    <SkeletonBlock className="w-14 h-14 rounded-2xl bg-white/20" />
+                    <div className="flex-1">
+                        <SkeletonBlock className="h-3 w-24 mb-3 bg-white/25" />
+                        <SkeletonBlock className="h-9 w-32 mb-3 bg-white/30" />
+                        <SkeletonBlock className="h-3 w-40 bg-white/20" />
+                    </div>
                 </div>
             </div>
+            {[0, 1].map((item) => (
+                <div key={item} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                    <div className="flex items-center gap-4">
+                        <SkeletonBlock
+                            tone=""
+                            className={`w-14 h-14 rounded-2xl ${item === 0 ? 'bg-emerald-100' : 'bg-blue-100'}`}
+                        />
+                        <div className="flex-1">
+                            <SkeletonBlock className="h-3 w-28 mb-3" />
+                            <SkeletonBlock className="h-8 w-24 mb-3" />
+                            <SkeletonBlock className="h-3 w-36" />
+                        </div>
+                    </div>
+                </div>
+            ))}
         </div>
 
-        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="hidden xl:grid grid-cols-8 gap-x-5 gap-y-4 px-8 py-5 bg-gray-50 border-b border-gray-100">
                 {[0, 1, 2, 3, 4, 5, 6, 7].map((item) => (
                     <SkeletonBlock key={item} className="h-3 w-full" />
@@ -100,6 +118,18 @@ const PaymentHistory = () => {
     if (loading) {
         return <PaymentHistoryLoader />;
     }
+
+    const getPaymentAmount = (payment) => parseFloat(payment.totalCost || payment.price || 0) || 0;
+    const formatCurrency = (amount) => amount.toLocaleString('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+    });
+    const totalPaid = payments.reduce((sum, payment) => sum + getPaymentAmount(payment), 0);
+    const latestPayment = payments[0];
+    const latestPaymentDate = latestPayment?.paymentDate || latestPayment?.requestedDate;
+    const latestPaymentLabel = latestPaymentDate
+        ? new Date(latestPaymentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+        : 'No payments yet';
 
     const generateInvoice = (payment) => {
         const doc = new jsPDF();
@@ -179,24 +209,57 @@ const PaymentHistory = () => {
     return (
         <div>
             {/* Page Header */}
-            <div className="mb-8">
+            <div className="mb-6">
                 <h1 className="text-3xl font-extrabold text-gray-900">Payment History</h1>
                 <p className="text-gray-500 mt-1">View all your successful transactions</p>
             </div>
             
-            {/* Stats Card */}
-            <div className="bg-linear-to-br from-[#03373D] to-[#025a63] rounded-2xl p-6 text-white mb-8 shadow-xl max-w-sm">
-                <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center">
-                        <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div className="group bg-linear-to-br from-[#03373D] to-[#025a63] rounded-2xl p-6 text-white shadow-xl transition-all duration-200 hover:-translate-y-1 hover:shadow-2xl hover:shadow-[#03373D]/20">
+                    <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center transition-all duration-200 group-hover:bg-white/30 group-hover:scale-105">
+                            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p className="text-white/60 text-sm font-semibold uppercase tracking-wider mb-0.5">Total Paid</p>
+                            <h2 className="text-3xl font-extrabold">৳{formatCurrency(totalPaid)}</h2>
+                            <p className="text-xs text-white/60 mt-1">Across paid parcel bookings</p>
+                        </div>
                     </div>
-                    <div>
-                        <p className="text-white/60 text-sm font-semibold uppercase tracking-wider mb-0.5">Total Paid</p>
-                        <h2 className="text-3xl font-extrabold">
-                            ৳{payments.reduce((sum, p) => sum + (parseFloat(p.totalCost || p.price || 0)), 0)}
-                        </h2>
+                </div>
+
+                <div className="group bg-white rounded-2xl p-6 border border-gray-100 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-lg hover:shadow-emerald-100/60">
+                    <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center transition-all duration-200 group-hover:bg-emerald-100 group-hover:scale-105">
+                            <svg className="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p className="text-gray-400 text-sm font-semibold uppercase tracking-wider mb-0.5">Paid Transactions</p>
+                            <h2 className="text-3xl font-extrabold text-gray-900">{payments.length}</h2>
+                            <p className="text-xs text-gray-400 mt-1">Successful payment records</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="group bg-white rounded-2xl p-6 border border-gray-100 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg hover:shadow-blue-100/60">
+                    <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center transition-all duration-200 group-hover:bg-blue-100 group-hover:scale-105">
+                            <svg className="w-7 h-7 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p className="text-gray-400 text-sm font-semibold uppercase tracking-wider mb-0.5">Latest Payment</p>
+                            <h2 className="text-3xl font-extrabold text-gray-900">
+                                ৳{formatCurrency(latestPayment ? getPaymentAmount(latestPayment) : 0)}
+                            </h2>
+                            <p className="text-xs text-gray-400 mt-1">{latestPaymentLabel}</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -212,7 +275,7 @@ const PaymentHistory = () => {
                     <p className="text-gray-500">You haven't made any payments yet. When you pay for a parcel, your receipt will appear here.</p>
                 </div>
             ) : (
-                <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     <div className="hidden xl:grid grid-cols-8 gap-x-5 gap-y-4 px-8 py-5 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider">
                         <div>Transaction Details</div>
                         <div>Transaction ID</div>
@@ -265,7 +328,7 @@ const PaymentHistory = () => {
                                 </div>
                                 
                                 <div>
-                                    <p className="text-base font-extrabold text-gray-900">৳{payment.totalCost || payment.price}</p>
+                                    <p className="text-base font-extrabold text-gray-900">৳{formatCurrency(getPaymentAmount(payment))}</p>
                                 </div>
                                 
                                 <div>
