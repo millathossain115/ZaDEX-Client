@@ -7,66 +7,96 @@ import Brands from './Brands/Brands';
 import FAQ from './FAQ/FAQ';
 import Services from './Services/Services';
 import WorkProcess from './WorkProcess/WorkProcess';
+import logo from '../../assets/LOGOS/Zadex-fav.svg';
+import banner1 from '../../assets/banner/banner1.png';
 
 const HomeSkeleton = () => (
-    <div className="bg-[#F0F0F0] min-h-screen animate-pulse overflow-hidden">
-        {/* Banner Skeleton */}
-        <div className="h-[75vh] bg-gray-200/60 rounded-b-[3rem] relative">
-            <div className="absolute inset-0 flex items-center justify-center">
-                <div className="max-w-4xl w-full px-4 text-center space-y-6 flex flex-col items-center">
-                    <div className="h-14 md:h-20 w-3/4 bg-gray-300 rounded-2xl"></div>
-                    <div className="h-14 md:h-20 w-2/4 bg-gray-300 rounded-2xl"></div>
-                    <div className="h-6 w-full max-w-2xl bg-gray-300/60 rounded-lg mt-6"></div>
-                    <div className="h-6 w-full max-w-xl bg-gray-300/60 rounded-lg"></div>
-                    <div className="flex gap-4 mt-8 flex-wrap justify-center">
-                        <div className="h-14 w-40 bg-gray-300 rounded-xl"></div>
-                        <div className="h-14 w-40 bg-gray-300 rounded-xl"></div>
+    <div className="bg-[#F0F0F0] min-h-screen overflow-hidden">
+        <div className="max-w-9/10 mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="relative min-h-[62vh] overflow-hidden rounded-lg bg-[#03373D] shadow-xl">
+                <img
+                    src={banner1}
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover opacity-45"
+                />
+                <div className="absolute inset-0 bg-linear-to-r from-[#03373D] via-[#03373D]/80 to-[#03373D]/20"></div>
+                <div className="relative z-10 flex min-h-[62vh] flex-col justify-center px-6 py-12 sm:px-10 lg:px-16">
+                    <div className="mb-8 flex items-center gap-3">
+                        <img src={logo} alt="Zadex" className="h-9 w-auto" />
+                        <span className="text-3xl font-black italic tracking-tight text-white">
+                            Za<span className="text-emerald-300">DEX</span>
+                        </span>
+                    </div>
+
+                    <div className="max-w-2xl">
+                        <p className="mb-4 text-xs font-black uppercase tracking-[0.28em] text-emerald-200">
+                            Preparing your delivery experience
+                        </p>
+                        <div className="space-y-4">
+                            <div className="h-12 w-full max-w-xl rounded-2xl bg-white/90 animate-pulse"></div>
+                            <div className="h-12 w-4/5 max-w-lg rounded-2xl bg-white/70 animate-pulse"></div>
+                            <div className="mt-6 h-4 w-full max-w-md rounded-full bg-white/35 animate-pulse"></div>
+                            <div className="h-4 w-2/3 max-w-sm rounded-full bg-white/25 animate-pulse"></div>
+                        </div>
+                    </div>
+
+                    <div className="mt-10 max-w-sm">
+                        <div className="h-2 overflow-hidden rounded-full bg-white/20">
+                            <div className="h-full w-2/3 rounded-full bg-emerald-300 shadow-[0_0_24px_rgba(110,231,183,0.65)] animate-pulse"></div>
+                        </div>
+                        <div className="mt-4 flex items-center gap-2">
+                            {[1, 2, 3].map((dot) => (
+                                <span
+                                    key={dot}
+                                    className="h-2.5 w-2.5 rounded-full bg-emerald-300 animate-ping"
+                                    style={{ animationDelay: `${dot * 160}ms` }}
+                                ></span>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {/* Work Process / Services Skeleton Grid */}
-        <div className="max-w-7xl mx-auto py-20 px-8 space-y-24">
-            {/* Section 1 */}
+        <div className="max-w-9/10 mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-16">
             <div className="space-y-12">
                 <div className="flex flex-col items-center gap-4">
-                    <div className="h-4 w-32 bg-gray-200 rounded-full text-center"></div>
-                    <div className="h-12 w-full max-w-md bg-gray-200 rounded-2xl"></div>
+                    <div className="h-4 w-28 rounded-full bg-[#03373D]/20 animate-pulse"></div>
+                    <div className="h-10 w-full max-w-sm rounded-2xl bg-gray-200 animate-pulse"></div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {[1, 2, 3].map((i) => (
-                        <div key={i} className="bg-white p-10 rounded-[2.5rem] shadow-sm space-y-6">
-                            <div className="w-20 h-20 bg-gray-100 rounded-3xl mx-auto"></div>
-                            <div className="h-6 w-3/4 bg-gray-200 rounded-xl mx-auto"></div>
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                    {[1, 2, 3, 4].map((i) => (
+                        <div key={i} className="aspect-square rounded-2xl border border-gray-100 bg-white p-6 shadow-md">
+                            <div className="mb-5 h-6 w-20 rounded-full bg-[#E6F7F8] animate-pulse"></div>
+                            <div className="mb-5 h-14 w-14 rounded-xl bg-[#03373D] animate-pulse"></div>
+                            <div className="mb-3 h-5 w-2/3 rounded-lg bg-gray-200 animate-pulse"></div>
                             <div className="space-y-2">
-                                <div className="h-4 w-full bg-gray-100 rounded-lg"></div>
-                                <div className="h-4 w-full bg-gray-100 rounded-lg"></div>
-                                <div className="h-4 w-2/3 bg-gray-100 rounded-lg mx-auto"></div>
+                                <div className="h-3 w-full rounded-lg bg-gray-100 animate-pulse"></div>
+                                <div className="h-3 w-5/6 rounded-lg bg-gray-100 animate-pulse"></div>
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
 
-            {/* Section 2 */}
-            <div className="space-y-12">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="h-4 w-32 bg-gray-200 rounded-full text-center"></div>
-                    <div className="h-12 w-full max-w-md bg-gray-200 rounded-2xl"></div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    {[1, 2, 3, 4].map((i) => (
-                        <div key={i} className="bg-white p-8 rounded-3xl shadow-sm space-y-5 h-64">
-                            <div className="w-14 h-14 bg-gray-100 rounded-2xl"></div>
-                            <div className="h-6 w-2/3 bg-gray-200 rounded-lg"></div>
-                            <div className="space-y-2">
-                                <div className="h-3 w-full bg-gray-100 rounded-lg"></div>
-                                <div className="h-3 w-full bg-gray-100 rounded-lg"></div>
-                                <div className="h-3 w-4/5 bg-gray-100 rounded-lg"></div>
+            <div className="rounded-xl bg-[#03373D] px-4 py-16 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-9/10">
+                    <div className="mb-12 flex flex-col items-center gap-4">
+                        <div className="h-9 w-48 rounded-2xl bg-white/80 animate-pulse"></div>
+                        <div className="h-4 w-full max-w-lg rounded-full bg-white/25 animate-pulse"></div>
+                    </div>
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                        {[1, 2, 3].map((i) => (
+                            <div key={i} className="h-64 rounded-lg bg-white p-6">
+                                <div className="mx-auto mb-5 h-14 w-14 rounded-2xl bg-[#E6F7D9] animate-pulse"></div>
+                                <div className="mx-auto mb-4 h-6 w-36 rounded-lg bg-gray-200 animate-pulse"></div>
+                                <div className="space-y-2">
+                                    <div className="h-3 w-full rounded-lg bg-gray-100 animate-pulse"></div>
+                                    <div className="mx-auto h-3 w-4/5 rounded-lg bg-gray-100 animate-pulse"></div>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>
