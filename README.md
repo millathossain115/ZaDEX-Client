@@ -36,6 +36,18 @@ This repository contains the React/Vite frontend. It connects to a backend API f
 
 ![ZaDEX login page](./public/screenshots/login.png)
 
+### Customer Dashboard
+
+![ZaDEX customer dashboard](./public/screenshots/user-dashboard.png)
+
+### Rider Statistics Dashboard
+
+![ZaDEX rider statistics dashboard](./public/screenshots/rider-dashboard.png)
+
+### Admin Statistics Dashboard
+
+![ZaDEX admin statistics dashboard](./public/screenshots/admin-statistics.png)
+
 ## What ZaDEX Does
 
 For non-technical readers, ZaDEX is built around three clear workflows:
@@ -280,5 +292,5 @@ These warnings do not block deployment, but future performance work should add r
 - Add lazy loading for dashboard routes to reduce initial JavaScript size.
 - Add automated UI tests for login, private route redirects, and dashboard role rendering.
 - Add typed API response contracts or migrate critical shared modules to TypeScript.
-- Add README screenshots for authenticated dashboards using seeded demo data.
+- Add more README screenshots for payment, rider assignment, and parcel tracking flows.
 - Add CI checks for lint and build before deployment.
