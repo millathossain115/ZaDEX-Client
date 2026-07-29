@@ -12,25 +12,11 @@ import WorkProcess from '@/features/home/components/WorkProcess';
 const Home = () => {
     const location = useLocation();
     const [loading, setLoading] = useState(true);
-    const [progress, setProgress] = useState(0);
 
     useEffect(() => {
-        const duration = 1500;
-        const stepTime = 30;
-        const increment = 100 / (duration / stepTime);
+        const timer = setTimeout(() => setLoading(false), 1500);
 
-        const interval = setInterval(() => {
-            setProgress(current => {
-                const next = Math.min(100, Math.round(current + increment));
-                if (next === 100) {
-                    clearInterval(interval);
-                    setTimeout(() => setLoading(false), 180);
-                }
-                return next;
-            });
-        }, stepTime);
-
-        return () => clearInterval(interval);
+        return () => clearTimeout(timer);
     }, []);
 
     useEffect(() => {
@@ -45,7 +31,7 @@ const Home = () => {
     }, [location, loading]);
 
     if (loading) {
-        return <HomeLoader progress={progress} />;
+        return <HomeLoader />;
     }
 
     return (
